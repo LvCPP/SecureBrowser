@@ -9,3 +9,5 @@ Build/
 Debug/
 x64/
 *.user
+
+packages/
