@@ -15,16 +15,14 @@ public:
 	T Pop()
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
-		if (!queue_.empty())
+		if (queue_.empty())
 		{
-			T temp(queue_.front());
-			queue_.pop();
-			return temp;
+			throw std::exception("queue is empty");
 		}
-		else
-		{
-			throw std::runtime_error("queue is empty");
-		}
+
+		T temp(queue_.front());
+		queue_.pop();
+		return temp;
 	}
 
 	bool IsEmpty() const
