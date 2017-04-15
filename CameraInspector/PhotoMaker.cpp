@@ -7,7 +7,7 @@ PhotoMaker::PhotoMaker() : saver_(nullptr), curr_frame_{}
 {
 }
 
-PhotoMaker::PhotoMaker(std::shared_ptr<IFrameSaver>& saver) : saver_(saver), curr_frame_{}
+PhotoMaker::PhotoMaker(const std::shared_ptr<IFrameSaver>& saver) : saver_(saver), curr_frame_{}
 {
 }
 
@@ -20,7 +20,7 @@ void PhotoMaker::MakePhoto() const
 {
 	if (saver_)
 	{
-		saver_->SaveFrame(curr_frame_);
+		saver_->Save(curr_frame_);
 	}
 	else
 	{
@@ -32,7 +32,7 @@ void PhotoMaker::MakePhoto(const cv::Mat& frame) const
 {
 	if (saver_)
 	{
-		saver_->SaveFrame(frame);
+		saver_->Save(frame);
 	}
 	else
 	{
@@ -40,19 +40,7 @@ void PhotoMaker::MakePhoto(const cv::Mat& frame) const
 	}
 }
 
-void PhotoMaker::MakePhoto(const cv::Mat& frame, const std::string& name) const
-{
-	if (saver_)
-	{
-		saver_->SaveFrame(frame, name);
-	}
-	else
-	{
-		throw std::exception("Saver is not initialized!");
-	}
-}
-
-void PhotoMaker::SetPhotoSaver(std::shared_ptr<IFrameSaver>& saver)
+void PhotoMaker::SetPhotoSaver(const std::shared_ptr<IFrameSaver>& saver)
 {
 	saver_ = saver;
 }

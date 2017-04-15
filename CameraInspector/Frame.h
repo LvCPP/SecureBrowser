@@ -17,9 +17,9 @@ public:
 	void* GetData() const;
 
 private:
-	int cols;			// width
-	int rows;			// height
-	void* data;			// bits
+	int cols_;		
+	int rows_;		
+	void* data_;	
 };
 
 } // namespace CameraInspector

@@ -53,7 +53,7 @@ int main()
 
 	// Create & configure saver
 	FileSystemFrameSaver saver;
-	saver.SetPathToSaveFiles("");
+	saver.SetPathToSave("");
 
 	// Create & configure maker
 	PhotoMaker maker;

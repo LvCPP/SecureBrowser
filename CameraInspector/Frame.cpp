@@ -3,30 +3,30 @@
 namespace CameraInspector
 {
 
-Frame::Frame(int height, int width, void* data) : cols(height), rows(width), data(data)
+Frame::Frame(int height, int width, void* data) : cols_(height), rows_(width), data_(data)
 {
 }
 
 void Frame::Construct(int height, int width, void* data)
 {
-	this->cols = width;
-	this->rows = height;
-	this->data = data;
+	cols_ = width;
+	rows_ = height;
+	data_ = data;
 }
 
 int Frame::GetRows() const
 {
-	return rows;
+	return rows_;
 }
 
 int Frame::GetCols() const
 {
-	return cols;
+	return cols_;
 }
 
 void* Frame::GetData() const
 {
-	return data;
+	return data_;
 }
 
 } // namespace CameraInspector

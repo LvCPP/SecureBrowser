@@ -11,9 +11,9 @@ void WebCameraCapture::Stop()
 {
 }
 
-void WebCameraCapture::AddFrameHandler(std::shared_ptr<IFrameHandler>& handler)
+void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler)
 {
-	handlers_.push_back(std::move(handler));
+	handlers_.push_back(handler);
 }
 
 } // namespace CameraInspector

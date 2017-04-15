@@ -15,7 +15,7 @@ public:
 	// Stops capturing the camera
 	void Stop();
 	// Frame handlers. This class instance can call they for different purposes
-	void AddFrameHandler(std::shared_ptr<IFrameHandler>& handler);
+	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 
 private:
 	std::vector<std::shared_ptr<IFrameHandler>> handlers_;

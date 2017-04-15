@@ -7,7 +7,6 @@ namespace CameraInspector
 class FaceDetector : public IFrameHandler
 {
 public:
-	FaceDetector();
 	virtual ~FaceDetector() = default;
 
 	// Interface :). Calls 'work' function inside

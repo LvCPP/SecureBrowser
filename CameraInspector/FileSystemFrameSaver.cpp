@@ -9,32 +9,32 @@ FileSystemFrameSaver::FileSystemFrameSaver() : name_to_save_("screenshot"), path
 {
 }
 
-void FileSystemFrameSaver::SaveFrame(const cv::Mat& frame)
+void FileSystemFrameSaver::Save(const cv::Mat& frame)
 {
 	SaveToDisk(frame, name_to_save_, path_to_save_);
 }
 
-void FileSystemFrameSaver::SaveFrame(const cv::Mat& frame, const std::string& name)
+void FileSystemFrameSaver::Save(const cv::Mat& frame, const std::string& name)
 {
 	SaveToDisk(frame, name, path_to_save_);
 }
 
-void FileSystemFrameSaver::SaveFrame(const cv::Mat& frame, const std::string& name, const std::string& path)
+void FileSystemFrameSaver::Save(const cv::Mat& frame, const std::string& name, const std::string& path)
 {
 	SaveToDisk(frame, name, path);
 }
 
-void FileSystemFrameSaver::SetPathToSaveFiles(const std::string& path)
+void FileSystemFrameSaver::SetPathToSave(const std::string& path)
 {
 	path_to_save_ = path;
 }
 
-void FileSystemFrameSaver::SetNameOfSavingFile(const std::string& name)
+void FileSystemFrameSaver::SetNameToSave(const std::string& name)
 {
 	name_to_save_ = name;
 }
 
-void FileSystemFrameSaver::SaveToDisk(const cv::Mat& frame, const std::string& name, const std::string& path) const
+void FileSystemFrameSaver::SaveToDisk(const cv::Mat& frame, const std::string& name, const std::string& path)
 {
 	std::vector<int> compression_params{ CV_IMWRITE_JPEG_QUALITY, QUALITY_HIGH };
 
