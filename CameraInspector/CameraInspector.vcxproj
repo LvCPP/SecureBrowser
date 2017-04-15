@@ -134,9 +134,6 @@
     <ClInclude Include="PhotoMaker.h" />
     <ClInclude Include="WebCameraCapture.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="screenshot.jpg" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\OpenCV.2.4.11\build\native\OpenCV.targets" Condition="Exists('..\packages\OpenCV.2.4.11\build\native\OpenCV.targets')" />
