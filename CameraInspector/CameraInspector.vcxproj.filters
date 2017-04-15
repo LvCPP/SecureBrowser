@@ -5,63 +5,56 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{fed3a047-b34a-4dc7-9f61-5019d06dc310}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FaceDetector.cpp">
+    <ClCompile Include="..\..\..\CameraInspector\FaceDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystemFrameSaver.cpp">
+    <ClCompile Include="..\..\..\CameraInspector\FileSystemFrameSaver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Frame.cpp">
+    <ClCompile Include="..\..\..\CameraInspector\Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PhotoMaker.cpp">
+    <ClCompile Include="..\..\..\CameraInspector\PhotoMaker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WebCameraCapture.cpp">
+    <ClCompile Include="..\..\..\CameraInspector\WebCameraCapture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FaceDetector.h">
+    <ClInclude Include="..\..\..\CameraInspector\FaceDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystemFrameSaver.h">
+    <ClInclude Include="..\..\..\CameraInspector\FileSystemFrameSaver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Frame.h">
+    <ClInclude Include="..\..\..\CameraInspector\Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IFrameHandler.h">
+    <ClInclude Include="..\..\..\CameraInspector\IFrameHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IFrameSaver.h">
+    <ClInclude Include="..\..\..\CameraInspector\IFrameSaver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhotoMaker.h">
+    <ClInclude Include="..\..\..\CameraInspector\PhotoMaker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WebCameraCapture.h">
+    <ClInclude Include="..\..\..\CameraInspector\WebCameraCapture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="screenshot.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>
