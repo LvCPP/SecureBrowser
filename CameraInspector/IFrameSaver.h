@@ -1,14 +1,15 @@
 #pragma once
-#include <opencv2\highgui\highgui.hpp>
 
 namespace CameraInspector
 {
+
+class Frame;
 
 class IFrameSaver
 {
 public:
 	virtual ~IFrameSaver() = default;
-	virtual void Save(const cv::Mat& frame) = 0;
+	virtual void Save(const Frame& frame) = 0;
 };
 
 } // namespace CameraInspector

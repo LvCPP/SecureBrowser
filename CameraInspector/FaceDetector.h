@@ -10,7 +10,7 @@ public:
 	virtual ~FaceDetector() = default;
 
 	// Interface :). Calls 'work' function inside
-	void ProcessFrame(cv::Mat frame) override;
+	void ProcessFrame(Frame frame) override;
 };
 
 } // namespace CameraInspector

@@ -1,9 +1,10 @@
 #include "FaceDetector.h"
+#include "Frame.h"
 
 namespace CameraInspector
 {
 
-void FaceDetector::ProcessFrame(cv::Mat frame)
+void FaceDetector::ProcessFrame(Frame frame)
 {
 }
 

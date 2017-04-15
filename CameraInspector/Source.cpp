@@ -3,6 +3,8 @@
 #include "FileSystemFrameSaver.h"
 #include "Frame.h"
 
+#include <opencv2\highgui\highgui.hpp>
+
 #include <Windows.h>
 #include <iostream>
 
@@ -39,7 +41,7 @@ int main()
 
 		imshow(original_window, frame_original);
 
-		my_frame.Construct(frame_original.rows, frame_original.cols, frame_original.data);
+		my_frame.Construct(frame_original.cols, frame_original.rows, frame_original.data);
 		cv::Mat frame_after(my_frame.GetRows(), my_frame.GetCols(), CV_8UC3, my_frame.GetData());
 
 		imshow(converted_window, frame_after);
@@ -47,8 +49,6 @@ int main()
 
 	cv::destroyWindow(original_window);
 	cv::destroyWindow(converted_window);
-
-	cv::Mat frame(my_frame.GetRows(), my_frame.GetCols(), CV_8UC3, my_frame.GetData());		// ensure that conversion works fine
 	// -----------------------------------------------------------------------------------------------------------------------------
 
 	// Create & configure saver
@@ -69,7 +69,7 @@ int main()
 	camera_01.Start();
 
 	// maker we will get from camera_01
-	maker.ProcessFrame(frame);				// or maker.MakePhoto(frame); - without saving it
+	maker.ProcessFrame(my_frame);				// or maker.MakePhoto(frame); - without saving it
 	maker.MakePhoto();				
 
 	// ...

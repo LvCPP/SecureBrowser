@@ -7,13 +7,12 @@ class Frame
 {
 public:
 	Frame() = default;
-	//Mat(Size size, int type, void *data, size_t step = AUTO_STEP)
-	Frame(int height, int width, void* data);			// QImage|cv::Mat to frame
+	Frame(int width, int height, void* data);
 	
-	void Construct(int height, int width, void* data);
+	void Construct(int width, int height, void* data);
 
-	int GetRows() const;
 	int GetCols() const;
+	int GetRows() const;
 	void* GetData() const;
 
 private:

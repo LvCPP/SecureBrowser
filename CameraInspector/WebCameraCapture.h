@@ -2,6 +2,7 @@
 #include "IFrameHandler.h"
 
 #include <memory>
+#include <vector>
 
 namespace CameraInspector
 {

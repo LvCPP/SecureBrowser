@@ -11,7 +11,7 @@ PhotoMaker::PhotoMaker(const std::shared_ptr<IFrameSaver>& saver) : saver_(saver
 {
 }
 
-void PhotoMaker::ProcessFrame(cv::Mat frame)
+void PhotoMaker::ProcessFrame(Frame frame)
 {
 	curr_frame_ = frame;
 }
@@ -28,7 +28,7 @@ void PhotoMaker::MakePhoto() const
 	}
 }
 
-void PhotoMaker::MakePhoto(const cv::Mat& frame) const
+void PhotoMaker::MakePhoto(const Frame& frame) const
 {
 	if (saver_)
 	{
