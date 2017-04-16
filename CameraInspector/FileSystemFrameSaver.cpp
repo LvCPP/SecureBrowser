@@ -40,9 +40,8 @@ void FileSystemFrameSaver::SetNameToSave(const std::string& name)
 
 void FileSystemFrameSaver::SaveToDisk(const Frame& frame, const std::string& name, const std::string& path)
 {
-	std::vector<int> compression_params{ CV_IMWRITE_JPEG_QUALITY, QUALITY_HIGH };
-
-	cv::Mat cv_frame(frame.GetRows(), frame.GetCols(), CV_8UC3, frame.GetData());
+	const cv::Mat cv_frame(frame.GetRows(), frame.GetCols(), CV_8UC3, frame.GetData());
+	const std::vector<int> compression_params{ CV_IMWRITE_JPEG_QUALITY, QUALITY_HIGH };
 
 	try
 	{

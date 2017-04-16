@@ -142,20 +142,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\CameraInspector\FaceDetector.cpp" />
-    <ClCompile Include="..\..\..\CameraInspector\FileSystemFrameSaver.cpp" />
-    <ClCompile Include="..\..\..\CameraInspector\Frame.cpp" />
-    <ClCompile Include="..\..\..\CameraInspector\PhotoMaker.cpp" />
-    <ClCompile Include="..\..\..\CameraInspector\WebCameraCapture.cpp" />
+    <ClCompile Include="FaceDetector.cpp" />
+    <ClCompile Include="FileSystemFrameSaver.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="PhotoMaker.cpp" />
+    <ClCompile Include="WebCameraCapture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\CameraInspector\FaceDetector.h" />
-    <ClInclude Include="..\..\..\CameraInspector\FileSystemFrameSaver.h" />
-    <ClInclude Include="..\..\..\CameraInspector\Frame.h" />
-    <ClInclude Include="..\..\..\CameraInspector\IFrameHandler.h" />
-    <ClInclude Include="..\..\..\CameraInspector\IFrameSaver.h" />
-    <ClInclude Include="..\..\..\CameraInspector\PhotoMaker.h" />
-    <ClInclude Include="..\..\..\CameraInspector\WebCameraCapture.h" />
+    <ClInclude Include="FileSystemFrameSaver.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="IFrameHandler.h" />
+    <ClInclude Include="IFrameSaver.h" />
+    <ClInclude Include="PhotoMaker.h" />
+    <ClInclude Include="WebCameraCapture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

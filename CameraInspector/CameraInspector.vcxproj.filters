@@ -18,42 +18,39 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\CameraInspector\FaceDetector.cpp">
+    <ClCompile Include="FaceDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\CameraInspector\FileSystemFrameSaver.cpp">
+    <ClCompile Include="FileSystemFrameSaver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\CameraInspector\Frame.cpp">
+    <ClCompile Include="Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\CameraInspector\PhotoMaker.cpp">
+    <ClCompile Include="PhotoMaker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\CameraInspector\WebCameraCapture.cpp">
+    <ClCompile Include="WebCameraCapture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\CameraInspector\FaceDetector.h">
+    <ClInclude Include="FileSystemFrameSaver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\CameraInspector\FileSystemFrameSaver.h">
+    <ClInclude Include="Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\CameraInspector\Frame.h">
+    <ClInclude Include="IFrameHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\CameraInspector\IFrameHandler.h">
+    <ClInclude Include="IFrameSaver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\CameraInspector\IFrameSaver.h">
+    <ClInclude Include="PhotoMaker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\CameraInspector\PhotoMaker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\CameraInspector\WebCameraCapture.h">
+    <ClInclude Include="WebCameraCapture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
