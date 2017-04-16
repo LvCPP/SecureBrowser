@@ -5,7 +5,6 @@
 
 #include <memory>
 #include <mutex>
-#include <atomic>
 
 namespace CameraInspector
 {
