@@ -10,5 +10,6 @@ Debug/
 x64/
 *.user
 
+Libraries/
 packages/
 *.jpg
