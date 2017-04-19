@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Browser", "Browser\Browser.vcxproj", "{B12702AD-ABFB-343A-A199-8E24837244A3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{966CF60D-A8AD-41A1-9790-EAFCB5F6100B} = {966CF60D-A8AD-41A1-9790-EAFCB5F6100B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraInspector", "CameraInspector\CameraInspector.vcxproj", "{A15C1CDB-9898-4D4A-AC5D-801911C5C87B}"
 EndProject
@@ -15,6 +18,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{1995414C-A528-4D9A-AC22-5128AB22D726}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraInspector_test", "Tools\CameraInspector_test\CameraInspector_test.vcxproj", "{966CF60D-A8AD-41A1-9790-EAFCB5F6100B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A15C1CDB-9898-4D4A-AC5D-801911C5C87B} = {A15C1CDB-9898-4D4A-AC5D-801911C5C87B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
