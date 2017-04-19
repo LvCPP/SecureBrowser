@@ -1,4 +1,7 @@
 #pragma once
+#include <memory>
+
+namespace cv { class Mat; }
 
 namespace CameraInspector
 {
@@ -6,7 +9,7 @@ namespace CameraInspector
 class Frame
 {
 public:
-	Frame() = default;
+	Frame();
 	Frame(int width, int height, void* data);
 	
 	void Construct(int width, int height, void* data);
@@ -16,9 +19,7 @@ public:
 	void* GetData() const;
 
 private:
-	int cols_;		
-	int rows_;		
-	void* data_;	
+	std::shared_ptr<cv::Mat> frame_;
 };
 
 } // namespace CameraInspector
