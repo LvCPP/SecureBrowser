@@ -5,42 +5,35 @@
 namespace CameraInspector
 {
 
-Frame::Frame() : frame_(std::make_shared<cv::Mat>())
+Frame::Frame() : cv_mat_impl_(std::make_shared<cv::Mat>(cv::Mat{}))
 {
 }
 
-Frame::Frame(int width, int height, void* data) : Frame::Frame()
+Frame::Frame(int width, int height, void* data) : cv_mat_impl_(std::make_shared<cv::Mat>(cv::Mat{ height, width, CV_8UC3, data }))
 {
-	frame_->cols = width;
-	frame_->rows = height;
-	frame_->data = reinterpret_cast<uchar*>(data);
 }
 
 void Frame::Construct(int width, int height, void* data)
 {
-	if(frame_)
-		frame_.reset();
+	if(cv_mat_impl_)
+		cv_mat_impl_.reset();
 	
-	frame_ = std::make_shared<cv::Mat>();
-
-	frame_->cols = width;
-	frame_->rows = height;
-	frame_->data = reinterpret_cast<uchar*>(data);
+	cv_mat_impl_ = std::make_shared<cv::Mat>(cv::Mat{ height, width, CV_8UC3, data });
 }
 
 int Frame::GetCols() const
 {
-	return frame_->cols;
+	return cv_mat_impl_->cols;
 }
 
 int Frame::GetRows() const
 {
-	return frame_->rows;
+	return cv_mat_impl_->rows;
 }
 
 void* Frame::GetData() const
 {
-	return frame_->data;
+	return cv_mat_impl_->data;
 }
 
 } // namespace CameraInspector

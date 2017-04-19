@@ -19,7 +19,7 @@ public:
 	void* GetData() const;
 
 private:
-	std::shared_ptr<cv::Mat> frame_;
+	std::shared_ptr<cv::Mat> cv_mat_impl_;
 };
 
 } // namespace CameraInspector
