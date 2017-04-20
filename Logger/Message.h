@@ -11,7 +11,7 @@ class MessageBuilder
 {
 public:
 	explicit __declspec(dllexport) MessageBuilder(
-			std::function<void(std::string&&)> completed_string_function);
+		const std::function<void(std::string&&)>& completed_string_function);
 
 	__declspec(dllexport) ~MessageBuilder();
 
