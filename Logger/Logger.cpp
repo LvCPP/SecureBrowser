@@ -1,47 +1,25 @@
 #include "Logger.h"
 #include <string>
 #include <ctime>
-#include <chrono>
 #include <fstream>
 #include <map>
+#include <iomanip>
 
 using namespace SecureBrowser;
 
-static std::map<LogLevel, int> log_level_weight{{LogLevel::Debug, 0}
-	,{LogLevel::Info, 1}
-	,{LogLevel::Warning, 2}
-	,{LogLevel::Error, 3}};
-
-static std::map<LogLevel, std::string> log_level_name{{LogLevel::Debug, "Debug"}
+static const std::map<LogLevel, std::string> log_level_name{{LogLevel::Debug, "Debug"}
 	,{LogLevel::Info, "Info"}
 	,{LogLevel::Warning, "Warning"}
 	,{LogLevel::Error, "Error"}};
 
 Logger::Logger(LogLevel min_log_level, std::ostream& write_to)
-		: stream_(new std::ostream(write_to.rdbuf()))
+		: stream_(write_to.rdbuf())
 		, is_running_(true)
 		, min_level_(min_log_level)
 		, message_queue_()
 {
 	//initialize thread here, for avoid using not initialized *this
 	write_thread_ = std::thread(&Logger::WriteThread, this);
-}
-
-Logger::Logger(LogLevel min_log_level, std::string& write_to_file)
-		: is_running_(true)
-		, min_level_(min_log_level)
-		, message_queue_()
-{
-	std::unique_ptr<std::ofstream> file(new std::ofstream(write_to_file, std::ios::app));
-	if (file->is_open())
-	{
-		stream_ = move(file);
-		write_thread_ = std::thread(&Logger::WriteThread, this);
-	}
-	else
-	{
-		throw std::invalid_argument("Can't open file");
-	}
 }
 
 Logger::~Logger()
@@ -54,41 +32,17 @@ Logger::~Logger()
 	}
 
 	//if it's file - close file. dynamic cast return nullptr if can't downcast
-	auto file = dynamic_cast<std::ofstream*>(stream_.get());
+	auto file = dynamic_cast<std::ofstream*>(&stream_);
 	if (file)
 		file->close();
 }
 
-static std::string GetFormattedCurrentDateTime()
+MessageBuilder Logger::operator<<(LogLevel level)
 {
-	auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-
-	char buf[30] = { 0 };
-	strftime(buf, sizeof(buf), "[%d/%m/%y at %T]", localtime(&now));
-	return buf;
+	return MessageBuilder(bind(&Logger::Log, this, std::placeholders::_1, level));
 }
 
-void Logger::Debug(const std::string& msg)
-{
-	Log(msg, LogLevel::Debug);
-}
-
-void Logger::Info(const std::string& msg)
-{
-	Log(msg, LogLevel::Info);
-}
-
-void Logger::Warning(const std::string& msg)
-{
-	Log(msg, LogLevel::Warning);
-}
-
-void Logger::Error(const std::string& msg)
-{
-	Log(msg, LogLevel::Error);
-}
-
-void Logger::Log(const std::string& msg, const LogLevel level)
+void Logger::Log(const std::string& msg, LogLevel level)
 {
 	message_queue_.Add({ msg, level });
 }
@@ -111,11 +65,13 @@ void Logger::WriteThread()
 	}
 }
 
-void Logger::Write(const Message& msg) const
+void Logger::Write(const LogMessage& message)
 {
-	if (log_level_weight[msg.level] >= log_level_weight[min_level_])
+	if (message.level >= min_level_)
 	{
-		*stream_ << GetFormattedCurrentDateTime() << " [" << log_level_name[msg.level] << "] "
-			<< msg.message << std::endl;
+		time_t time_now = time(nullptr);
+		tm local_time_now = *localtime(&time_now);
+		stream_ << std::put_time(&local_time_now, "[%d/%m/%y at %T]") << " [" 
+			<< log_level_name.at(message.level) << "] " << message.message << std::endl;
 	}
 }
