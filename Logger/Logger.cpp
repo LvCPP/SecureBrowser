@@ -39,12 +39,8 @@ Logger::~Logger()
 
 MessageBuilder Logger::operator<<(LogLevel level)
 {
+	//after string is builded, Logger::Log will be called with those string as a parameter
 	return MessageBuilder(bind(&Logger::Log, this, std::placeholders::_1, level));
-}
-
-void Logger::Log(const std::string& msg, LogLevel level)
-{
-	message_queue_.Add({ msg, level });
 }
 
 void Logger::WriteThread()
@@ -74,4 +70,9 @@ void Logger::Write(const LogMessage& message)
 		stream_ << std::put_time(&local_time_now, "[%d/%m/%y at %T]") << " [" 
 			<< log_level_name.at(message.level) << "] " << message.message << std::endl;
 	}
+}
+
+void Logger::Log(const std::string& msg, LogLevel level)
+{
+	message_queue_.Add({ msg, level });
 }

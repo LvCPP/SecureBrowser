@@ -8,5 +8,6 @@ MessageBuilder::MessageBuilder(const std::function<void(std::string&&)>& complet
 
 MessageBuilder::~MessageBuilder()
 {
+	//call function with builded string as a parameter
 	completed_string_function_(message_stream_->str());
 }

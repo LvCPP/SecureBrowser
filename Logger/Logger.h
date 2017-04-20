@@ -30,12 +30,16 @@ public:
 	explicit __declspec(dllexport) Logger(LogLevel min_log_level = LogLevel::Debug,
 			std::ostream& write_to = std::cout);
 	__declspec(dllexport) ~Logger();
-	__declspec(dllexport) MessageBuilder operator<<(LogLevel level);
-	__declspec(dllexport) void Log(const std::string& msg, LogLevel level = LogLevel::Info);				   
+
+	/* Main idea of output: 1) After call with LogLevel create temporary object of MessageBuilder.
+	 * 2)call other chained << operators for MessageBuilder
+	 * 3)return string by callback function in destructor of MessageBuilder */
+	__declspec(dllexport) MessageBuilder operator<<(LogLevel level);				   
 
 private:
 	void WriteThread();
 	void Write(const LogMessage& message);
+	void Log(const std::string& msg, LogLevel level = LogLevel::Info);
 
 	std::thread write_thread_;
 	std::ostream stream_;
