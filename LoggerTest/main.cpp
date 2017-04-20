@@ -6,13 +6,13 @@ using namespace SecureBrowser;
 
 int main()
 {
-	//Logger inst;									//write to std::cout with min_level DEBUG (lowest level)
+	//Logger inst;					//write to std::cout with min_level DEBUG (lowest level)
 
-	Logger inst(LogLevel::Info);					//write to std::cout with min_level INFO
+	Logger inst(LogLevel::Info);			//write to std::cout with min_level INFO
 
 	//std::ofstream file("log.txt", std::ios::app);
-	//Logger inst(LogLevel::Info, file);			//write to file with min_level INFO
-													//don't close file, Logger do it automatically
+	//Logger inst(LogLevel::Info, file);		//write to file with min_level INFO
+							//don't close file, Logger do it automatically
 	
 	inst << LogLevel::Error << "Hello, world! #" << 555 << 123;
 	inst << LogLevel::Warning << "123";
