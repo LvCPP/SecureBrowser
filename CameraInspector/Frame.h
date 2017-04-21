@@ -13,6 +13,7 @@ public:
 	Frame(int width, int height, void* data);
 	
 	void Construct(int width, int height, void* data);
+	void Remember(const Frame& frame);
 
 	int GetCols() const;
 	int GetRows() const;

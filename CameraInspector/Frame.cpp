@@ -9,7 +9,8 @@ Frame::Frame() : cv_mat_impl_(std::make_shared<cv::Mat>(cv::Mat{}))
 {
 }
 
-Frame::Frame(int width, int height, void* data) : cv_mat_impl_(std::make_shared<cv::Mat>(cv::Mat{ height, width, CV_8UC3, data }))
+Frame::Frame(int width, int height, void* data) 
+		: cv_mat_impl_(std::make_shared<cv::Mat>(cv::Mat{ height, width, CV_8UC3, data }))
 {
 }
 
@@ -19,6 +20,16 @@ void Frame::Construct(int width, int height, void* data)
 		cv_mat_impl_.reset();
 	
 	cv_mat_impl_ = std::make_shared<cv::Mat>(cv::Mat{ height, width, CV_8UC3, data });
+}
+
+void Frame::Remember(const Frame& frame)
+{
+	std::unique_ptr<cv::Mat> cpy = std::make_unique<cv::Mat>(frame.cv_mat_impl_->clone());
+
+	if (cv_mat_impl_)
+		cv_mat_impl_.reset();
+	
+	cv_mat_impl_ = std::move(cpy);	
 }
 
 int Frame::GetCols() const
