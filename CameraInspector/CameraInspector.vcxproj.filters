@@ -33,6 +33,9 @@
     <ClCompile Include="WebCameraCapture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StableFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileSystemFrameSaver.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FaceDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StableFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

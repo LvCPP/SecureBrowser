@@ -1,7 +1,7 @@
 #pragma once
 #include "IFrameHandler.h"
 #include "IFrameSaver.h"
-#include "Frame.h"
+#include "StableFrame.h"
 
 #include <memory>
 #include <mutex>
@@ -38,7 +38,7 @@ private:
 	std::atomic<bool> store_next_frame_;
 
 	std::shared_ptr<IFrameSaver> saver_;
-	Frame stored_frame_;
+	StableFrame stored_frame_;
 	mutable std::mutex mx_;
 };
 

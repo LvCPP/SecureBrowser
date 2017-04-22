@@ -11,15 +11,15 @@ class Frame
 public:
 	Frame();
 	Frame(int width, int height, void* data);
+	virtual ~Frame() = default;
 	
 	void Construct(int width, int height, void* data);
-	void Remember(const Frame& frame);
 
 	int GetCols() const;
 	int GetRows() const;
 	void* GetData() const;
 
-private:
+protected:
 	std::shared_ptr<cv::Mat> cv_mat_impl_;
 };
 

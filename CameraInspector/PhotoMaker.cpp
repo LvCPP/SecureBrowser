@@ -51,7 +51,7 @@ void PhotoMaker::StoreFrame()
 
 void PhotoMaker::SaveStoredFrame()
 {
-	SaveToDisk(stored_frame_);
+	SaveToDisk(static_cast<Frame>(stored_frame_));
 }
 
 void PhotoMaker::SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver)
@@ -63,7 +63,7 @@ void PhotoMaker::SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver)
 
 Frame PhotoMaker::GetStoredFrame() const
 {
-	return stored_frame_;
+	return static_cast<Frame>(stored_frame_);
 }
 
 void PhotoMaker::SaveToDisk(const Frame& frame) const
