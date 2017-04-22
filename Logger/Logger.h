@@ -2,6 +2,7 @@
 
 #include "MutexQueue.h"
 #include "Message.h"
+#include "Utils.h"
 #include <thread>
 #include <iostream>
 #include <atomic>
@@ -27,14 +28,14 @@ class Logger final
 {
 public:
 	//if ostream is file, please, don't close it. Logger automatically close it in destructor
-	explicit __declspec(dllexport) Logger(LogLevel min_log_level = LogLevel::Debug,
+	explicit LOGGER_API Logger(LogLevel min_log_level = LogLevel::Debug,
 			std::ostream& write_to = std::cout);
-	__declspec(dllexport) ~Logger();
+	LOGGER_API ~Logger();
 
 	/* Main idea of output: 1) After call with LogLevel create temporary object of MessageBuilder.
 	 * 2)call other chained << operators for MessageBuilder
 	 * 3)return string by callback function in destructor of MessageBuilder */
-	__declspec(dllexport) MessageBuilder operator<<(LogLevel level);				   
+	LOGGER_API MessageBuilder operator<<(LogLevel level);
 
 private:
 	void WriteThread();

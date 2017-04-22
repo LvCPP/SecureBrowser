@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Utils.h"
 #include <sstream>
 #include <functional>
 
@@ -14,7 +15,8 @@ public:
 
 	MessageBuilder(const MessageBuilder&& builder);
 
-	__declspec(dllexport) ~MessageBuilder();
+	//User code calls destructor, so we need to export it
+	LOGGER_API ~MessageBuilder();
 
 	template <class T>
 	__declspec(dllexport) friend std::ostream& operator<< (MessageBuilder&& builder,

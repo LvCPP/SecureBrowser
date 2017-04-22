@@ -20,7 +20,7 @@ public:
 			throw std::exception("queue is empty");
 		}
 
-		T temp(queue_.front());
+		T temp(std::move(queue_.front()));
 		queue_.pop();
 		return temp;
 	}
