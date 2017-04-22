@@ -18,7 +18,7 @@ PhotoMaker::PhotoMaker(const std::shared_ptr<IFrameSaver>& saver) : save_next_fr
 {
 }
 
-void PhotoMaker::ProcessFrame(Frame frame)
+void PhotoMaker::ProcessFrame(const Frame& frame)
 {
 	if (save_next_frame_)
 	{

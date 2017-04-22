@@ -14,7 +14,7 @@ public:
 	FaceDetector();
 	virtual ~FaceDetector() = default;
 
-	void ProcessFrame(Frame frame) override;
+	void ProcessFrame(const Frame& frame) override;
 
 	cv::CascadeClassifier face_cascade;
 	std::string face_cascade_name;

@@ -18,7 +18,7 @@ public:
 	PhotoMaker(const std::shared_ptr<IFrameSaver>& saver);
 	virtual ~PhotoMaker() = default;
 
-	void ProcessFrame(Frame frame) override;
+	void ProcessFrame(const Frame& frame) override;
 	// Save next frame
 	void MakePhoto();
 	// Store next frame

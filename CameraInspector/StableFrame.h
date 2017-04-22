@@ -9,6 +9,7 @@ class StableFrame :
 {
 public:
 	StableFrame();
+	StableFrame(const cv::Mat& mat);
 	StableFrame(int width, int height, void* data);
 	StableFrame(const Frame& frame);
 	virtual ~StableFrame() = default;

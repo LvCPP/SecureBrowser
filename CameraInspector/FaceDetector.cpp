@@ -3,9 +3,9 @@
 
 namespace CameraInspector
 {
-void FaceDetector::ProcessFrame(Frame frame)
+void FaceDetector::ProcessFrame(const Frame& frame)
 {
-	cv::Mat cv_frame(frame.GetRows(), frame.GetCols(), CV_8UC3, frame.GetData());
+	cv::Mat cv_frame = frame.GetImpl();
 	cv::Mat frame_gray;
 
 	cvtColor(cv_frame, frame_gray, cv::COLOR_BGR2GRAY);

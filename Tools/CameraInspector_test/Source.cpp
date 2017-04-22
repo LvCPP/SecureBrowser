@@ -17,16 +17,15 @@ int main()
 {
 	cv::VideoCapture video(0);
 	cv::Mat frame_original;
-	Frame my_frame;
 
 	cv::String f_original_window = "Original";
 	cv::String f_converted_window = "Converted";
 	cv::namedWindow(f_original_window, CV_WINDOW_AUTOSIZE);
 	cv::namedWindow(f_converted_window, CV_WINDOW_AUTOSIZE);
 
-	std::cout << "Height: " << video.get(CV_CAP_PROP_FRAME_HEIGHT) << std::endl;
-	std::cout << "Width: " << video.get(CV_CAP_PROP_FRAME_WIDTH) << std::endl;
-	std::cout << "Press Esc to capture the screen" << std::endl;
+	std::cout << "Height: " << video.get(CV_CAP_PROP_FRAME_HEIGHT)
+		<< "Width: " << video.get(CV_CAP_PROP_FRAME_WIDTH)
+		<< "Press Esc to capture the screen" << std::endl;
 
 	// Wait while camera initializes (don't need to do this on VS17)
 	Sleep(500);
@@ -44,8 +43,8 @@ int main()
 
 		imshow(f_original_window, frame_original);
 
-		my_frame.Construct(frame_original.cols, frame_original.rows, frame_original.data);
-		cv::Mat frame_after(my_frame.GetRows(), my_frame.GetCols(), CV_8UC3, my_frame.GetData());
+		Frame my_frame(frame_original);
+		cv::Mat frame_after(my_frame.GetImpl());
 
 		imshow(f_converted_window, frame_after);
 	}
@@ -80,8 +79,7 @@ int main()
 	Sleep(100);
 	
 	// ...and wants to see himself
-	Frame tmp_f_stored = maker.GetStoredFrame();
-	cv::Mat tmp_stored(tmp_f_stored.GetRows(), tmp_f_stored.GetCols(), CV_8UC3, tmp_f_stored.GetData());
+	cv::Mat tmp_stored(maker.GetStoredFrame().GetImpl());
 	cv::namedWindow("Stored photo");
 	cv::imshow("Stored photo", tmp_stored);
 	cv::waitKey(0);
@@ -111,7 +109,7 @@ void TImitFPS(cv::VideoCapture& video, PhotoMaker& maker)
 {
 	cv::Mat tmp_frame;
 	
-	while(g_imit)
+	while (g_imit)
 	{
 		if (!video.read(tmp_frame))
 		{
@@ -119,7 +117,7 @@ void TImitFPS(cv::VideoCapture& video, PhotoMaker& maker)
 			system("pause");
 			exit(-1);
 		}
-		maker.ProcessFrame(Frame(tmp_frame.cols, tmp_frame.rows, tmp_frame.data));
+		maker.ProcessFrame(Frame(tmp_frame));
 		
 		// 20 FPS
 		Sleep(50);

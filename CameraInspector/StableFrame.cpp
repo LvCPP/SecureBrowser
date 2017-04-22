@@ -9,6 +9,10 @@ StableFrame::StableFrame() : Frame::Frame()
 {
 }
 
+StableFrame::StableFrame(const cv::Mat& mat) : Frame(mat)
+{
+}
+
 StableFrame::StableFrame(int width, int height, void * data) : Frame::Frame(width, height, data)
 {
 }
