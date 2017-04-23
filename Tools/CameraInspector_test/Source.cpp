@@ -67,6 +67,9 @@ int main()
 	camera_01.AddFrameHandler(share_maker);
 	camera_01.Start();
 
+	// Imitate camera capture work
+	std::thread imit_fps = std::thread(TImitFPS, std::ref(video), std::ref(maker));
+
 	/*	User ID photo. Possible use example
 	FrameStorer id_photo(camera_01.GetFrame());
 	cv::imshow("ID", id_photo.Get().GetImpl());			// user doesn't like this and want another	(Cancel button)
@@ -88,9 +91,6 @@ int main()
 	cv::destroyWindow("Stored frame");	
 	dynamic_cast<FileSystemFrameSaver&>(*share_saver).SetNameToSave("ID");	// optional
 	store_id.Save(share_saver);
-
-	// Imitate camera capture work
-	std::thread imit_fps = std::thread(TImitFPS, std::ref(video), std::ref(maker));
 
 	// During test
 	dynamic_cast<FileSystemFrameSaver*>(share_saver.get())->SetNameToSave("shot_01");

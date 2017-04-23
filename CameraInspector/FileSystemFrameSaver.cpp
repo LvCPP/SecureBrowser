@@ -6,8 +6,7 @@
 
 constexpr int QUALITY_HIGH = 92;
 
-namespace CameraInspector
-{
+using namespace CameraInspector;
 
 FileSystemFrameSaver::FileSystemFrameSaver() 
 	: name_to_save_("screenshot")
@@ -30,12 +29,12 @@ void FileSystemFrameSaver::Save(const Frame& frame, const std::string& name, con
 	SaveToDisk(frame, name, path);
 }
 
-void FileSystemFrameSaver::SetPathToSave(const std::string& path)
+void FileSystemFrameSaver::SetPathToSave(const std::string& path) noexcept
 {
 	path_to_save_ = path;
 }
 
-void FileSystemFrameSaver::SetNameToSave(const std::string& name)
+void FileSystemFrameSaver::SetNameToSave(const std::string& name) noexcept
 {
 	name_to_save_ = name;
 }
@@ -55,5 +54,3 @@ void FileSystemFrameSaver::SaveToDisk(const Frame& frame, const std::string& nam
 		throw std::exception("Problems with saving file");
 	}
 }
-
-} // namespace CameraInspector

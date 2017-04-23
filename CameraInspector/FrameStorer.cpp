@@ -1,7 +1,6 @@
 #include "FrameStorer.h"
 
-namespace CameraInspector
-{
+using namespace CameraInspector;
 
 FrameStorer::FrameStorer(StableFrame sframe)
 	: stored_frame_(sframe)
@@ -25,5 +24,3 @@ const Frame& FrameStorer::Get() const
 {
 	return dynamic_cast<const Frame&>(stored_frame_);
 }
-
-} // namespace CameraInspector

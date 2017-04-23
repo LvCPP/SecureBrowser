@@ -4,8 +4,7 @@
 namespace CameraInspector
 {
 
-class StableFrame :
-	public Frame
+class StableFrame : public Frame
 {
 public:
 	StableFrame();

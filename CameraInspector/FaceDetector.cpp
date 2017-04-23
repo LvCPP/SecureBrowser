@@ -1,8 +1,8 @@
 #include "FaceDetector.h"
 #include "Frame.h"
 
-namespace CameraInspector
-{
+using namespace CameraInspector;
+
 void FaceDetector::ProcessFrame(const Frame& frame)
 {
 	cv::Mat cv_frame = frame.GetImpl();
@@ -29,5 +29,3 @@ FaceDetector::FaceDetector()
 	, window_name("Capture - Face detection")
 {
 }
-
-} // namespace CameraInspector

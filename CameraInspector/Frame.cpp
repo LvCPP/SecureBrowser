@@ -2,8 +2,7 @@
 
 #include <opencv2\highgui\highgui.hpp>
 	
-namespace CameraInspector
-{
+using namespace CameraInspector;
 
 Frame::Frame()
 	: Frame(cv::Mat())
@@ -39,5 +38,3 @@ void* Frame::GetData() const
 {
 	return cv_mat_impl_->data;
 }
-
-} // namespace CameraInspector

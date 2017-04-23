@@ -2,8 +2,7 @@
 
 #include <opencv2\highgui\highgui.hpp>
 
-namespace CameraInspector
-{
+using namespace CameraInspector;
 
 StableFrame::StableFrame() 
 	: StableFrame(cv::Mat())
@@ -28,15 +27,11 @@ StableFrame::StableFrame(int width, int height, void* data)
 StableFrame::StableFrame(const cv::Mat& mat) 
 	: Frame(mat)
 {
-	std::unique_ptr<cv::Mat> cpy = std::make_unique<cv::Mat>(cv_mat_impl_->clone());
-	cv_mat_impl_ = std::move(cpy);
+	cv_mat_impl_ = std::move(std::make_unique<cv::Mat>(cv_mat_impl_->clone()));
 }
 
 StableFrame& StableFrame::operator=(const StableFrame& sframe)
 {
-	std::unique_ptr<cv::Mat> cpy = std::make_unique<cv::Mat>(sframe.cv_mat_impl_->clone());
-	cv_mat_impl_ = std::move(cpy);
+	cv_mat_impl_ = std::move(std::make_unique<cv::Mat>(cv_mat_impl_->clone()));
 	return *this;
 }
-
-} // namespace CameraInspector

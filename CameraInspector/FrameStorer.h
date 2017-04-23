@@ -5,6 +5,7 @@
 namespace CameraInspector
 {
 
+// Store frame. Can represent and save if
 class FrameStorer
 {
 public:

@@ -1,7 +1,6 @@
 #include "PhotoMaker.h"
 
-namespace CameraInspector
-{
+using namespace CameraInspector;
 
 PhotoMaker::PhotoMaker() 
 	: save_next_frame_(false)
@@ -37,6 +36,7 @@ void PhotoMaker::ProcessFrame(const Frame& frame)
 			save_next_frame_ = false;
 			throw ex;
 		}
+		save_next_frame_ = false;
 	}
 }
 
@@ -66,5 +66,3 @@ void PhotoMaker::SaveToDisk(const Frame& frame) const
 		throw std::exception("Saver is not initialized");
 	}
 }
-
-} // namespace CameraInspector

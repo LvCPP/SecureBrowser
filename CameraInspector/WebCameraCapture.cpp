@@ -1,7 +1,6 @@
 #include "WebCameraCapture.h"
 
-namespace CameraInspector
-{
+using namespace CameraInspector;
 
 void WebCameraCapture::Start()
 {
@@ -15,5 +14,3 @@ void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& han
 {
 	handlers_.push_back(handler);
 }
-
-} // namespace CameraInspector

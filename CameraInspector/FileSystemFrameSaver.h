@@ -17,8 +17,8 @@ public:
 	void Save(const Frame& frame, const std::string& name);
 	void Save(const Frame& frame, const std::string& name, const std::string& path);
 	
-	void SetPathToSave(const std::string& path);
-	void SetNameToSave(const std::string& name);
+	void SetPathToSave(const std::string& path) noexcept;
+	void SetNameToSave(const std::string& name) noexcept;
 
 private:
 	static void SaveToDisk(const Frame& frame, const std::string& name, const std::string& path);
