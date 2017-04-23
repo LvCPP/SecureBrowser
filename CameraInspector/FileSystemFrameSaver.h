@@ -21,7 +21,6 @@ public:
 	void SetNameToSave(const std::string& name);
 
 private:
-	// Does main work. Called from interface function
 	static void SaveToDisk(const Frame& frame, const std::string& name, const std::string& path);
 
 	std::string name_to_save_;

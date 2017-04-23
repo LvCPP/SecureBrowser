@@ -1,6 +1,7 @@
 #include "WebCameraCapture.h"
 #include "PhotoMaker.h"
 #include "FileSystemFrameSaver.h"
+#include "FrameStorer.h"
 
 #include <opencv2\highgui\highgui.hpp>
 
@@ -53,16 +54,12 @@ int main()
 	cv::destroyWindow(f_converted_window);
 	// -----------------------------------------------------------------------------------------------------------------------------
 
-	// Create & configure saver
-	FileSystemFrameSaver saver;
-	saver.SetPathToSave("");
+	std::shared_ptr<IFrameSaver> share_saver = std::make_shared<FileSystemFrameSaver>(FileSystemFrameSaver());
+	dynamic_cast<FileSystemFrameSaver&>(*share_saver).SetPathToSave("");
 
 	// Create & configure maker
 	PhotoMaker maker;
-	std::shared_ptr<IFrameSaver> share_saver = std::make_shared<FileSystemFrameSaver>(saver);
 	maker.SetFrameSaver(share_saver);
-
-	//	maker.SetPhotoSaver(std::shared_ptr<IFrameSaver>(&saver));
 
 	// Create & configure camera
 	WebCameraCapture camera_01;
@@ -70,24 +67,30 @@ int main()
 	camera_01.AddFrameHandler(share_maker);
 	camera_01.Start();
 
+	/*	User ID photo. Possible use example
+	FrameStorer id_photo(camera_01.GetFrame());
+	cv::imshow("ID", id_photo.Get().GetImpl());			// user doesn't like this and want another	(Cancel button)
+	
+	id_photo = FrameStorer(camera_01.GetFrame());
+	cv::imshow("ID", id_photo.Get().GetImpl());			// user like it, we want to save			(OK button)
+	FrameStorer.Save(share_saver);
+	*/
+
+	cv::Mat id_frame;
+	video.read(id_frame);
+	FrameStorer store_id(id_frame);
+
+	cv::namedWindow("Stored frame");
+	cv::imshow("Stored frame", store_id.Get().GetImpl());
+	cv::waitKey(0);
+	
+	// User approves
+	cv::destroyWindow("Stored frame");	
+	dynamic_cast<FileSystemFrameSaver&>(*share_saver).SetNameToSave("ID");	// optional
+	store_id.Save(share_saver);
+
 	// Imitate camera capture work
 	std::thread imit_fps = std::thread(TImitFPS, std::ref(video), std::ref(maker));
-	
-	// Initial photo with ID
-	// User preess photo button ...
-	maker.StoreFrame();
-	Sleep(100);
-	
-	// ...and wants to see himself
-	cv::Mat tmp_stored(maker.GetStoredFrame().GetImpl());
-	cv::namedWindow("Stored photo");
-	cv::imshow("Stored photo", tmp_stored);
-	cv::waitKey(0);
-	cv::destroyWindow("Stored photo");
-
-	// If he satisfied, we can save it, otherwise, he may press photo button again
-	dynamic_cast<FileSystemFrameSaver*>(share_saver.get())->SetNameToSave("ID");
-	maker.SaveStoredFrame();
 
 	// During test
 	dynamic_cast<FileSystemFrameSaver*>(share_saver.get())->SetNameToSave("shot_01");

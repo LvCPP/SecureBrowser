@@ -10,13 +10,12 @@ class Frame
 {
 public:
 	Frame();
-	Frame(const cv::Mat& mat);
 	Frame(int width, int height, void* data);
+	Frame(cv::Mat mat);
 	virtual ~Frame() = default;
 	
-	void Construct(int width, int height, void* data);
-
-	cv::Mat GetImpl() const;
+	cv::Mat GetImpl() const noexcept;
+	
 	int GetCols() const;
 	int GetRows() const;
 	void* GetData() const;

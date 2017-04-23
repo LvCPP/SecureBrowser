@@ -9,12 +9,13 @@ class StableFrame :
 {
 public:
 	StableFrame();
-	StableFrame(const cv::Mat& mat);
-	StableFrame(int width, int height, void* data);
+	StableFrame(const StableFrame& sframe);
 	StableFrame(const Frame& frame);
+	StableFrame(int width, int height, void* data);
+	StableFrame(const cv::Mat& mat);
 	virtual ~StableFrame() = default;
 
-	void Remember(const StableFrame& frame);
+	StableFrame& operator= (const StableFrame& sframe);
 };
 
-}
+} // namespace CameraInspector

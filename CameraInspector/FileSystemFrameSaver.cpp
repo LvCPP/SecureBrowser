@@ -9,7 +9,9 @@ constexpr int QUALITY_HIGH = 92;
 namespace CameraInspector
 {
 
-FileSystemFrameSaver::FileSystemFrameSaver() : name_to_save_("screenshot"), path_to_save_("")
+FileSystemFrameSaver::FileSystemFrameSaver() 
+	: name_to_save_("screenshot")
+	, path_to_save_("")
 {
 }
 

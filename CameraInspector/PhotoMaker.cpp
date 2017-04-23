@@ -3,18 +3,24 @@
 namespace CameraInspector
 {
 
-PhotoMaker::PhotoMaker() : save_next_frame_(false), store_next_frame_(false)
-		, saver_(nullptr), stored_frame_{}, mx_{}
+PhotoMaker::PhotoMaker() 
+	: save_next_frame_(false)
+	, saver_(nullptr)
+	, mx_()
 {
 }
 
-PhotoMaker::PhotoMaker(const PhotoMaker& rhs) : save_next_frame_(false), store_next_frame_(false)
-		, saver_(rhs.saver_), stored_frame_(rhs.stored_frame_), mx_{}
+PhotoMaker::PhotoMaker(const PhotoMaker& maker) 
+	: save_next_frame_(false)
+	, saver_(maker.saver_)
+	, mx_()
 {
 }
 
-PhotoMaker::PhotoMaker(const std::shared_ptr<IFrameSaver>& saver) : save_next_frame_(false)
-		, store_next_frame_(false), saver_(saver), stored_frame_{}, mx_{}
+PhotoMaker::PhotoMaker(const std::shared_ptr<IFrameSaver>& saver) 
+	: save_next_frame_(false)
+	, saver_(saver)
+	, mx_()
 {
 }
 
@@ -32,26 +38,11 @@ void PhotoMaker::ProcessFrame(const Frame& frame)
 			throw ex;
 		}
 	}
-	else if (store_next_frame_)
-	{
-		stored_frame_.Remember(frame);
-		store_next_frame_ = false;
-	}
 }
 
-void PhotoMaker::MakePhoto()
+void PhotoMaker::MakePhoto() noexcept
 {
 	save_next_frame_ = true;
-}
-
-void PhotoMaker::StoreFrame()
-{
-	store_next_frame_ = true;
-}
-
-void PhotoMaker::SaveStoredFrame()
-{
-	SaveToDisk(static_cast<Frame>(stored_frame_));
 }
 
 void PhotoMaker::SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver)
@@ -59,11 +50,6 @@ void PhotoMaker::SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver)
 	std::lock_guard<std::mutex> guard(mx_);
 
 	saver_ = saver;
-}
-
-Frame PhotoMaker::GetStoredFrame() const
-{
-	return static_cast<Frame>(stored_frame_);
 }
 
 void PhotoMaker::SaveToDisk(const Frame& frame) const
