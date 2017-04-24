@@ -18,16 +18,10 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hooking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="KeyList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KeyboardHooking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpecialKeys.cpp">
@@ -35,16 +29,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Hooking.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="KeyList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardHooking.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SpecialKeys.h">

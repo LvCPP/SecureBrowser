@@ -1,27 +1,28 @@
 #pragma once
-#include "Hooking.h"
 #include <windows.h>
 #include <map>
+#include <iostream>
+#include <fstream>
 
-class KeyList
+#define SCAN_CODE_SHIFT 16;
+
+class KeyPair
 {
 public:
-	KeyList() {}
-
-	static void SetDefaultKeyList(std::map<UINT, UINT>& key_list);
-	
-	void EmptyKeyListInit(std::map<UINT, UINT>& key_list);
-
-	void AddKey(UINT key, std::map<UINT, UINT>& key_list);
-
-	void RemoveKey(UINT key, std::map<UINT, UINT>& key_list);
-
-	UINT GetVkCode(UINT key, std::map<UINT, UINT>& key_list);
-
+	KeyPair() {}
+	KeyPair (UINT vk_code, std::string key_name) : vk(vk_code), name(key_name) {}
+	std::string GetKeyName();
 private:
-	
-	static std::map <UINT, UINT> key_list;	
+	UINT vk;
+    std::string name;
 };
 
+static std::map <UINT, KeyPair> key;
+
+void InitKeyMap(std::map <UINT, KeyPair>& key);
+
+void AddKey(UINT key_num, UINT key_vk, std::string key_name, std::map <UINT, KeyPair>& key);
+
+void RemoveKey(UINT key_num, std::map <UINT, KeyPair>& key);
 
 

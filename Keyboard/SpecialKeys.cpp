@@ -2,7 +2,7 @@
 
 bool SpecialKeys::KeyIsDownNow(UINT key)
 {
-	if (GetAsyncKeyState(key) < 0) // higher bit
+	if (GetKeyState(key) < 0) // higher bit
 		return true;
 	else
 		return false;
@@ -10,7 +10,7 @@ bool SpecialKeys::KeyIsDownNow(UINT key)
 
 bool SpecialKeys::KeyWasDownBefore(UINT key)
 {
-	if ((GetAsyncKeyState(key) & 0x1) == 0) // higher bit
+	if ((GetKeyState(key) & 0x1) == 0) // higher bit
 		return true;
 	else
 		return false;
@@ -18,7 +18,7 @@ bool SpecialKeys::KeyWasDownBefore(UINT key)
 
 bool SpecialKeys::KeyIsToggled(UINT key)
 {
-	if (GetAsyncKeyState(key) & 0x1) // lower bit
+	if (GetKeyState(key) & 0x1) // lower bit
 		return true;
 	else
 		return false;
