@@ -17,7 +17,7 @@ public:
 	PhotoMaker(const PhotoMaker& maker);
 	PhotoMaker(const std::shared_ptr<IFrameSaver>& saver);
 	virtual ~PhotoMaker() = default;
-	
+
 	// Calls <fps> times per second
 	void ProcessFrame(const Frame& frame) override;
 	// Save next frame
