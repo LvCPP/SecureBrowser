@@ -20,7 +20,7 @@ public:
 
 	template <class T>
 	__declspec(dllexport) friend std::ostream& operator<< (MessageBuilder&& builder,
-			const T& object)
+		const T& object)
 	{
 		return builder.message_stream_ << object;
 	}

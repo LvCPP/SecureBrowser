@@ -13,10 +13,10 @@ static const std::map<LogLevel, std::string> log_level_name{{LogLevel::Debug, "D
 	,{LogLevel::Error, "Error"}};
 
 Logger::Logger(LogLevel min_log_level, std::ostream& write_to)
-		: stream_(write_to.rdbuf())
-		, is_running_(true)
-		, min_level_(min_log_level)
-		, message_queue_()
+	: stream_(write_to.rdbuf())
+	, is_running_(true)
+	, min_level_(min_log_level)
+	, message_queue_()
 {
 	//initialize thread here, for avoid using not initialized *this
 	write_thread_ = std::thread(&Logger::WriteThread, this);

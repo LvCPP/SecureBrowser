@@ -29,7 +29,7 @@ class Logger final
 public:
 	//if ostream is file, please, don't close it. Logger automatically close it in destructor
 	explicit LOGGER_API Logger(LogLevel min_log_level = LogLevel::Debug,
-			std::ostream& write_to = std::cout);
+		std::ostream& write_to = std::cout);
 	LOGGER_API ~Logger();
 
 	/* Main idea of output: 1) After call with LogLevel create temporary object of MessageBuilder.
