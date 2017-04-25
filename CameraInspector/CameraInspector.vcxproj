@@ -160,6 +160,7 @@
     <ClCompile Include="FileSystemFrameSaver.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="FrameStorer.cpp" />
+    <ClCompile Include="IObservable.cpp" />
     <ClCompile Include="PhotoMaker.cpp" />
     <ClCompile Include="StableFrame.cpp" />
     <ClCompile Include="WebCameraCapture.cpp" />
@@ -171,6 +172,8 @@
     <ClInclude Include="FrameStorer.h" />
     <ClInclude Include="IFrameHandler.h" />
     <ClInclude Include="IFrameSaver.h" />
+    <ClInclude Include="IObservable.h" />
+    <ClInclude Include="IObserver.h" />
     <ClInclude Include="PhotoMaker.h" />
     <ClInclude Include="StableFrame.h" />
     <ClInclude Include="WebCameraCapture.h" />

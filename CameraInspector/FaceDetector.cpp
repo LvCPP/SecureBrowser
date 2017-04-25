@@ -19,8 +19,13 @@ namespace CameraInspector
 {
 FaceDetector::FaceDetector()
 	: face_cascade_name("../Recources/haarcascade_frontalface_alt.xml")
-	, window_name("Capture - Face detection")
 {
+}
+
+
+bool FaceDetector::Load()
+{
+	return face_cascade.load(face_cascade_name);
 }
 
 void FaceDetector::ProcessFrame(const Frame& frame)
@@ -38,9 +43,12 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 	{
 		cv::Point pt1(faces[ic].x, faces[ic].y); // Display detected faces on main window - live stream from camera
 		cv::Point pt2((faces[ic].x + faces[ic].width), (faces[ic].y + faces[ic].height));
-		
+		#ifdef DEBUG		
 		rectangle(cv_frame, pt1, pt2, color, thickness, line_type, shift);
+		#endif // DEBUG
 	}
-	imshow("Debug window", cv_frame);
+#ifdef DEBUG
+imshow("Debug window", cv_frame);
+#endif // DEBUG
 }
 } // namespace CameraInspector
