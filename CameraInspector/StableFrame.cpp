@@ -32,6 +32,8 @@ StableFrame::StableFrame(const cv::Mat& mat)
 
 StableFrame& StableFrame::operator=(const StableFrame& sframe)
 {
-	cv_mat_impl_ = std::move(std::make_unique<cv::Mat>(cv_mat_impl_->clone()));
+	if(this != &sframe)
+		cv_mat_impl_ = std::move(std::make_unique<cv::Mat>(cv_mat_impl_->clone()));
+	
 	return *this;
 }

@@ -33,6 +33,7 @@ void PhotoMaker::ProcessFrame(const Frame& frame)
 		}
 		catch (std::exception ex)
 		{
+			// Calling logger ...
 			save_next_frame_ = false;
 			throw ex;
 		}
