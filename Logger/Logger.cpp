@@ -66,7 +66,8 @@ void Logger::Write(const LogMessage& message)
 	if (message.level >= min_level_)
 	{
 		time_t time_now = time(nullptr);
-		tm local_time_now = *localtime(&time_now);
+		tm local_time_now;
+		localtime_s(&local_time_now, &time_now);
 		stream_ << std::put_time(&local_time_now, "[%d/%m/%y at %T]") << " [" 
 			<< log_level_name.at(message.level) << "] " << message.message << std::endl;
 	}

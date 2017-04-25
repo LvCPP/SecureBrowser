@@ -1,3 +1,7 @@
 #pragma once
 
-#define LOGGER_API __declspec(dllexport)
+#ifdef LOGGER_LIB
+	#define LOGGER_API __declspec(dllexport)
+#else
+	#define LOGGER_API __declspec(dllimport)
+#endif
