@@ -6,7 +6,7 @@ template<class T>
 class MutexQueue
 {
 public:
-	void Add(T element)
+	void Add(const T& element)
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
 		queue_.push(element);
@@ -17,7 +17,7 @@ public:
 		std::unique_lock<std::mutex> lock(mutex_);
 		if (queue_.empty())
 		{
-			throw std::exception("queue is empty");
+			throw std::out_of_range("queue is empty");
 		}
 
 		T temp(std::move(queue_.front()));

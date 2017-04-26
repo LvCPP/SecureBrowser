@@ -26,15 +26,22 @@ Logger::~Logger()
 {
 	//wait for flush all messages
 	is_running_ = false;
+	Flush();
+
+	//Notify all threads to end waiting for messages
+	cond_var_.notify_all();
 	if (write_thread_.joinable())
 	{
 		write_thread_.join();
 	}
+}
 
-	//if it's file - close file. dynamic cast return nullptr if can't downcast
-	auto file = dynamic_cast<std::ofstream*>(&stream_);
-	if (file)
-		file->close();
+void Logger::Flush()
+{
+	while (!message_queue_.IsEmpty())
+	{
+		TryWrite();
+	}
 }
 
 MessageBuilder Logger::operator<<(LogLevel level)
@@ -47,16 +54,12 @@ void Logger::WriteThread()
 {
 	while (is_running_ || !message_queue_.IsEmpty())
 	{
+		std::unique_lock<std::mutex> lock(lock_waiting_message_);
+		cond_var_.wait(lock);
+
 		if (!message_queue_.IsEmpty())
 		{
-			try
-			{
-				Write(message_queue_.Pop());
-			}
-			catch (std::exception& ex)
-			{
-				Write({ ex.what(), LogLevel::Error });
-			}
+			TryWrite();
 		}
 	}
 }
@@ -65,9 +68,12 @@ void Logger::Write(const LogMessage& message)
 {
 	if (message.level >= min_level_)
 	{
+		std::unique_lock<std::mutex> lock(lock_writing_);
+
 		time_t time_now = time(nullptr);
 		tm local_time_now;
 		localtime_s(&local_time_now, &time_now);
+
 		stream_ << std::put_time(&local_time_now, "[%d/%m/%y at %T]") << " [" 
 			<< log_level_name.at(message.level) << "] " << message.message << std::endl;
 	}
@@ -76,4 +82,17 @@ void Logger::Write(const LogMessage& message)
 void Logger::Log(const std::string& msg, LogLevel level)
 {
 	message_queue_.Add({ msg, level });
+	cond_var_.notify_one();
+}
+
+void Logger::TryWrite()
+{
+	try
+	{
+		Write(message_queue_.Pop());
+	}
+	catch (std::out_of_range&)
+	{
+		//ignore this exception, it's happened because other thread got message faster
+	}
 }
