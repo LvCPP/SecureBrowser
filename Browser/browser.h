@@ -6,7 +6,7 @@
 #include <QWebEngineView>
 #include <QUrl>
 #include <QDebug>
-#include <memory>
+
 
 
 class Browser : public QWidget
