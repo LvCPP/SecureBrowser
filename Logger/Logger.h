@@ -2,7 +2,7 @@
 
 #include "MutexQueue.h"
 #include "MessageBuilder.h"
-#include "Utils.h"
+#include "LoggerUtils.h"
 #include <thread>
 #include <iostream>
 #include <atomic>
