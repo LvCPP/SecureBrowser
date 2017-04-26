@@ -1,71 +1,33 @@
 #include "browser.h"
 
+
 Browser::Browser(QWidget *parent)
 	: QWidget(parent)
 {
-	ui->setupUi(this);
+	ui_->setupUi(this);
 
-	//ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks); //change setLinkDelegationPolicy in QWebEngine
-	
-
-	/*ui->webView->load(QUrl("http://google.com"));
-	ui->webView->show();	*/
-
-	connect(ui->line_edit_url, &QLineEdit::returnPressed, this, &Browser::slotEnter);
-	//connect(ui->webView, &QWebEngineView::linkClicked, this, &Browser::slotLinkClicked); //change &QWebView
-
-	connect(ui->push_btn_back, SIGNAL(clicked()), ui->webView, SLOT(back()));
-	connect(ui->push_btn_forward, SIGNAL(clicked()), ui->webView, SLOT(forward()));//Change &QPushButton::clicked;
-	connect(ui->push_btn_refresh, SIGNAL(clicked()), ui->webView, SLOT(reload()));
-	connect(ui->push_btn_stop, SIGNAL(clicked()), ui->webView, SLOT(stop()));
-
-	/*if (ui->webView->history()->count == 0)
-	{
-		ui->push_btn_forward->setEnabled(false);	
-		ui->push_btn_back->setEnabled(false);
-	}*/
+	connect(ui_->line_edit_url, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
+	connect(ui_->push_btn_back, SIGNAL(clicked()), ui_->web_view, SLOT(back()));
+	connect(ui_->push_btn_forward, SIGNAL(clicked()), ui_->web_view, SLOT(forward()));
+	connect(ui_->push_btn_refresh, SIGNAL(clicked()), ui_->web_view, SLOT(reload()));
+	connect(ui_->push_btn_stop, SIGNAL(clicked()), ui_->web_view, SLOT(stop()));
+	connect(ui_->web_view, SIGNAL(loadProgress(int)), ui_->progress_bar, SLOT(setValue(int)));
+	connect(ui_->web_view, SIGNAL(linkClicked(Qurl)), this, SLOT(SlotLinkClicked(Qurl)));
 }
 
-Browser::~Browser()
-{
 
+void Browser::SlotEnter()
+{
+	ui_->web_view->load(QUrl(ui_->line_edit_url->text()));
+	if (!(ui_->line_edit_url->text().startsWith("http://")))
+	{
+		ui_->web_view->load("http://" + ui_->line_edit_url->text());
+	}
 }
 
-void Browser::slotEnter()
+void Browser::SlotLinkClicked(QUrl url)
 {
-	ui->webView->load(QUrl(ui->line_edit_url->text()));
-	if (!(ui->line_edit_url->text().startsWith("http://")))
-	{
-		ui->webView->load("http://" + ui->line_edit_url->text());
-	}
-	/*if (!(ui->line_edit_url->text().endsWith(".com")))
-	{
-		ui->webView->load("http://www.google.com/search?sourceid=chrome-psyapi2&ion=1&espv=2&ie=UTF-8&q=" + ui->line_edit_url->text());
-	}*/
-}
-
-void Browser::slotLinkClicked(QUrl url)
-{
-	ui->line_edit_url->setText(url.toString());
-	ui->webView->load(url);   
-	/*
-	if(ui->webView->history()->canGoForward())
-	{
-		ui->push_btn_forward->setEnabled(true);
-	}
-	else
-	{
-		ui->push_btn_forward->setEnabled(false)
-	}
-	
-	if(ui->webView->history()->canGoBack())
-	{
-		ui->push_btn_back->setEnabled(true);
-	}
-	else
-	{
-		ui->push_btn_back->setEnabled(false)
-	}
-	*/
+	ui_->web_view->load(url);
+	ui_->line_edit_url->setText(url.toString());
 }
 

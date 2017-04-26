@@ -1,12 +1,13 @@
-#ifndef BROWSER_H
-#define BROWSER_H
+#pragma once
 
-#include <QtWidgets/QWidget>
 #include "ui_browser.h"
+#include <QtWidgets/QWidget>
 #include <QMainWindow>
 #include <QWebEngineView>
 #include <QUrl>
 #include <QDebug>
+#include <memory>
+
 
 class Browser : public QWidget
 {
@@ -14,15 +15,13 @@ class Browser : public QWidget
 
 public:
 	Browser(QWidget *parent = 0);
-	~Browser();
 
-private slots:
-
-	void slotEnter();       // For Enter in LineEdit
-	void slotLinkClicked(QUrl url); // For clicked URL
+	private slots:
+	void SlotEnter();       // For Enter in LineEdit
+	void SlotLinkClicked(QUrl url); // For clicked URL
 
 private:
-	Ui::BrowserClass *ui;
+		Ui::BrowserClass *ui_;
 };
 
-#endif // BROWSER_H
+
