@@ -80,12 +80,10 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="KeyList.cpp" />
     <ClCompile Include="KeyboardHooking.cpp" />
-    <ClCompile Include="SpecialKeys.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyList.h" />
     <ClInclude Include="KeyboardHooking.h" />
-    <ClInclude Include="SpecialKeys.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

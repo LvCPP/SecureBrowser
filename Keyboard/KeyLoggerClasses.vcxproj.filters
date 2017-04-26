@@ -24,18 +24,12 @@
     <ClCompile Include="KeyboardHooking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpecialKeys.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardHooking.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpecialKeys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,9 +16,6 @@ public:
 
 	 //the loop for getting messages
 	static void MsgLoop();
-
-private:
-	SpecialKeys Key;
 };
 
 
