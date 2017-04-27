@@ -8,11 +8,9 @@ class KeyPair
 {
 public:
 	KeyPair() {}
-	KeyPair (UINT vk_code, std::string key_name) : vk(vk_code), name(key_name) {}
+	KeyPair(UINT vk_code, std::string key_name) : vk(vk_code), name(key_name) {}
 	std::string GetKeyName();
 private:
 	UINT vk;
-    std::string name;
+	std::string name;
 };
-
-
