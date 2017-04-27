@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LoginWidget</class>
- <widget class="QWidget" name="LoginWidget">
+ <class>LoginWidgetClass</class>
+ <widget class="QWidget" name="LoginWidgetClass">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>471</width>
-    <height>391</height>
+    <width>535</width>
+    <height>383</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QPushButton" name="push_button_start_test">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>200</x>
      <y>290</y>
      <width>75</width>
      <height>23</height>
@@ -29,7 +29,7 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>200</x>
      <y>60</y>
      <width>261</width>
      <height>171</height>
@@ -89,7 +89,7 @@
   <widget class="QLabel" name="label_SoftServeLogo">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>60</y>
      <width>161</width>
      <height>171</height>
@@ -101,6 +101,8 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="LoginWidget.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -13,7 +13,7 @@ LoginCamera::LoginCamera(QWidget *parent) :
 void LoginCamera::MakePhoto()
 {
 	// TBD
-	QImage photo(":/Icons/Resources/share-image.png");
+	QImage photo(":/icons/Icons/share-image.png");
 	QPixmap picture = QPixmap::fromImage(photo);
 	int width = ui_->label_photo->width();
 	int height = ui_->label_photo->height();
@@ -22,7 +22,7 @@ void LoginCamera::MakePhoto()
 	ui_->push_button_make_another_photo->setText("New Photo");
 }
 
-QPushButton* LoginCamera::getAcceptPhotoButton()
+QPushButton* LoginCamera::GetAcceptPhotoButton() const
 {
 	return ui_->push_button_accept_photo;
 }

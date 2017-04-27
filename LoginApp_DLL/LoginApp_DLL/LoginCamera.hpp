@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include <QWidget>
 #include <memory>
+#include "ui_LoginCamera.h"
 class QPushButton;
-namespace Ui {class LoginCamera;}
 
 class LoginCamera : public QWidget {
 	Q_OBJECT
@@ -10,10 +10,8 @@ class LoginCamera : public QWidget {
 public:
 
 	explicit LoginCamera(QWidget *parent = Q_NULLPTR);
-	QPushButton* getAcceptPhotoButton();
-
-
-	private slots:
+	QPushButton* GetAcceptPhotoButton() const;
+private slots:
 	void MakePhoto();// TBD
 
 private:

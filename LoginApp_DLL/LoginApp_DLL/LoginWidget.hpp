@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <QWidget>
 #include <memory>
 #include "ui_LoginWidget.h"
@@ -10,13 +10,14 @@ public:
 
 	explicit LoginWidget(QWidget * parent = Q_NULLPTR);
 	bool IsUsernameAndPasswordValid(); // TBD
-	QPushButton* getLoginButton();
-	void CleanPassword();
+	QPushButton* GetLoginButton() const;
+	void ResetPassword();
 
-	private slots:
+private slots:
 	void UsernameChanged();
 
 private:
 	void SetupWindow();// TBD(interface)
-	std::unique_ptr<Ui::LoginWidget> ui_;
+	std::unique_ptr<Ui::LoginWidgetClass> ui_;
 };
+
