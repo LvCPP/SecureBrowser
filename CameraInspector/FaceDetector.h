@@ -1,22 +1,27 @@
 #pragma once
 #include "IFrameHandler.h"
-#include "IObservable.h"
+#include "IFaceDetectorObserver.h"
 #include "Frame.h"
-#include "opencv2/objdetect/objdetect.hpp"
+#include <list>
+
+class Cascade;// forward-declare private "implementation" class
 
 namespace CameraInspector
 {
 
-class FaceDetector : public IFrameHandler, public IObservable
+class FaceDetector : public IFrameHandler
 {
 public:
 	FaceDetector();
-	virtual ~FaceDetector() = default;
-	bool Load();//Loads a classifier from a file.
+	~FaceDetector() = default;
+	void Attach(IFaceDetectorObserver* observer);
+	void Detach(IFaceDetectorObserver* observer);
 	void ProcessFrame(const Frame& frame) override;
 private:
-	cv::CascadeClassifier face_cascade;
-	std::string face_cascade_name;
+	void Notify(int face_count);
+
+	std::list<IFaceDetectorObserver*> observers;
+	std::unique_ptr<Cascade> pimpl;
 };
 
 } // namespace CameraInspector

@@ -68,5 +68,8 @@
     <ClInclude Include="FrameStorer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IFaceDetectorObserver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
