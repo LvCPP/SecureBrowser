@@ -1,11 +1,10 @@
 #include "Logger.h"
+#include <Windows.h>
 #include <string>
 #include <ctime>
 #include <fstream>
 #include <map>
 #include <iomanip>
-
-#include <Windows.h>
 
 using namespace SecureBrowser;
 
@@ -81,7 +80,9 @@ void Logger::Write(const LogMessage& message)
 			<< log_level_name.at(message.level) << "] " << message.message << std::endl;
 
 		stream_ << str_stream.str();
-		OutputDebugStringA(str_stream.str().c_str());
+
+		if(IsDebuggerPresent())
+			OutputDebugStringA(str_stream.str().c_str());
 	}
 }
 
