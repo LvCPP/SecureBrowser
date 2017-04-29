@@ -6,6 +6,7 @@
 #include <QWebEngineView>
 #include <QUrl>
 #include <QDebug>
+#include <QWebEnginePage>
 #include <memory>
 
 
@@ -18,10 +19,10 @@ public:
 
 	private slots:
 	void SlotEnter();       // For Enter in LineEdit
-	void SlotLinkClicked(QUrl url); // For clicked URL
+	void SetUrl(const QUrl &url); // For clicked URL
 
 private:
-		Ui::BrowserClass *ui_;
+		std::unique_ptr<Ui::BrowserClass> ui_;
 };
 
 

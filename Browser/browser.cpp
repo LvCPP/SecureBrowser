@@ -2,32 +2,37 @@
 
 
 Browser::Browser(QWidget *parent)
-	: QWidget(parent)
+	: QWidget(parent), ui_(std::make_unique<Ui::BrowserClass>())
 {
 	ui_->setupUi(this);
-
+	//this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint); TBD
 	connect(ui_->line_edit_url, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
-	connect(ui_->push_btn_back, SIGNAL(clicked()), ui_->web_view, SLOT(back()));
-	connect(ui_->push_btn_forward, SIGNAL(clicked()), ui_->web_view, SLOT(forward()));
-	connect(ui_->push_btn_refresh, SIGNAL(clicked()), ui_->web_view, SLOT(reload()));
-	connect(ui_->push_btn_stop, SIGNAL(clicked()), ui_->web_view, SLOT(stop()));
-	connect(ui_->web_view, SIGNAL(loadProgress(int)), ui_->progress_bar, SLOT(setValue(int)));
-	connect(ui_->web_view, SIGNAL(linkClicked(Qurl)), this, SLOT(SlotLinkClicked(Qurl)));
+	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
+	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
+	connect(ui_->push_btn_refresh, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
+	connect(ui_->push_btn_stop, &QPushButton::clicked, ui_->web_view, &QWebEngineView::stop);
+	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->progress_bar, &QProgressBar::setValue);
+	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
+
 }
 
 
 void Browser::SlotEnter()
 {
-	ui_->web_view->load(QUrl(ui_->line_edit_url->text()));
-	if (!(ui_->line_edit_url->text().startsWith("http://")))
+	QString uri = ui_->line_edit_url->text();
+	if (!(uri.startsWith("http://")))
 	{
-		ui_->web_view->load("http://" + ui_->line_edit_url->text());
+		uri = "http://" + uri;
 	}
+	ui_->web_view->load(uri);
 }
 
-void Browser::SlotLinkClicked(QUrl url)
+
+void Browser::SetUrl(const QUrl &url)
 {
-	ui_->web_view->load(url);
 	ui_->line_edit_url->setText(url.toString());
 }
+
+
+
 
