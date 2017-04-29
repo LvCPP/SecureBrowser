@@ -10,14 +10,14 @@ using namespace CameraInspector;
 
 namespace
 {
-	constexpr char* CASCADE_FILE_PATH = "../Recources/haarcascade_frontalface_alt.xml";
-	constexpr double SCALE_FACTOR = 1.1;
-	constexpr int MIN_NEIGHBORS = 2;
-	constexpr int FLAGS = cv::CASCADE_SCALE_IMAGE;
-	const cv::Scalar COLOR_GREEN = cv::Scalar(0, 255, 0);
-	constexpr int THICKNESS = 2;
-	constexpr int LINE_TYPE = 8;
-	constexpr int SHIFT = 0;
+constexpr char* CASCADE_FILE_PATH = "../Recources/haarcascade_frontalface_alt.xml";
+constexpr double SCALE_FACTOR = 1.1;
+constexpr int MIN_NEIGHBORS = 2;
+constexpr int FLAGS = cv::CASCADE_SCALE_IMAGE;
+const cv::Scalar COLOR_GREEN = cv::Scalar(0, 255, 0);
+constexpr int THICKNESS = 2;
+constexpr int LINE_TYPE = 8;
+constexpr int SHIFT = 0;
 }
 
 class FaceDetectorImpl
@@ -34,8 +34,8 @@ private:
 
 struct ObserverInfo
 {
-	size_t id_;
-	std::weak_ptr<IFaceDetectorObserver> ptr_;
+	size_t id;
+	std::weak_ptr<IFaceDetectorObserver> ptr;
 };
 
 FaceDetector::FaceDetector()
@@ -52,11 +52,11 @@ void FaceDetector::Attach(const std::shared_ptr<IFaceDetectorObserver>& observer
 
 void FaceDetector::Detach(const std::shared_ptr<IFaceDetectorObserver>& observer)
 {
-	const size_t id = reinterpret_cast<size_t>(observer.get());
+	const size_t temp_id = reinterpret_cast<size_t>(observer.get());
 	observers_.erase(std::remove_if(observers_.begin(), observers_.end(),
-		[id](const ObserverInfo& o)
+		[temp_id](const ObserverInfo& o)
 	{
-		return o.id_== id;
+		return o.id== temp_id;
 	}), observers_.end());
 }
 
@@ -66,14 +66,14 @@ void FaceDetector::Notify(int face_count)
 	observers_.erase(std::remove_if(observers_.begin(), observers_.end(),
 		[](const ObserverInfo& o)
 	{
-		return o.ptr_.expired();
+		return o.ptr.expired();
 	}), observers_.end());
 
 	// Notify any valid observers of events.
 	std::for_each(observers_.cbegin(), observers_.cend(),
 		[face_count](const ObserverInfo& o)
 	{
-		auto observer = o.ptr_.lock();
+		auto observer = o.ptr.lock();
 		if (observer) {
 			observer->OnFaceQuantityChanged(face_count);
 		}
