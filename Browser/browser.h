@@ -10,6 +10,7 @@
 #include <memory>
 
 
+
 class Browser : public QWidget
 {
 	Q_OBJECT
