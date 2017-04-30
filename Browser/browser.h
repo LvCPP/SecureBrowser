@@ -9,7 +9,8 @@
 #include <QWebEnginePage>
 #include <memory>
 
-
+namespace SecureBrowser
+{
 
 class Browser : public QWidget
 {
@@ -17,14 +18,12 @@ class Browser : public QWidget
 
 public:
 	Browser(QWidget *parent = 0);
-
 	private slots:
 	void SlotEnter();       // For Enter in LineEdit
 	void SetUrl(const QUrl &url); // For clicked URL
 
 private:
-		std::unique_ptr<Ui::BrowserClass> ui_;
+	std::unique_ptr<Ui::BrowserClass> ui_;
 };
 
-
-
+}

@@ -1,36 +1,31 @@
 #include "browser.h"
 
+using namespace SecureBrowser;
 
 Browser::Browser(QWidget *parent)
 	: QWidget(parent), ui_(std::make_unique<Ui::BrowserClass>())
 {
 	ui_->setupUi(this);
-	connect(ui_->line_edit_url, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
-	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
-	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
-	connect(ui_->push_btn_refresh, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
-	connect(ui_->push_btn_stop, &QPushButton::clicked, ui_->web_view, &QWebEngineView::stop);
-	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->progress_bar, &QProgressBar::setValue);
-	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
+	connect(ui_->LineEdit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
+	connect(ui_->BtnBack, &QPushButton::clicked, ui_->WebView, &QWebEngineView::back);
+	connect(ui_->BtnForward, &QPushButton::clicked, ui_->WebView, &QWebEngineView::forward);
+	connect(ui_->BtnReload, &QPushButton::clicked, ui_->WebView, &QWebEngineView::reload);
+	connect(ui_->BtnStop, &QPushButton::clicked, ui_->WebView, &QWebEngineView::stop);
+	connect(ui_->WebView, &QWebEngineView::loadProgress, ui_->ProgressBar, &QProgressBar::setValue);
+	connect(ui_->WebView, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
 }
-
 
 void Browser::SlotEnter()
 {
-	QString uri = ui_->line_edit_url->text();
+	QString uri = ui_->LineEdit->text();
 	if (!(uri.startsWith("http://")))
 	{
 		uri = "http://" + uri;
 	}
-	ui_->web_view->load(uri);
+	ui_->WebView->load(uri);
 }
-
 
 void Browser::SetUrl(const QUrl &url)
 {
-	ui_->line_edit_url->setText(url.toString());
+	ui_->LineEdit->setText(url.toString());
 }
-
-
-
-

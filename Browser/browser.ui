@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="HorizontalLayout">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -29,7 +29,7 @@
       <number>1</number>
      </property>
      <item>
-      <widget class="QPushButton" name="push_btn_back">
+      <widget class="QPushButton" name="BtnBack">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to go back&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -41,12 +41,12 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>C:/Users/sdemntc/Desktop/Back.png</normaloff>C:/Users/sdemntc/Desktop/Back.png</iconset>
+         <normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/Back.png</normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/Back.png</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="push_btn_forward">
+      <widget class="QPushButton" name="BtnForward">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to go forward&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -55,12 +55,12 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>C:/Users/sdemntc/Desktop/Forward.png</normaloff>C:/Users/sdemntc/Desktop/Forward.png</iconset>
+         <normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/Forward.png</normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/Forward.png</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="push_btn_refresh">
+      <widget class="QPushButton" name="BtnReload">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to reload this page&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -69,15 +69,15 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>C:/Users/sdemntc/Desktop/download.jpg</normaloff>C:/Users/sdemntc/Desktop/download.jpg</iconset>
+         <normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/download.jpg</normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/download.jpg</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="line_edit_url"/>
+      <widget class="QLineEdit" name="LineEdit"/>
      </item>
      <item>
-      <widget class="QPushButton" name="push_btn_stop">
+      <widget class="QPushButton" name="BtnStop">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to stop loading this page&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -86,17 +86,17 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>C:/Users/sdemntc/Desktop/stop.jpg</normaloff>C:/Users/sdemntc/Desktop/stop.jpg</iconset>
+         <normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/stop.jpg</normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/stop.jpg</iconset>
        </property>
       </widget>
      </item>
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QWebEngineView" name="web_view" native="true"/>
+    <widget class="QWebEngineView" name="WebView" native="true"/>
    </item>
    <item row="2" column="0">
-    <widget class="QProgressBar" name="progress_bar">
+    <widget class="QProgressBar" name="ProgressBar">
      <property name="styleSheet">
       <string notr="true">QProgressBar{
 	text-align:center
