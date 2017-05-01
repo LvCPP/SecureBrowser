@@ -34,6 +34,13 @@ private:
 
 struct ObserverInfo
 {
+	ObserverInfo(const std::shared_ptr<IFaceDetectorObserver>& observer)
+		: id(GetPointerId(observer))
+		, ptr(observer)
+	{
+	};
+
+
 	static size_t GetPointerId(const std::shared_ptr<IFaceDetectorObserver>& observer)
 	{
 		return reinterpret_cast<size_t>(observer.get());
@@ -51,8 +58,7 @@ FaceDetector::FaceDetector()
 
 void FaceDetector::Attach(const std::shared_ptr<IFaceDetectorObserver>& observer)
 {
-	ObserverInfo temp { ObserverInfo::GetPointerId(observer), observer };
-	observers_.emplace_back(temp);
+	observers_.emplace_back(observer);
 }
 
 void FaceDetector::Detach(const std::shared_ptr<IFaceDetectorObserver>& observer)
