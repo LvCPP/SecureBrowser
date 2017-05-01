@@ -1,10 +1,12 @@
 #include "browser.h"
 #include <QtWidgets/QApplication>
 
-int main(int argc, char** argv)
+using namespace SecureBrowser;
+
+int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 	Browser w;
-	w.show();
+	w.showMaximized();
 	return a.exec();
 }
