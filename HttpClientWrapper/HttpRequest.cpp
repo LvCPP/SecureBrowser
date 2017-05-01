@@ -4,7 +4,7 @@
 using namespace web;
 using namespace web::http;
 
-namespace Http {
+using namespace Http;
 
 static const std::map<HttpRequestMethod, web::http::method> RequestToStringMap = {
 	{ HttpRequestMethod::Get, methods::GET },
@@ -26,10 +26,10 @@ std::string HttpRequest::GetRequestUri() const
 	return utility::conversions::to_utf8string(request_->request_uri().to_string());
 }
 
-void HttpRequest::SetRequestHeader(const std::string& name, const std::string& value)
+void HttpRequest::AddRequestHeader(const std::string& name, const std::string& value)
 {
 	request_->headers().add(utility::conversions::to_string_t(name)
-		,utility::conversions::to_string_t(value));
+		, utility::conversions::to_string_t(value));
 }
 
 std::map<std::string, std::string> HttpRequest::GetHeaders()
@@ -53,6 +53,4 @@ void HttpRequest::SetBody(const std::vector<unsigned char>& body)
 std::vector<unsigned char> HttpRequest::GetBody() const
 {
 	return request_->extract_vector().get();
-}
-
 }

@@ -4,7 +4,7 @@
 using namespace web;
 using namespace web::http;
 
-namespace Http {
+using namespace Http;
 
 HttpClient::HttpClient(const std::string& host)
 	: client_(new web::http::client::http_client(utility::conversions::to_string_t(host)))
@@ -16,7 +16,7 @@ HttpResponse HttpClient::Request(HttpRequest& request)
 	auto task = client_->request(request.GetRequestImpl());
 	auto status = task.wait();
 	if (status != pplx::task_group_status::completed)
-		throw 1;
+		throw std::exception("Error message");
 
 	return HttpResponse::FromHttpImpl(task.get());
 }
@@ -32,6 +32,4 @@ HttpResponse HttpClient::Post(const std::string& path, const std::vector<unsigne
 	HttpRequest req(HttpRequestMethod::Post, path);
 	req.SetBody(data);
 	return Request(req);
-}
-
 }

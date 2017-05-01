@@ -6,7 +6,7 @@ using namespace Http;
 int main(int argc, char* argv[])
 {
 	HttpClient client;
-	try 
+	try
 	{
 		auto response = client.Get("/");
 	}
