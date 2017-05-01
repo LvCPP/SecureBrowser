@@ -7,7 +7,8 @@ using namespace web::http;
 using namespace Http;
 
 HttpClient::HttpClient(const std::string& host)
-	: client_(new web::http::client::http_client(utility::conversions::to_string_t(host)))
+	: client_(std::make_shared<web::http::client::http_client>(web::http::client::http_client
+	(utility::conversions::to_string_t(host))))
 {
 }
 
