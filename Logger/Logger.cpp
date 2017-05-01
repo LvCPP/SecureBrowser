@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include <Windows.h>
 #include <string>
 #include <ctime>
 #include <fstream>
@@ -74,8 +75,14 @@ void Logger::Write(const LogMessage& message)
 		tm local_time_now;
 		localtime_s(&local_time_now, &time_now);
 
-		stream_ << std::put_time(&local_time_now, "[%d/%m/%y at %T]") << " [" 
+		std::ostringstream str_stream;
+		str_stream << std::put_time(&local_time_now, "[%d/%m/%y at %T]") << " ["
 			<< log_level_name.at(message.level) << "] " << message.message << std::endl;
+
+		stream_ << str_stream.str();
+
+		if(IsDebuggerPresent())
+			OutputDebugStringA(str_stream.str().c_str());
 	}
 }
 
