@@ -95,7 +95,7 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 	std::vector<cv::Rect> faces;
 	// Detect faces
 	pimpl_->GetFaceCascade().detectMultiScale(frame_gray, faces, SCALE_FACTOR, MIN_NEIGHBORS, FLAGS, cv::Size(30, 30));
-	Notify(faces.size());
+	Notify(static_cast<int>(faces.size()));
 #ifdef DEBUG
 	for (size_t ic = 0; ic < faces.size(); ic++) // Iterate through all current elements (detected faces)
 	{
