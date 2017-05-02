@@ -17,7 +17,7 @@ HttpResponse HttpClient::Request(HttpRequest& request)
 	auto task = client_->request(request.GetRequestImpl());
 	auto status = task.wait();
 	if (status != pplx::task_group_status::completed)
-		throw std::exception("Error message");
+		throw std::exception("status incompleted");
 
 	return HttpResponse::FromHttpImpl(task.get());
 }
