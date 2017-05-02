@@ -94,7 +94,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /C /Y $(SolutionDir)Libraries\Debug\HttpClient.dll $(ProjectDir)\..\Build\</Command>
+      <Command>xcopy /C /Y "$(SolutionDir)Libraries\Debug\HttpClient.dll" "$(ProjectDir)\..\Build\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
