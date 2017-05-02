@@ -27,7 +27,7 @@ public:
 	void SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver);
 
 private:
-	void SaveToDisk(const Frame& frame) const;
+	void Save(const Frame& frame) const;
 	
 	std::atomic<bool> save_next_frame_;
 	std::shared_ptr<IFrameSaver> saver_;

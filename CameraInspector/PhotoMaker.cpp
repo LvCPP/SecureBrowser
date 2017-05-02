@@ -29,7 +29,7 @@ void PhotoMaker::ProcessFrame(const Frame& frame)
 	{
 		try
 		{
-			SaveToDisk(frame);
+			Save(frame);
 		}
 		catch (std::exception ex)
 		{
@@ -53,7 +53,7 @@ void PhotoMaker::SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver)
 	saver_ = saver;
 }
 
-void PhotoMaker::SaveToDisk(const Frame& frame) const
+void PhotoMaker::Save(const Frame& frame) const
 {
 	std::lock_guard<std::mutex> guard(mx_);
 
