@@ -1,4 +1,8 @@
 <RCC>
-    <qresource prefix="Browser">
+    <qresource prefix="/Browser">
+        <file>Resources/Back.png</file>
+        <file>Resources/download.jpg</file>
+        <file>Resources/Forward.png</file>
+        <file>Resources/stop.jpg</file>
     </qresource>
 </RCC>

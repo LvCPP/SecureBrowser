@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="HorizontalLayout">
+    <layout class="QHBoxLayout" name="horizontal_layout">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -29,7 +29,7 @@
       <number>1</number>
      </property>
      <item>
-      <widget class="QPushButton" name="BtnBack">
+      <widget class="QPushButton" name="push_btn_back">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to go back&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -40,13 +40,13 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/Back.png</normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/Back.png</iconset>
+        <iconset resource="browser.qrc">
+         <normaloff>:/Browser/Resources/Back.png</normaloff>:/Browser/Resources/Back.png</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="BtnForward">
+      <widget class="QPushButton" name="push_btn_forward">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to go forward&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -54,13 +54,13 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/Forward.png</normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/Forward.png</iconset>
+        <iconset resource="browser.qrc">
+         <normaloff>:/Browser/Resources/Forward.png</normaloff>:/Browser/Resources/Forward.png</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="BtnReload">
+      <widget class="QPushButton" name="push_btn_reload">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to reload this page&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -68,16 +68,16 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/download.jpg</normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/download.jpg</iconset>
+        <iconset resource="browser.qrc">
+         <normaloff>:/Browser/Resources/download.jpg</normaloff>:/Browser/Resources/download.jpg</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="LineEdit"/>
+      <widget class="QLineEdit" name="line_edit"/>
      </item>
      <item>
-      <widget class="QPushButton" name="BtnStop">
+      <widget class="QPushButton" name="push_btn_stop">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to stop loading this page&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -85,18 +85,18 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/stop.jpg</normaloff>H:/Visual Studio 2015/Projects/Browser_git/Browser/Resources/stop.jpg</iconset>
+        <iconset resource="browser.qrc">
+         <normaloff>:/Browser/Resources/stop.jpg</normaloff>:/Browser/Resources/stop.jpg</iconset>
        </property>
       </widget>
      </item>
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QWebEngineView" name="WebView" native="true"/>
+    <widget class="QWebEngineView" name="web_view" native="true"/>
    </item>
    <item row="2" column="0">
-    <widget class="QProgressBar" name="ProgressBar">
+    <widget class="QProgressBar" name="load_progress_page">
      <property name="styleSheet">
       <string notr="true">QProgressBar{
 	text-align:center
