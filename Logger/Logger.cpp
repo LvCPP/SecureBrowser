@@ -6,7 +6,7 @@
 #include <map>
 #include <iomanip>
 
-using namespace SecureBrowser;
+using namespace BrowserLogger;
 
 static const std::map<LogLevel, std::string> log_level_name{{LogLevel::Debug, "Debug"}
 	,{LogLevel::Info, "Info"}

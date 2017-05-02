@@ -7,7 +7,7 @@
 #include <iostream>
 #include <atomic>
 
-namespace SecureBrowser
+namespace BrowserLogger
 {
 
 enum class LogLevel
@@ -54,4 +54,4 @@ private:
 	MutexQueue<LogMessage> message_queue_;
 };
 
-} // namespace SecureBrowser
+} // namespace BrowserLogger
