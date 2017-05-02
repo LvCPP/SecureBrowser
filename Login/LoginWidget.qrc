@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>Icons/share-image.png</file>
+        <file>Icons/warning.png</file>
+    </qresource>
+</RCC>
