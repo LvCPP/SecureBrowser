@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpClient", "HttpClient\Ht
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{B60EE220-FBB6-4444-AF43-B283AE131AA6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpClien_test", "HttpClien_test\HttpClien_test.vcxproj", "{7A435297-FEAC-4443-A5A4-60F7F3E4F406}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpClien_test", "Tools\HttpClien_test\HttpClien_test.vcxproj", "{7A435297-FEAC-4443-A5A4-60F7F3E4F406}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
