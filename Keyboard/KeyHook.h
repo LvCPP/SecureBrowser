@@ -1,7 +1,8 @@
 #pragma once
 #include "KeyList.h"
+#include "KeyUtils.h"
 
-namespace SecureBrowser
+namespace Keyboard
 {
 
 // for bitwise operations
@@ -11,14 +12,14 @@ const int SHIFT_BITS = sizeof(SHORT) * 8 - 1;
 class KeyboardHooking
 {
 public:
-	void StartKeyboardHooking();
-	void StopKeyboardHooking();
+	KEY_API void StartKeyboardHooking();
+	KEY_API void StopKeyboardHooking();
 
 	//to be run for low level hooking
-	static LRESULT CALLBACK LowLevelKeyboardProc(int code, WPARAM wParam, LPARAM lParam);
+	KEY_API static LRESULT CALLBACK LowLevelKeyboardHook(int code, WPARAM wParam, LPARAM lParam);
 
 	//the loop for getting messages
-	static void MsgLoop();
+	KEY_API static void MsgLoop();
 };
 
-};
+}
