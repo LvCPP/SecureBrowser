@@ -32,8 +32,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoggerTest", "Tools\LoggerT
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Login", "Login\Login.vcxproj", "{ACD08B75-1253-4C23-961A-92A253BE36BD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyDLL", "Keyboard\KeyDLL.vcxproj", "{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLL_test", "Tools\DLL_test\DLL_test.vcxproj", "{41719103-0C3A-4FE4-A536-86C1965F24EB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD} = {277AF845-D118-4EF9-ACE5-0D3B70C85EFD}
@@ -45,6 +43,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpClien_test", "Tools\Htt
 	ProjectSection(ProjectDependencies) = postProject
 		{0CC6265F-6D69-47F4-B4F5-104E442EF01B} = {0CC6265F-6D69-47F4-B4F5-104E442EF01B}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyDLL", "KeyDLL\KeyDLL.vcxproj", "{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,14 +98,6 @@ Global
 		{ACD08B75-1253-4C23-961A-92A253BE36BD}.Release|x64.ActiveCfg = Release|Win32
 		{ACD08B75-1253-4C23-961A-92A253BE36BD}.Release|x86.ActiveCfg = Release|Win32
 		{ACD08B75-1253-4C23-961A-92A253BE36BD}.Release|x86.Build.0 = Release|Win32
-		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Debug|x64.ActiveCfg = Debug|x64
-		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Debug|x64.Build.0 = Debug|x64
-		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Debug|x86.ActiveCfg = Debug|Win32
-		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Debug|x86.Build.0 = Debug|Win32
-		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Release|x64.ActiveCfg = Release|x64
-		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Release|x64.Build.0 = Release|x64
-		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Release|x86.ActiveCfg = Release|Win32
-		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Release|x86.Build.0 = Release|Win32
 		{41719103-0C3A-4FE4-A536-86C1965F24EB}.Debug|x64.ActiveCfg = Debug|x64
 		{41719103-0C3A-4FE4-A536-86C1965F24EB}.Debug|x64.Build.0 = Debug|x64
 		{41719103-0C3A-4FE4-A536-86C1965F24EB}.Debug|x86.ActiveCfg = Debug|Win32
@@ -130,6 +122,14 @@ Global
 		{7A435297-FEAC-4443-A5A4-60F7F3E4F406}.Release|x64.Build.0 = Release|x64
 		{7A435297-FEAC-4443-A5A4-60F7F3E4F406}.Release|x86.ActiveCfg = Release|Win32
 		{7A435297-FEAC-4443-A5A4-60F7F3E4F406}.Release|x86.Build.0 = Release|Win32
+		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Debug|x64.ActiveCfg = Debug|x64
+		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Debug|x64.Build.0 = Debug|x64
+		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Debug|x86.ActiveCfg = Debug|Win32
+		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Debug|x86.Build.0 = Debug|Win32
+		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Release|x64.ActiveCfg = Release|x64
+		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Release|x64.Build.0 = Release|x64
+		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Release|x86.ActiveCfg = Release|Win32
+		{277AF845-D118-4EF9-ACE5-0D3B70C85EFD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
