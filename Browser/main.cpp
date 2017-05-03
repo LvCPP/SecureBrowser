@@ -13,8 +13,8 @@ int main(int argc, char* argv[])
 	Browser w;
 	w.showMaximized();
 
-	LoginApp app;
-	app.show();
+	//LoginApp app;
+	//app.show();
 
 	return a.exec();
 }

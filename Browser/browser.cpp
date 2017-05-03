@@ -6,6 +6,7 @@ Browser::Browser(QWidget *parent)
 	: QWidget(parent), ui_(std::make_unique<Ui::BrowserClass>())
 {
 	ui_->setupUi(this);
+	this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
