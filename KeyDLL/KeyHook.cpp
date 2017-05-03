@@ -28,113 +28,90 @@ LRESULT CALLBACK KeyboardHooking::LowLevelKeyboardHook(int code, WPARAM wParam, 
 		// accept the next message
 		return CallNextHookEx(NULL, code, wParam, lParam);
 
-	typedef struct tagKBDLLHOOKSTRUCT
-	{
-		DWORD     vkCode;
-		DWORD     scanCode;
-		DWORD     flags;
-		DWORD     time;
-		ULONG_PTR dwExtraInfo;
-	} KBDLLHOOKSTRUCT;
+	//get the key from PKBDLLHOOKSTRUCT struct using lParam
+	PKBDLLHOOKSTRUCT key = (PKBDLLHOOKSTRUCT)lParam;
 
-	KBDLLHOOKSTRUCT* key = (KBDLLHOOKSTRUCT*)lParam;
-
-	std::string key_name = "";
-
+	// open "keys.txt" for writing info about keys
 	std::ofstream f;
 	f.open("keys.txt", std::ios::app);
 
-	BOOL control_key_down
-		= ((GetAsyncKeyState(VK_CONTROL) < 0)
-			|| (GetAsyncKeyState(VK_LCONTROL) < 0)
-			|| (GetAsyncKeyState(VK_RCONTROL) < 0));
-
-	//checks if shift key is pressed
-	BOOL shift_key_down
-		= ((GetAsyncKeyState(VK_SHIFT) < 0)
-			|| (GetAsyncKeyState(VK_LSHIFT) < 0)
-			|| (GetAsyncKeyState(VK_RSHIFT) < 0));
-
-	//checks if win key is pressed
-	BOOL win_key_down
-		= ((GetAsyncKeyState(VK_LWIN) < 0)
-			|| (GetAsyncKeyState(VK_RWIN) < 0));
-
-	BOOL is_special = control_key_down || shift_key_down || win_key_down;
-
-	DWORD new_key_flags = (*key).flags;
-	if (new_key_flags & LLKHF_ALTDOWN
-		&& (*key).vkCode >= 0x03
-		&& (*key).vkCode <= 0xDE
-		&& (*key).vkCode != VK_SHIFT
-		&& (*key).vkCode != VK_LSHIFT
-		&& (*key).vkCode != VK_RSHIFT
-		&& (*key).vkCode != VK_MENU
-		&& (*key).vkCode != VK_LMENU
-		&& (*key).vkCode != VK_RMENU)
-	{
-		f << "\n" << "ALT key + vc " << (*key).vkCode << " was blocked!\n";
-		return 1;
-	}
-
-	if (GetAsyncKeyState(VK_LWIN) < 0 || GetAsyncKeyState(VK_RWIN) < 0 )
-	{
-		f << "\n" << "Key WIN was blocked!\n";
-		return 1;
-	}
-
-	if (GetAsyncKeyState(VK_TAB) < 0)
-	{
-		f << "\n" << "Key TAB was blocked!\n";
-		return 1;
-	}
-
-	// check if the key is in the list of key combinations to be blocked
-	for (UINT i = 0; i < block_list.size(); ++i)
-		if (block_list[i].control_key_down == (CtrlEnum)control_key_down
-			&& block_list[i].shift_key_down == (ShiftEnum)shift_key_down
-			&& block_list[i].key_code == (*key).vkCode)
-		{
-			f << "\n";
-			if (block_list[i].control_key_down == CTRL_DOWN)
-				f << "CTRL";
-			if (block_list[i].shift_key_down == SHIFT_DOWN)
-				f << "SHIFT";
-			f << " + vc " << (*key).vkCode << " was blocked!\n";
-			return 1; // block the keys and key combinations
-		}
-
-	if ((*key).vkCode == VK_PRINT)
-	{
-		f << "\nKey PRINT was blocked!" << "\n";
-		return 1;
-	}
-	if ((*key).vkCode == VK_SNAPSHOT)
-	{
-		f << "\nKey SNAPSHOT was blocked!" << "\n";
-		return 1;
-	}
-
-	// if not-alt key pressed
+	bool found_in_map = true;
+	std::string name = "";
+	std::map <UINT, KeyPair>::iterator it = key_map.find((*key).vkCode);
+	if (it == key_map.end())
+		found_in_map = false;
+	
+	if (found_in_map)
+		name = key_map[(*key).vkCode].GetKeyName();
+	else
+		name = " vk " + std::to_string((*key).vkCode) + " ";
+	
 	if (wParam == WM_KEYDOWN)
 	{
-		if (!is_special)
+		if (GetAsyncKeyState(VK_CONTROL))
 		{
-			if ((*key).vkCode == VK_PRINT || (*key).vkCode == VK_SNAPSHOT
-				|| (*key).vkCode == VK_APPS || (*key).vkCode == VK_LMENU
-				|| (*key).vkCode >= 0x70 && (*key).vkCode <= 0x7B)
-				key_name = key_name + " " + key_map[(*key).vkCode].GetKeyName();
+			f << " CTRL " << name << " ";
+			if ((*key).vkCode == 0x43 // C
+				|| (*key).vkCode == 0x56 // V
+				|| (*key).vkCode == 0x50 // P
+				|| (*key).vkCode == 0x53 // S
+				|| (*key).vkCode == 0x58 // X
+				|| (*key).vkCode == VK_INSERT) // Ins
+			{
+				f << "\nKey combination Ctrl + " << name << " is blocked! ";
+				return 1;
+			}
+		}
+		else if (GetAsyncKeyState(VK_SHIFT))
+		{
+			f << " SHIFT " << name << " ";
+			if ((*key).vkCode == VK_DELETE // Del
+				|| (*key).vkCode == VK_F10 // F10
+				|| (*key).vkCode == VK_INSERT) // Ins
+			{
+				f << "\nKey combination Shift + " << name << " is blocked! ";
+				return 1;
+			}
+		}
+
+		else if (GetAsyncKeyState(VK_LWIN) || GetAsyncKeyState(VK_RWIN))
+		{
+			f << " WIN " << name << " ";
+			f << "\nWin key is blocked! \n";
+			return 1;
+		}
+		else if ((*key).vkCode == VK_PRINT
+			|| (*key).vkCode == VK_SNAPSHOT
+			|| (*key).vkCode == VK_APPS)
+		{
+			f << " " << name << " ";
+			f << "\nKey " << name << " is blocked! ";
+			return 1;
+		}
+		else if (((*key).vkCode >= 0x70 // F1
+			&& ((*key).vkCode <= 0x7B))) // F12
+			f << name << " ";
+	}
+
+	else if (wParam == WM_SYSKEYDOWN)
+	{
+		if (GetAsyncKeyState(VK_MENU))
+		{
+			f << " ALT " << name << " ";
+			if ((*key).vkCode == VK_TAB
+				|| (*key).vkCode == VK_PRINT
+				|| (*key).vkCode == VK_SNAPSHOT
+				|| (*key).vkCode == VK_F6
+				|| (*key).vkCode == VK_ESCAPE)
+			{
+				f << "\nKey combination Alt + " << name << " is blocked! \n";
+				return 1;
+			}
 		}
 		else
-		{
-			if (control_key_down) key_name = "CTRL " + key_name;
-			if (shift_key_down) key_name = "SHIFT " + key_name;
-			if (win_key_down) key_name = "WIN " + key_name;
-			key_name = key_name + " " + key_map[(*key).vkCode].GetKeyName();
-		}
+			f << " " << name << " ";
 	}
-	if (key_name != "")
-		f << key_name << " ";
+	
 	f.close();
 	return CallNextHookEx(NULL, code, wParam, lParam);
 }
