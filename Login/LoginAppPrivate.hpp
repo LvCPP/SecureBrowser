@@ -9,8 +9,8 @@ class LoginWidget;
 class LoginCamera;
 class LoginAppPrivate : QObject
 {
-	Q_OBJECT
-		Q_DECLARE_PUBLIC(LoginApp);
+	Q_DISABLE_COPY(LoginAppPrivate)
+	Q_DECLARE_PUBLIC(LoginApp)
 public:
 	explicit LoginAppPrivate(QObject* parent = Q_NULLPTR);
 	virtual ~LoginAppPrivate() = default;

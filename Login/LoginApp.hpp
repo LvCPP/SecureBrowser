@@ -16,9 +16,9 @@ protected:
 	LoginAppPrivate* const d_ptr; // d-pointer
 	LoginApp(LoginAppPrivate &&another_d_ptr, QStackedWidget *parent); //TBD
 private:
-	Q_PRIVATE_SLOT(d_func(), void _q_OnPushButtonLoginClick());
-	Q_PRIVATE_SLOT(d_func(), void _q_PhotoAccepted());
-	Q_DECLARE_PRIVATE(LoginApp);
+	Q_PRIVATE_SLOT(d_func(), void _q_OnPushButtonLoginClick())
+	Q_PRIVATE_SLOT(d_func(), void _q_PhotoAccepted())
+	Q_DECLARE_PRIVATE(LoginApp)
 };
 }
 

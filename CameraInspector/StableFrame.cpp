@@ -26,7 +26,7 @@ StableFrame::StableFrame(int width, int height, void* data)
 
 StableFrame::StableFrame(const cv::Mat& mat) 
 	: Frame(mat)
-{
+{//tr
 	cv_mat_impl_ = std::move(std::make_unique<cv::Mat>(cv_mat_impl_->clone()));
 }
 

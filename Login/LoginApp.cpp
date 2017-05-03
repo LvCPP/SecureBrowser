@@ -12,7 +12,6 @@ constexpr size_t WINDOWWIDTH = 400;
 
 LoginAppPrivate::LoginAppPrivate(QObject* parent) :QObject(parent)
 {
-
 }
 
 LoginApp::LoginApp(LoginAppPrivate &&another_d_ptr, QStackedWidget *parent) : //TBD
@@ -82,14 +81,14 @@ void LoginAppPrivate::AskCameraAccess()
 void LoginAppPrivate::_q_OnPushButtonLoginClick()
 {
 	Q_Q(LoginApp);
-	if (q->d_ptr->login_->IsUsernameAndPasswordValid())
+	if (login_->IsUsernameAndPasswordValid())
 	{
-		q->d_ptr->AskCameraAccess();
+		AskCameraAccess();
 	}
 	else
 	{
 		QMessageBox::warning(q, "Login", ("Username or password are incorrect, try again"));//add tr (q is like this)
-		q->d_ptr->login_->ResetPassword();
+		login_->ResetPassword();
 	}
 }
 
@@ -103,8 +102,8 @@ void LoginAppPrivate::SetupWindow() //TBD
 void LoginAppPrivate::_q_PhotoAccepted()
 {
 	Q_Q(LoginApp);
-	q->d_ptr->SendImage();
-	q->d_ptr->login_passed_ = true;
+	SendImage();
+	login_passed_ = true;
 	q->close();
 }
 

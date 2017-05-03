@@ -10,11 +10,11 @@ int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 	
-	Browser w;
-	w.showMaximized();
+	/*Browser w;
+	w.showMaximized();*/
 
-	//LoginApp app;
-	//app.show();
+	LoginApp app;
+	app.show();
 
 	return a.exec();
 }

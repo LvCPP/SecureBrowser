@@ -9,9 +9,9 @@
 using namespace BrowserLogger;
 
 static const std::map<LogLevel, std::string> log_level_name{{LogLevel::Debug, "Debug"}
-	,{LogLevel::Info, "Info"}
-	,{LogLevel::Warning, "Warning"}
-	,{LogLevel::Error, "Error"}};
+	, {LogLevel::Info, "Info"}
+	, {LogLevel::Warning, "Warning"}
+	, {LogLevel::Error, "Error"}};
 
 Logger::Logger(LogLevel min_log_level, std::ostream& write_to)
 	: stream_(write_to.rdbuf())
@@ -30,7 +30,7 @@ Logger::~Logger()
 	Flush();
 
 	//Notify all threads to end waiting for messages
-	cond_var_.notify_all();
+	wait_message_.notify_all();
 	if (write_thread_.joinable())
 	{
 		write_thread_.join();
@@ -56,7 +56,7 @@ void Logger::WriteThread()
 	while (is_running_ || !message_queue_.IsEmpty())
 	{
 		std::unique_lock<std::mutex> lock(lock_waiting_message_);
-		cond_var_.wait(lock);
+		wait_message_.wait(lock);
 
 		if (!message_queue_.IsEmpty())
 		{
@@ -89,7 +89,7 @@ void Logger::Write(const LogMessage& message)
 void Logger::Log(const std::string& msg, LogLevel level)
 {
 	message_queue_.Add({ msg, level });
-	cond_var_.notify_one();
+	wait_message_.notify_one();
 }
 
 void Logger::TryWrite()

@@ -46,7 +46,7 @@ private:
 
 	std::mutex lock_writing_;
 	std::mutex lock_waiting_message_;
-	std::condition_variable cond_var_;
+	std::condition_variable wait_message_;
 	std::thread write_thread_;
 	std::ostream stream_;
 	std::atomic<bool> is_running_;
