@@ -27,13 +27,13 @@ StableFrame::StableFrame(int width, int height, void* data)
 StableFrame::StableFrame(const cv::Mat& mat) 
 	: Frame(mat)
 {
-	cv_mat_impl_ = std::move(std::make_unique<cv::Mat>(cv_mat_impl_->clone()));
+	cv_mat_impl_ = std::make_unique<cv::Mat>(cv_mat_impl_->clone());
 }
 
 StableFrame& StableFrame::operator=(const StableFrame& sframe)
 {
 	if(this != &sframe)
-		cv_mat_impl_ = std::move(std::make_unique<cv::Mat>(cv_mat_impl_->clone()));
+		cv_mat_impl_ = std::make_unique<cv::Mat>(cv_mat_impl_->clone());
 	
 	return *this;
 }
