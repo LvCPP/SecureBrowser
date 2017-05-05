@@ -7,14 +7,12 @@ namespace BrowserLogin
 {
 class LoginWidget;
 class LoginCamera;
-class LoginAppPrivate : QObject
+
+class LoginAppPrivate
 {
-	Q_OBJECT
-		Q_DECLARE_PUBLIC(LoginApp);
 public:
-	explicit LoginAppPrivate(QObject* parent = Q_NULLPTR);
-	virtual ~LoginAppPrivate() = default;
-	LoginApp* q_ptr; //q-pointer
+	explicit LoginAppPrivate() = default;
+	virtual ~LoginAppPrivate();
 
 	void _q_PhotoAccepted(); //_q_ is a rule for naming private slots
 	void _q_OnPushButtonLoginClick();
@@ -22,8 +20,14 @@ public:
 	void SetupWindow(); //TBD(interface)
 	void AskCameraAccess();
 	void SendImage(); // TBD
+	LoginApp* q_ptr;
+	LoginWidget* login_;
+	LoginCamera* camera_login_;
 	bool login_passed_ = false;
-	std::unique_ptr<LoginWidget> login_;
-	std::unique_ptr<LoginCamera> camera_login_;
+private:
+	Q_DISABLE_COPY(LoginAppPrivate)
+	Q_DECLARE_PUBLIC(LoginApp)
+
 };
+
 }

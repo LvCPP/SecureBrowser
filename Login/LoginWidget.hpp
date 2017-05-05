@@ -5,17 +5,20 @@
 
 namespace BrowserLogin
 {
+
 class LoginWidget : public QWidget {
 	Q_OBJECT
 public:
 	explicit LoginWidget(QWidget * parent = Q_NULLPTR);
 	bool IsUsernameAndPasswordValid(); // TBD
-	QPushButton* GetLoginButton() const;
 	void ResetPassword();
-	private slots:
+signals:
+	void LoginButtonClicked();
+private slots:
 	void UsernameChanged();
 private:
 	void SetupWindow();// TBD(interface)
-	std::unique_ptr<Ui::LoginWidgetClass> ui_;
+	QScopedPointer<Ui::LoginWidgetClass> ui_;
 };
+
 }

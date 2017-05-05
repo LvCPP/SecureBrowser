@@ -1,24 +1,30 @@
 ﻿#pragma once
-#include"LoginDynLib.h"
 #include<QtWidgets/QWidget>
 #include<QObject>
+#include<memory>
 #include<qstackedwidget.h>
 
 namespace BrowserLogin
 {
+
 class LoginAppPrivate;
-class LoginApp : public QStackedWidget
+class LoginApp: public QStackedWidget
 {
 	Q_OBJECT
 public:
-	explicit LOGIN_API LoginApp(QStackedWidget* parent = Q_NULLPTR);
+	explicit LoginApp(QWidget* parent = Q_NULLPTR);
+	~LoginApp();
+signals:
+	void AcceptPhotoClicked();
+	void RejectClicked();
 protected:
-	LoginAppPrivate* const d_ptr; // d-pointer
-	LoginApp(LoginAppPrivate &&another_d_ptr, QStackedWidget *parent); //TBD
+	LoginAppPrivate* const d_ptr;
 private:
-	Q_PRIVATE_SLOT(d_func(), void _q_OnPushButtonLoginClick());
-	Q_PRIVATE_SLOT(d_func(), void _q_PhotoAccepted());
-	Q_DECLARE_PRIVATE(LoginApp);
+	Q_PRIVATE_SLOT(d_func(), void _q_OnPushButtonLoginClick())
+	Q_PRIVATE_SLOT(d_func(), void _q_PhotoAccepted())
+	Q_DECLARE_PRIVATE(LoginApp)
 };
+
 }
+
 
