@@ -99,7 +99,7 @@
       <AdditionalDependencies>Login.lib;Logger.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5WebEngineWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /C /Y $(SolutionDir)Libraries/Release/*.dll $(SolutionDir)Build\Release\</Command>
+      <Command>xcopy /C /Y "$(SolutionDir)Libraries/Release/*.dll" "$(SolutionDir)Build\Release\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
