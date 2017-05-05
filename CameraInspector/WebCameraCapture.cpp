@@ -59,12 +59,13 @@ void WebCameraCapture::ProcessHandlers()
 {
 	while (is_working_)
 	{
-		// I think we should unload the system by calling Sleep in this loop
+		cv::Mat mat_to_process;
+		camera_->read(mat_to_process);
+
 		for (auto it = handlers_.begin(); it != handlers_.end(); ++it)
 		{
-			cv::Mat mat_to_process;
-			camera_->read(mat_to_process);
 			(*it)->ProcessFrame(mat_to_process);
 		}
+		// I think we should unload the system by calling Sleep in this loop
 	}
 }
