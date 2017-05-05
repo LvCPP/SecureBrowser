@@ -9,12 +9,14 @@ using namespace BrowserLogin;
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
-	
-	/*Browser w;
-	w.showMaximized();*/
 
 	LoginApp app;
-	app.show();
+	if (!app.exec())
+		return 0; //user no authenticated
+
+	Browser w;
+	w.showMaximized();
+
 
 	return a.exec();
 }

@@ -25,8 +25,8 @@ int main()
 	cv::namedWindow(f_converted_window, CV_WINDOW_AUTOSIZE);
 
 	std::cout << "Height: " << video.get(CV_CAP_PROP_FRAME_HEIGHT)
-		<< "Width: " << video.get(CV_CAP_PROP_FRAME_WIDTH)
-		<< "Press Esc to capture the screen" << std::endl;
+		<< "\nsWidth: " << video.get(CV_CAP_PROP_FRAME_WIDTH)
+		<< "\nPress Esc to capture the screen" << std::endl;
 
 	// Wait while camera initializes (don't need to do this on VS17)
 	Sleep(500);
