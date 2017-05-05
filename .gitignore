@@ -1,0 +1,13 @@
+#Visual Studio generated files
+.vs/
+*.user
+*.opendb
+*.db
+
+GeneratedFiles/
+Build/
+Debug/
+x64/
+*.user
+
+packages/
