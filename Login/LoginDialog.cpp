@@ -5,15 +5,10 @@ using namespace BrowserLogin;
 LoginDialog::LoginDialog(QDialog * parent) : 
 	QDialog(parent)
 	,login_(new LoginApp(this))
+	,ui_(new Ui::LoginDialog())
 {
-	connect(login_, &LoginApp::AcceptPhotoClicked, [this] {this->reject(); });
+	connect(login_, &LoginApp::AcceptPhotoClicked, [this] {this->accept(); });
 	connect(login_, &LoginApp::RejectClicked, [this] {this->reject(); });
-
-	ui = new Ui::LoginDialog();
-	ui->setupUi(this); 
-
+	ui_->setupUi(this); 
 }
 
-LoginDialog::~LoginDialog() {
-	delete ui;
-}

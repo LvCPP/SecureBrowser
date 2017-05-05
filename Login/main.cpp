@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 	LoginDialog app;
-	app.exec();
+	if (!app.exec())
+		return 1;
 	return a.exec();
 }
