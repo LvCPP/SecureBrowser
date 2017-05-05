@@ -8,7 +8,7 @@ class http_response;
 }
 }
 
-namespace Http {
+namespace BrowserHttp {
 
 class HttpResponse
 {

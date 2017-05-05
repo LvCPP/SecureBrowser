@@ -1,11 +1,11 @@
 #include"HttpClient.h"
 #include<iostream>
 
-using namespace Http;
+using namespace BrowserHttp;
 
 int main(int argc, char* argv[])
 {
-	HttpClient client;
+	HttpClient client("https://www.google.com.ua");
 	try
 	{
 		auto response = client.Get("/");
