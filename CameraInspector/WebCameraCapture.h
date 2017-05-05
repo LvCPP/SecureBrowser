@@ -14,16 +14,23 @@ namespace CameraInspector
 class WebCameraCapture
 {
 public:
-	WebCameraCapture();
+	WebCameraCapture(const WebCameraCapture&) = delete;
+	WebCameraCapture(WebCameraCapture&&) = delete;
+	WebCameraCapture& operator= (const WebCameraCapture&) = delete;
+	WebCameraCapture& operator= (WebCameraCapture&&) = delete;
+
+	static WebCameraCapture& Instance();
 
 	void Start();
 	void Stop();
-	// Frame handlers. This class instance can call they for different purposes
-	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 
+	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 	cv::VideoCapture GetCamera() const noexcept;
 
 private:
+	WebCameraCapture();
+	~WebCameraCapture() = default;
+
 	// TODO: make it thread-safe
 	void ProcessHandlers();
 

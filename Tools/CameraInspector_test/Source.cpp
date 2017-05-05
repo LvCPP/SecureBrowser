@@ -12,7 +12,7 @@ using namespace CameraInspector;
 
 int main()
 {
-	WebCameraCapture cam_cap;
+	WebCameraCapture& cam_cap = WebCameraCapture::Instance();
 
 	cv::Mat frame_original;
 	cv::String f_original_window = "Original";
@@ -21,7 +21,7 @@ int main()
 	cv::namedWindow(f_converted_window, CV_WINDOW_AUTOSIZE);
 
 	std::cout << "Height: " << cam_cap.GetCamera().get(CV_CAP_PROP_FRAME_HEIGHT)
-		<< "\nsWidth: " << cam_cap.GetCamera().get(CV_CAP_PROP_FRAME_WIDTH)
+		<< "\nWidth: " << cam_cap.GetCamera().get(CV_CAP_PROP_FRAME_WIDTH)
 		<< "\nPress Esc to capture the screen" << std::endl;
 
 	// Wait while camera initializes (don't need to do this on VS17)
@@ -59,15 +59,6 @@ int main()
 
 	cam_cap.AddFrameHandler(shared_maker);
 	cam_cap.Start();
-
-	/*	User ID photo. Possible use example
-	FrameStorer id_photo(camera_01.GetFrame());
-	cv::imshow("ID", id_photo.Get().GetImpl());			// user doesn't like this and want another	(Cancel button)
-	
-	id_photo = FrameStorer(camera_01.GetFrame());
-	cv::imshow("ID", id_photo.Get().GetImpl());			// user like it, we want to save			(OK button)
-	FrameStorer.Save(share_saver);
-	*/
 
 	cv::Mat id_frame;
 	cam_cap.GetCamera().read(id_frame);

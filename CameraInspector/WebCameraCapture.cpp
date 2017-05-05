@@ -11,17 +11,38 @@ WebCameraCapture::WebCameraCapture()
 {
 }
 
+WebCameraCapture& WebCameraCapture::Instance()
+{
+	// Since it's a static variable, if the class has already been created, it won't be created again.
+	static WebCameraCapture inst;
+	return inst;
+}
+
 void WebCameraCapture::Start()
 {
-	is_working_ = true;
-	worker_ = std::thread(&WebCameraCapture::ProcessHandlers, this);
+	if (!is_working_)
+	{
+		is_working_ = true;
+		worker_ = std::thread(&WebCameraCapture::ProcessHandlers, this);
+	}
+	else
+	{
+		throw std::exception("Capturing already started");
+	}
 }
 
 void WebCameraCapture::Stop()
 {
-	is_working_ = false;
-	if (worker_.joinable())
-		worker_.join();
+	if (is_working_)
+	{
+		is_working_ = false;
+		if (worker_.joinable())
+			worker_.join();
+	}
+	else
+	{
+		throw std::exception("Capturing already stopped");
+	}
 }
 
 void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler)
