@@ -6,6 +6,7 @@
 #include <thread>
 #include <iostream>
 #include <atomic>
+#include <map>
 
 namespace BrowserLogger
 {
@@ -18,11 +19,31 @@ enum class LogLevel
 	Error,
 };
 
+struct LogMessage
+{
+	std::string message;
+	LogLevel level;
+};
+
+static const std::map<LogLevel, std::string> log_level_name{ { LogLevel::Debug, "Debug" }
+	, { LogLevel::Info, "Info" }
+	, { LogLevel::Warning, "Warning" }
+	, { LogLevel::Error, "Error" } };
+
+std::string DefaultFormat(const LogMessage& log_message)
+{
+	std::stringstream formatted_message;
+	formatted_message << "[" << GetFormattedDate() << " at " << GetFormattedTime() << "]" << " ["
+		<< log_level_name.at(log_message.level) << "] " << log_message.message << std::endl;
+	return formatted_message.str();
+}
+
 class Logger final
 {
 public:
 	explicit LOGGER_API Logger(LogLevel min_log_level = LogLevel::Debug,
-		std::ostream& write_to = std::cout);
+		std::ostream& write_to = std::cout,
+		std::function<std::string(const LogMessage&)> formatter = DefaultFormat);
 	LOGGER_API ~Logger();
 
 	LOGGER_API void Flush();
@@ -33,15 +54,10 @@ public:
 	LOGGER_API MessageBuilder operator<<(LogLevel level);
 
 private:
-	struct LogMessage
-	{
-		std::string message;
-		LogLevel level;
-	};
 
 	void WriteThread();
-	void Write(const LogMessage& message);
-	void Log(const std::string& msg, LogLevel level = LogLevel::Info);
+	void Write(const LogMessage& log_message);
+	void Log(const std::string& msg, LogLevel level);
 	void TryWrite();
 
 	std::mutex lock_writing_;
@@ -52,6 +68,7 @@ private:
 	std::atomic<bool> is_running_;
 	LogLevel min_level_;
 	MutexQueue<LogMessage> message_queue_;
+	std::function<std::string(const LogMessage& log_message)> formatter_;
 };
 
 } // namespace BrowserLogger
