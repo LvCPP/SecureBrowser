@@ -66,6 +66,7 @@ const KeySequence KEY_TAB = KeySequence(VK_TAB);
 const KeySequence KEY_C = KeySequence(0x43);
 const KeySequence KEY_F = KeySequence(0x46);
 const KeySequence KEY_G = KeySequence(0x47);
+const KeySequence KEY_I = KeySequence(0x49);
 const KeySequence KEY_N = KeySequence(0x4E);
 const KeySequence KEY_O = KeySequence(0x4F);
 const KeySequence KEY_P = KeySequence(0x50);

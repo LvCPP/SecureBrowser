@@ -8,10 +8,10 @@
 
 int main()
 {
+	 
+	
 	KeyboardInspector ki;
 	
-	ki.IgnoreKeySequence(KEY_LCONTROL + KEY_LALT);
-
 	// TAB
 	ki.IgnoreKeySequence(KEY_LALT + KEY_TAB);
 	ki.IgnoreKeySequence(KEY_RALT + KEY_TAB);
@@ -104,6 +104,8 @@ int main()
 	 //OTHERS
 	ki.IgnoreKeySequence(KEY_LCONTROL + KEY_F);
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_F);
+	ki.IgnoreKeySequence(KEY_LCONTROL + KEY_I);
+	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_I);
 	ki.IgnoreKeySequence(KEY_LCONTROL + KEY_G);
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_G);
 	ki.IgnoreKeySequence(KEY_LCONTROL + KEY_N);
@@ -120,9 +122,9 @@ int main()
 	Sleep(1500000);
 
 	ki.Stop();
+
 	
-
-
+	
 
 	return 0;
 }

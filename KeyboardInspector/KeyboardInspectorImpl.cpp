@@ -22,15 +22,12 @@ KeyboardInspectorImpl::~KeyboardInspectorImpl()
 void KeyboardInspectorImpl::Start()
 {
 	msg_loop_thread_ = std::thread(&KeyboardInspectorImpl::MessageLoop, this);
-
-	OutputDebugStringA("Keyboard hooking started\n");
-	  
+	OutputDebugStringA("Keyboard hooking started\n");  
 }
 
 void KeyboardInspectorImpl::Stop()
 {
 	PostThreadMessage(GetThreadId(msg_loop_thread_.native_handle()), WM_QUIT, 0, 0);
-	OutputDebugStringA("Stop keyboard hooking.\n");
 	UnhookWindowsHookEx(keyboard_hook);
 	msg_loop_thread_.join();
 }
@@ -64,9 +61,9 @@ LRESULT CALLBACK KeyboardInspectorImpl::LowLevelKeyboardProc(int code, WPARAM wP
 		return CallNextHookEx(NULL, code, wParam, lParam);
 	
 	PKBDLLHOOKSTRUCT kb = (PKBDLLHOOKSTRUCT)lParam;
-
+	
 	std::string debug;
-
+		
 	switch (wParam)
 	{
 	case WM_KEYDOWN:

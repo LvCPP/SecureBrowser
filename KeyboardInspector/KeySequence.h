@@ -176,6 +176,7 @@ KEYBOARDINSPECTOR_API extern const KeySequence KEY_TAB;
 
 KEYBOARDINSPECTOR_API extern const KeySequence KEY_C;
 KEYBOARDINSPECTOR_API extern const KeySequence KEY_F;
+KEYBOARDINSPECTOR_API extern const KeySequence KEY_I;
 KEYBOARDINSPECTOR_API extern const KeySequence KEY_G;
 KEYBOARDINSPECTOR_API extern const KeySequence KEY_N;
 KEYBOARDINSPECTOR_API extern const KeySequence KEY_O;
