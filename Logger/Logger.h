@@ -6,7 +6,6 @@
 #include <thread>
 #include <iostream>
 #include <atomic>
-#include <map>
 
 namespace BrowserLogger
 {

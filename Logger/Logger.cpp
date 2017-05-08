@@ -1,18 +1,16 @@
 #include "Logger.h"
 #include <Windows.h>
 #include <string>
-#include <ctime>
 #include <fstream>
-#include <iomanip>
 
 using namespace BrowserLogger;
 
 Logger::Logger(LogLevel min_log_level, std::ostream& write_to, std::function<std::string(const LogMessage&)> formatter)
 	: stream_(write_to.rdbuf())
-	, formatter_(formatter)
 	, is_running_(true)
 	, min_level_(min_log_level)
 	, message_queue_()
+	, formatter_(formatter)
 {
 	//initialize thread here, for avoid using not initialized *this
 	write_thread_ = std::thread(&Logger::WriteThread, this);
