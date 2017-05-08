@@ -9,7 +9,7 @@ namespace BrowserLogin
 class LoginWidget : public QWidget {
 	Q_OBJECT
 public:
-	explicit LoginWidget(QWidget * parent = Q_NULLPTR);
+	explicit LoginWidget(QWidget* parent = Q_NULLPTR);
 	bool IsUsernameAndPasswordValid(); // TBD
 	void ResetPassword();
 signals:

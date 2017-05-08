@@ -35,9 +35,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LoginWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -68,15 +65,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_LoginApp.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="LoginDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_LoginDialog.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_LoginDialog.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="LoginWidget.ui">
@@ -94,16 +82,13 @@
     <CustomBuild Include="LoginCamera.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="LoginApp.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="LoginAppPrivate.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="LoginDialog.hpp">
+    <CustomBuild Include="LoginApp.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="LoginDialog.ui">
+    <CustomBuild Include="LoginApp.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -114,8 +99,11 @@
     <ClInclude Include="GeneratedFiles\ui_LoginCamera.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_LoginDialog.h">
+    <ClInclude Include="GeneratedFiles\ui_LoginApp.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginDynLib.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

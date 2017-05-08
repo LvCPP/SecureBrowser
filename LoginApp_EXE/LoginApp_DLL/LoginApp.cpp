@@ -1,38 +1,38 @@
-﻿#include"LoginApp.hpp"
-#include"LoginAppPrivate.hpp"
+﻿#include "LoginApp.hpp"
+#include "LoginAppPrivate.hpp"
 #include"LoginWidget.hpp"
 #include"LoginCamera.hpp"
-#include<qstackedwidget.h>
 #include<qmessagebox.h>
 using namespace BrowserLogin;
 
-namespace
+LoginAppPrivate::LoginAppPrivate(): ui_(new Ui::LoginApp())
 {
-
-constexpr size_t WINDOWHEIGHT = 470;
-constexpr size_t WINDOWWIDTH = 400;
 
 }
 
-LoginApp::LoginApp(QWidget* parent) :
-	QStackedWidget(parent)
-	, d_ptr(new LoginAppPrivate())
+LoginApp::LoginApp(QWidget* parent) : 
+	QDialog(parent) 
+	,d_ptr(new LoginAppPrivate())
 {
 	Q_D(LoginApp);//for access to private class methods and variables from public class method 
+	d->ui_->setupUi(this);
 	d->q_ptr = this;
-	d->SetupWindow();
-	d->login_ = new LoginWidget(this);
-	d->camera_login_ = new LoginCamera(this);
-	connect(d->login_
-		, &LoginWidget::LoginButtonClicked
-		, [d] {d->_q_OnPushButtonLoginClick(); });
-	connect(d->camera_login_
-		, &LoginCamera::AcceptPhotoButtonClicked
-		, [d] {d->_q_PhotoAccepted(); });
-	connect(d->camera_login_, &LoginCamera::AcceptPhotoButtonClicked, this, &LoginApp::AcceptPhotoClicked);
-    addWidget(d->login_);
-	addWidget(d->camera_login_);
-	setCurrentWidget(d->login_);
+	d->SetupWidgets();
+	connect(d->login_,
+		&LoginWidget::LoginButtonClicked,
+		[d] {d->_q_OnPushButtonLoginClick(); });
+	connect(d->camera_login_,
+		&LoginCamera::AcceptPhotoButtonClicked,
+		[d] {d->_q_PhotoAccepted(); });
+}
+
+void BrowserLogin::LoginAppPrivate::SetupWidgets()
+{
+	login_ = new LoginWidget(ui_->stackedWidget);
+	camera_login_ = new LoginCamera(ui_->stackedWidget);
+	ui_->stackedWidget->addWidget(login_);
+	ui_->stackedWidget->addWidget(camera_login_);
+	ui_->stackedWidget->setCurrentWidget(login_);
 }
 
 void LoginAppPrivate::AskCameraAccess()
@@ -49,10 +49,10 @@ void LoginAppPrivate::AskCameraAccess()
 	switch (action)
 	{
 	case QMessageBox::AcceptRole:
-		q->setCurrentWidget(camera_login_);
+		ui_->stackedWidget->setCurrentWidget(camera_login_);
 		break;
 	default:
-		emit q->RejectClicked();
+		emit q->reject();
 		break;
 	}
 }
@@ -71,34 +71,22 @@ void LoginAppPrivate::_q_OnPushButtonLoginClick()
 	}
 }
 
-void LoginAppPrivate::SetupWindow() //TBD
-{
-	Q_Q(LoginApp);
-	q->setMinimumSize(WINDOWHEIGHT, WINDOWWIDTH);
-	q->setMaximumSize(WINDOWHEIGHT, WINDOWWIDTH);
-}
-
 void LoginAppPrivate::_q_PhotoAccepted()
 {
 	Q_Q(LoginApp);
 	SendImage();
-	login_passed_ = true;
-	q->close();
-}
-
-LoginAppPrivate::~LoginAppPrivate()
-{
-	delete q_ptr;
-}
-
-LoginApp::~LoginApp()
-{
-	delete d_ptr;
+	emit q->accept();
 }
 
 void LoginAppPrivate::SendImage()
 {
 	//TBD
+}
+
+LoginApp::~LoginApp()
+{
+	delete d_ptr->q_ptr;
+	delete d_ptr;
 }
 
 #include "moc_LoginApp.cpp" //needed to be included becouse moc, generated

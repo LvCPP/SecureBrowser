@@ -1,22 +1,17 @@
 ﻿#pragma once
-#include<QtWidgets/QWidget>
-#include<QObject>
-#include<memory>
-#include<qstackedwidget.h>
+#include <QDialog>
+#include"LoginDynLib.h"
 
 namespace BrowserLogin
 {
 
 class LoginAppPrivate;
-class LoginApp: public QStackedWidget
+class LoginApp : public QDialog 
 {
 	Q_OBJECT
 public:
-	explicit LoginApp(QWidget* parent = Q_NULLPTR);
-	~LoginApp();
-signals:
-	void AcceptPhotoClicked();
-	void RejectClicked();
+	explicit LOGIN_API LoginApp(QWidget * parent = Q_NULLPTR);
+	virtual ~LoginApp(); //for potential further implementation
 protected:
 	LoginAppPrivate* const d_ptr;
 private:
@@ -26,5 +21,3 @@ private:
 };
 
 }
-
-

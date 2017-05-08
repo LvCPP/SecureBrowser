@@ -1,10 +1,9 @@
 ﻿#include "LoginCamera.hpp"
-#include "ui_logincamera.h"
 using namespace BrowserLogin;
 
-LoginCamera::LoginCamera(QWidget *parent) :
-	QWidget(parent),
-	ui_(new Ui::LoginCamera())
+LoginCamera::LoginCamera(QWidget* parent) :
+	QWidget(parent)
+	,ui_(new Ui::LoginCamera())
 {
 	SetupWindow();
 	connect(ui_->push_button_make_another_photo, &QPushButton::clicked, this, &LoginCamera::MakePhoto);
