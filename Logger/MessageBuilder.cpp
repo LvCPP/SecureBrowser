@@ -1,6 +1,6 @@
 #include "MessageBuilder.h"
 
-using namespace SecureBrowser;
+using namespace BrowserLogger;
 
 MessageBuilder::MessageBuilder(const std::function<void(std::string)>& completed_string_function)
 	: message_stream_()

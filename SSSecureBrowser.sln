@@ -12,10 +12,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logger", "Logger\Logger.vcx
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{A4E3C2AB-BBAC-4301-A88A-BCCA73A3A1F2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoggerTest", "LoggerTest\LoggerTest.vcxproj", "{64108125-7392-477D-89FF-FD804F4599EF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F359068F-5042-4390-A788-91E17009B13A} = {F359068F-5042-4390-A788-91E17009B13A}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoggerTest", "Tools\LoggerTest\LoggerTest.vcxproj", "{64108125-7392-477D-89FF-FD804F4599EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

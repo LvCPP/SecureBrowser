@@ -4,7 +4,7 @@
 #include <sstream>
 #include <functional>
 
-namespace SecureBrowser
+namespace BrowserLogger
 {
 
 class MessageBuilder
@@ -28,4 +28,4 @@ private:
 	std::function<void(std::string)> completed_string_function_;
 };
 
-} // namespace SecureBrowser
+} // namespace BrowserLogger

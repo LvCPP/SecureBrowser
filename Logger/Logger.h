@@ -6,23 +6,17 @@
 #include <thread>
 #include <iostream>
 #include <atomic>
+#include <map>
 
-namespace SecureBrowser
+namespace BrowserLogger
 {
-
-enum class LogLevel
-{
-	Debug,
-	Info,
-	Warning,
-	Error,
-};
 
 class Logger final
 {
 public:
 	explicit LOGGER_API Logger(LogLevel min_log_level = LogLevel::Debug,
-		std::ostream& write_to = std::cout);
+		std::ostream& write_to = std::cout,
+		std::function<std::string(const LogMessage&)> formatter = DefaultFormat);
 	LOGGER_API ~Logger();
 
 	LOGGER_API void Flush();
@@ -33,25 +27,21 @@ public:
 	LOGGER_API MessageBuilder operator<<(LogLevel level);
 
 private:
-	struct LogMessage
-	{
-		std::string message;
-		LogLevel level;
-	};
 
 	void WriteThread();
-	void Write(const LogMessage& message);
-	void Log(const std::string& msg, LogLevel level = LogLevel::Info);
+	void Write(const LogMessage& log_message);
+	void Log(const std::string& msg, LogLevel level);
 	void TryWrite();
 
 	std::mutex lock_writing_;
 	std::mutex lock_waiting_message_;
-	std::condition_variable cond_var_;
+	std::condition_variable wait_message_;
 	std::thread write_thread_;
 	std::ostream stream_;
 	std::atomic<bool> is_running_;
 	LogLevel min_level_;
 	MutexQueue<LogMessage> message_queue_;
+	std::function<std::string(const LogMessage& log_message)> formatter_;
 };
 
-} // namespace SecureBrowser
+} // namespace BrowserLogger
