@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include"ui_LoginApp.h"
-#include<qstackedwidget.h>
-#include<memory>
+#include "ui_LoginApp.h"
+#include <qstackedwidget.h>
+#include <memory>
 
 namespace BrowserLogin
 {

@@ -1,8 +1,8 @@
 ﻿#include "LoginApp.hpp"
 #include "LoginAppPrivate.hpp"
-#include"LoginWidget.hpp"
-#include"LoginCamera.hpp"
-#include<qmessagebox.h>
+#include "LoginWidget.hpp"
+#include "LoginCamera.hpp"
+#include <qmessagebox.h>
 using namespace BrowserLogin;
 
 LoginAppPrivate::LoginAppPrivate(): ui_(new Ui::LoginApp())
@@ -26,7 +26,7 @@ LoginApp::LoginApp(QWidget* parent) :
 		[d] {d->_q_PhotoAccepted(); });
 }
 
-void BrowserLogin::LoginAppPrivate::SetupWidgets()
+void LoginAppPrivate::SetupWidgets()
 {
 	login_ = new LoginWidget(ui_->stackedWidget);
 	camera_login_ = new LoginCamera(ui_->stackedWidget);

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <QDialog>
-#include"LoginDynLib.h"
+#include "LoginDynLib.h"
 
 namespace BrowserLogin
 {
