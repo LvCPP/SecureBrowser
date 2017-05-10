@@ -1,8 +1,8 @@
 #pragma once
 
 #include<map>
-#include<vector>
 #include<memory>
+#include<vector>
 
 namespace web {
 namespace http {
@@ -10,7 +10,7 @@ class http_request;
 }
 }
 
-namespace Http
+namespace BrowserHttp
 {
 
 enum class HttpRequestMethod
@@ -22,7 +22,7 @@ enum class HttpRequestMethod
 class HttpRequest
 {
 public:
-	HttpRequest(const HttpRequestMethod& method, const std::string& path = "/");
+	HttpRequest(HttpRequestMethod method, const std::string& path = "/");
 
 	void AddRequestHeader(const std::string& name, const std::string& value);
 

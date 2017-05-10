@@ -8,12 +8,12 @@ class http_response;
 }
 }
 
-namespace Http {
+namespace BrowserHttp {
 
 class HttpResponse
 {
 public:
-	HttpResponse();
+	//HttpResponse();
 	static HttpResponse FromHttpImpl(const web::http::http_response& impl);
 
 private:

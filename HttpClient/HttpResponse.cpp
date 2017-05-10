@@ -1,22 +1,21 @@
 #include"HttpResponse.h"
 #include<cpprest\http_client.h>
 
-using namespace web;
 using namespace web::http;
 
-using namespace Http;
+using namespace BrowserHttp;
 
-HttpResponse::HttpResponse()
-	:response_(std::make_shared<web::http::http_response>(web::http::http_response()))
+/*HttpResponse::HttpResponse()
+:response_(std::make_shared<http_response>(http_response()))
+{
+}*/
+
+HttpResponse::HttpResponse(const http_response& impl)
+	: response_(std::make_shared<http_response>(http_response(impl)))
 {
 }
 
-HttpResponse::HttpResponse(const web::http::http_response& impl)
-	: response_(std::make_shared<web::http::http_response>(web::http::http_response(impl)))
-{
-}
-
-HttpResponse HttpResponse::FromHttpImpl(const web::http::http_response& impl)
+HttpResponse HttpResponse::FromHttpImpl(const http_response& impl)
 {
 	return HttpResponse(impl);
 }
