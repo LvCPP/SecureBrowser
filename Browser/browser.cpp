@@ -9,7 +9,6 @@ Browser::Browser(QWidget *parent)
 {
 	ui_->setupUi(this);
 	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
-	SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, TRUE, &bOldState, 0);
 	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
