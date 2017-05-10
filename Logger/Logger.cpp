@@ -1,18 +1,16 @@
 #include "Logger.h"
 #include <Windows.h>
 #include <string>
-#include <ctime>
 #include <fstream>
-#include <iomanip>
 
 using namespace BrowserLogger;
 
 Logger::Logger(LogLevel min_log_level, std::ostream& write_to, std::function<std::string(const LogMessage&)> formatter)
 	: stream_(write_to.rdbuf())
-	, formatter_(formatter)
 	, is_running_(true)
 	, min_level_(min_log_level)
 	, message_queue_()
+	, formatter_(formatter)
 {
 	//initialize thread here, for avoid using not initialized *this
 	write_thread_ = std::thread(&Logger::WriteThread, this);
@@ -40,10 +38,10 @@ void Logger::Flush()
 	}
 }
 
-MessageBuilder Logger::operator<<(LogLevel level)
+LOGGER_API MessageBuilder Logger::MakeMessageBuilder(LogLevel level, const std::string& file,
+	const std::string& function, unsigned int line, const tm& time)
 {
-	//after string is builded, Logger::Log will be called with those string as a parameter
-	return MessageBuilder(bind(&Logger::Log, this, std::placeholders::_1, level));
+	return MessageBuilder(bind(&Logger::Log, this, std::placeholders::_1, level, file, function, line, time));
 }
 
 void Logger::WriteThread()
@@ -73,9 +71,10 @@ void Logger::Write(const LogMessage& log_message)
 	}
 }
 
-void Logger::Log(const std::string& msg, LogLevel level)
+void Logger::Log(const std::string& msg, LogLevel level, const std::string& file,
+	const std::string& function, unsigned int line, const tm& time)
 {
-	std::string formatted_message = formatter_({ msg, level });
+	std::string formatted_message = formatter_({ msg, level, file, function, line, time });
 
 	message_queue_.Add({ formatted_message, level });
 	wait_message_.notify_one();
