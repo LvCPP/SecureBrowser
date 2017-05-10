@@ -21,10 +21,10 @@
     <ClInclude Include="MutexQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utils.h">
+    <ClInclude Include="MessageBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MessageBuilder.h">
+    <ClInclude Include="LoggerUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
