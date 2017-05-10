@@ -2,15 +2,17 @@
 #include "PhotoMaker.h"
 #include "FileSystemFrameSaver.h"
 #include "FrameStorer.h"
+#include "FaceDetector.h"
 
 #include <opencv2\highgui\highgui.hpp>
 
 #include <Windows.h>
 #include <iostream>
+#include <thread>
 
 using namespace CameraInspector;
 
-int main()
+int TestPhotoMaker()
 {
 	WebCameraCapture& cam_cap = WebCameraCapture::Instance();
 
@@ -67,9 +69,9 @@ int main()
 	cv::namedWindow("Stored frame");
 	cv::imshow("Stored frame", store_id.Get().GetImpl());
 	cv::waitKey(0);
-	
+
 	// User approves
-	cv::destroyWindow("Stored frame");	
+	cv::destroyWindow("Stored frame");
 	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetNameToSave("ID");	// optional
 	store_id.Save(shared_saver);
 
@@ -80,7 +82,55 @@ int main()
 	std::cout << "Another photo saved!" << std::endl;
 
 	cam_cap.Stop();
+}
 
-	system("pause");
+
+class DummyObserver : public IFaceDetectorObserver
+{
+	void OnFaceQuantityChanged(int face_number)
+	{
+		std::cout << "New face count : " << face_number << std::endl;
+	}
+};
+
+
+void TestFaceDetector()
+{
+	WebCameraCapture& cam_cap = WebCameraCapture::Instance();
+
+	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>();
+
+	const std::shared_ptr<DummyObserver> observer = std::make_shared<DummyObserver>();
+	face_detector->Attach(observer);
+
+	cam_cap.AddFrameHandler(face_detector);
+	cam_cap.Start();
+
+	std::this_thread::sleep_for(std::chrono::seconds(60));
+	cam_cap.Stop();
+}
+
+int main(int argc, char** argv)
+{
+	if (argc != 2)
+	{
+		return -1;
+	}
+
+	const std::string select = argv[1];
+	if (select == "photo")
+	{
+		TestPhotoMaker();
+	}
+	else if (select == "face")
+	{
+		TestFaceDetector();
+	}
+	else
+	{
+		std::cout << "bad_choise" << std::endl;
+	}
+
+    system("pause");
 	return 0;
 }
