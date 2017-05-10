@@ -84,7 +84,7 @@ void LoginAppPrivate::SendImage()
 
 LoginApp::~LoginApp()
 {
-	delete d_ptr->q_ptr;
+	//delete d_ptr->q_ptr;
 	delete d_ptr;
 }
 

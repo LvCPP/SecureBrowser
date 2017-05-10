@@ -80,7 +80,7 @@
       <AdditionalDependencies>Login.lib;Logger.lib;qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5WebEngineWidgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /C /Y "$(SolutionDir)Libraries\Debug\*.dll" "$(SolutionDir)Build\Debug\"</Command>
+      <Command>for %%x in (dll pdb) do xcopy /C /Y "$(SolutionDir)Libraries\Debug\*.%%x" "$(SolutionDir)Build\Debug\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
