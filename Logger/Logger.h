@@ -23,13 +23,15 @@ public:
 	/* Main idea of output: 1) After call with LogLevel create temporary object of MessageBuilder.
 	 * 2)call other chained << operators for MessageBuilder
 	 * 3)return string by callback function in destructor of MessageBuilder */
-	LOGGER_API MessageBuilder operator<<(LogLevel level);
+	LOGGER_API MessageBuilder MakeMessageBuilder(LogLevel level, const std::string& file,
+		const std::string& function, unsigned int line, const tm& time);
 
 private:
 
 	void WriteThread();
 	void Write(const LogMessage& log_message);
-	void Log(const std::string& msg, LogLevel level);
+	void Log(const std::string& msg, LogLevel level, const std::string& file,
+		const std::string& function, unsigned int line, const tm& time);
 	void TryWrite();
 
 	std::mutex lock_writing_;
