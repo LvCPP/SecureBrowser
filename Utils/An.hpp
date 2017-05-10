@@ -32,7 +32,7 @@ private:
 template <typename T>
 inline void AnFill(An<T>& an)
 {
-	throw std::exception("Can't find implementation for class: " + typeid(T).name());
+	static_assert(true, "Can't find implementation for class");
 }
 
-}
+} // namespace Utils

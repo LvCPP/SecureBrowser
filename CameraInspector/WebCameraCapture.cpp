@@ -2,13 +2,15 @@
 #include "Frame.h"
 
 #include <opencv2\highgui\highgui.hpp>
+#include <Windows.h>
 
 using namespace CameraInspector;
 
 WebCameraCapture::WebCameraCapture()
-	: camera_(std::make_shared<cv::VideoCapture>(cv::VideoCapture(0)))
+	: camera_(std::make_shared<cv::VideoCapture>(0))
 	, is_working_(false)
 {
+	WaitForInit();
 }
 
 void WebCameraCapture::Start()
@@ -38,16 +40,26 @@ void WebCameraCapture::Stop()
 	}
 }
 
-void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler)
-{
-	handlers_.push_back(handler);
-}
-
 StableFrame WebCameraCapture::GetCurrentStableFrame() const
 {
 	cv::Mat r_mat;
 	camera_->read(r_mat);
 	return StableFrame(r_mat);
+}
+
+void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler)
+{
+	handlers_.push_back(handler);
+}
+
+void WebCameraCapture::WaitForInit()
+{
+	cv::Mat init_mat;
+	while (init_mat.empty())
+	{
+		camera_->read(init_mat);
+		Sleep(0);
+	}
 }
 
 void WebCameraCapture::ProcessHandlers()

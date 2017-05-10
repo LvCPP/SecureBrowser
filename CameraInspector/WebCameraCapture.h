@@ -3,7 +3,6 @@
 #include "StableFrame.h"
 #include "An.hpp"
 
-#include <Windows.h>
 #include <memory>
 #include <vector>
 #include <atomic>
@@ -32,7 +31,8 @@ public:
 	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 	
 private:
-	// TODO: make it thread-safe
+	void WaitForInit();
+
 	void ProcessHandlers();
 	std::vector<std::shared_ptr<IFrameHandler>> handlers_;
 	std::shared_ptr<cv::VideoCapture> camera_;
@@ -50,9 +50,6 @@ inline void AnFill<CameraInspector::WebCameraCapture>(An<CameraInspector::WebCam
 {
 	static CameraInspector::WebCameraCapture wcc;
 	an = &wcc;
-
-	// Wait while camera initializes (don't need to do this on VS17)
-	Sleep(500);
 }
 
-}
+} // namespace Utils
