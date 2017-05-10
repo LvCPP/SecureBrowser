@@ -1,11 +1,15 @@
 #include "browser.h"
+#include "ui_browser.h"
 
 using namespace SecureBrowser;
 
 Browser::Browser(QWidget *parent)
-	: QWidget(parent), ui_(std::make_unique<Ui::BrowserClass>())
+	: QWidget(parent)
+	, ui_(new Ui::Browser())
 {
 	ui_->setupUi(this);
+	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+	SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, TRUE, &bOldState, 0);
 	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
@@ -15,14 +19,14 @@ Browser::Browser(QWidget *parent)
 	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
 }
 
+Browser::~Browser()
+{
+}
+
 void Browser::SlotEnter()
 {
-	QString uri = ui_->line_edit->text();
-	if (!(uri.startsWith("http://")))
-	{
-		uri = "http://" + uri;
-	}
-	ui_->web_view->load(uri);
+	QUrl url = QUrl::fromUserInput(ui_->line_edit->text());
+	ui_->web_view->load(url);
 }
 
 void Browser::SetUrl(const QUrl &url)
