@@ -1,7 +1,6 @@
 #include "HttpClient.h"
 #include<cpprest\http_client.h>
 
-using namespace web;
 using namespace web::http::client;
 using namespace utility::conversions;
 
