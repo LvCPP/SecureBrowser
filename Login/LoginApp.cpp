@@ -22,7 +22,7 @@ LoginApp::LoginApp(LoginAppPrivate &&another_d_ptr, QStackedWidget *parent) : //
 	d->q_ptr = this;
 }
 
-LoginApp::LoginApp(QStackedWidget* parent) :
+LoginApp::LoginApp(QWidget* parent) :
 	QStackedWidget(parent)
 	,d_ptr(new LoginAppPrivate())
 {
