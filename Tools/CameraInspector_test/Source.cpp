@@ -3,50 +3,31 @@
 #include "FileSystemFrameSaver.h"
 #include "FrameStorer.h"
 
-#include <opencv2\highgui\highgui.hpp>
+#include <opencv2\highgui\highgui.hpp>		// used only for displaying images and input control
 
 #include <Windows.h>
 #include <iostream>
 
 using namespace CameraInspector;
+using namespace Utils;
 
 int main()
 {
-	WebCameraCapture& cam_cap = WebCameraCapture::Instance();
+	An<WebCameraCapture> cam_cap;
 
-	cv::Mat frame_original;
-	cv::String f_original_window = "Original";
 	cv::String f_converted_window = "Converted";
-	cv::namedWindow(f_original_window, CV_WINDOW_AUTOSIZE);
 	cv::namedWindow(f_converted_window, CV_WINDOW_AUTOSIZE);
+	
+	std::cout << "\nPress Esc to capture the screen" << std::endl;
 
-	std::cout << "Height: " << cam_cap.GetCamera().get(CV_CAP_PROP_FRAME_HEIGHT)
-		<< "\nWidth: " << cam_cap.GetCamera().get(CV_CAP_PROP_FRAME_WIDTH)
-		<< "\nPress Esc to capture the screen" << std::endl;
-
-	// Wait while camera initializes (don't need to do this on VS17)
-	Sleep(500);
-
+	char choose = 0;
 	while (cv::waitKey(30) != 27)
 	{
-		bool success = cam_cap.GetCamera().read(frame_original);
-
-		if (!success)
-		{
-			std::cout << "Trouble capturing webcam!" << std::endl;
-			system("pause");
-			return -1;
-		}
-
-		imshow(f_original_window, frame_original);
-
-		Frame my_frame(frame_original);
-		cv::Mat frame_after(my_frame.GetImpl());
-
-		imshow(f_converted_window, frame_after);
+		Frame tmp_frame = cam_cap->GetCurrentStableFrame();
+		cv::Mat to_show(tmp_frame.GetImpl());
+		imshow(f_converted_window, to_show);
 	}
 
-	cv::destroyWindow(f_original_window);
 	cv::destroyWindow(f_converted_window);
 	// -----------------------------------------------------------------------------------------------------------------------------
 
@@ -57,29 +38,26 @@ int main()
 	std::shared_ptr<PhotoMaker> shared_maker = std::make_shared<PhotoMaker>(PhotoMaker());
 	shared_maker->SetFrameSaver(shared_saver);
 
-	cam_cap.AddFrameHandler(shared_maker);
-	cam_cap.Start();
+	cam_cap->AddFrameHandler(shared_maker);
+	cam_cap->Start();
 
-	cv::Mat id_frame;
-	cam_cap.GetCamera().read(id_frame);
-	FrameStorer store_id(id_frame);
+	FrameStorer storer = cam_cap->GetCurrentStableFrame();
 
 	cv::namedWindow("Stored frame");
-	cv::imshow("Stored frame", store_id.Get().GetImpl());
+	cv::imshow("Stored frame", storer.Get().GetImpl());
 	cv::waitKey(0);
 	
-	// User approves
+	// Suppose, user approves
 	cv::destroyWindow("Stored frame");	
 	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetNameToSave("ID");	// optional
-	store_id.Save(shared_saver);
+	storer.Save(shared_saver);
 
-	// During test
+	// During test ...
 	dynamic_cast<FileSystemFrameSaver*>(shared_saver.get())->SetNameToSave("shot_01");
 	shared_maker->MakePhoto();
-	Sleep(100);
 	std::cout << "Another photo saved!" << std::endl;
 
-	cam_cap.Stop();
+	cam_cap->Stop();
 
 	system("pause");
 	return 0;

@@ -11,13 +11,6 @@ WebCameraCapture::WebCameraCapture()
 {
 }
 
-WebCameraCapture& WebCameraCapture::Instance()
-{
-	// Since it's a static variable, if the class has already been created, it won't be created again.
-	static WebCameraCapture inst;
-	return inst;
-}
-
 void WebCameraCapture::Start()
 {
 	if (!is_working_)
@@ -50,9 +43,11 @@ void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& han
 	handlers_.push_back(handler);
 }
 
-cv::VideoCapture WebCameraCapture::GetCamera() const noexcept
+StableFrame WebCameraCapture::GetCurrentStableFrame() const
 {
-	return *camera_;
+	cv::Mat r_mat;
+	camera_->read(r_mat);
+	return StableFrame(r_mat);
 }
 
 void WebCameraCapture::ProcessHandlers()
