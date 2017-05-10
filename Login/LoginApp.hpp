@@ -11,7 +11,7 @@ class LoginApp : public QStackedWidget
 {
 	Q_OBJECT
 public:
-	explicit LOGIN_API LoginApp(QStackedWidget* parent = Q_NULLPTR);
+	explicit LOGIN_API LoginApp(QWidget* parent = Q_NULLPTR);
 protected:
 	LoginAppPrivate* const d_ptr; // d-pointer
 	LoginApp(LoginAppPrivate &&another_d_ptr, QStackedWidget *parent); //TBD

@@ -2,7 +2,10 @@
 
 #include <QWidget>
 
-namespace Ui { class Browser; }
+namespace Ui 
+{ 
+class Browser; 
+}
 
 namespace SecureBrowser
 {
