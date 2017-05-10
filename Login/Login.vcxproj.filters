@@ -82,11 +82,14 @@
     <CustomBuild Include="LoginCamera.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="LoginAppPrivate.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
     <CustomBuild Include="LoginApp.hpp">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="LoginAppPrivate.hpp">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="LoginApp.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="LoginDynLib.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_LoginApp.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,15 +1,13 @@
 ﻿#include "LoginCamera.hpp"
-#include "ui_logincamera.h"
-
 using namespace BrowserLogin;
 
-LoginCamera::LoginCamera(QWidget *parent) :
-	QWidget(parent),
-	ui_(std::make_unique<Ui::LoginCamera>())
+LoginCamera::LoginCamera(QWidget* parent) 
+	: QWidget(parent)
+	, ui_(new Ui::LoginCamera())
 {
 	SetupWindow();
-
 	connect(ui_->push_button_make_another_photo, &QPushButton::clicked, this, &LoginCamera::MakePhoto);
+	connect(ui_->push_button_accept_photo, &QPushButton::clicked, this, &LoginCamera::AcceptPhotoButtonClicked);
 }
 
 void LoginCamera::MakePhoto()
@@ -22,11 +20,6 @@ void LoginCamera::MakePhoto()
 	ui_->label_photo->setPixmap(picture.scaled(width, height, Qt::KeepAspectRatio));
 	ui_->push_button_accept_photo->setEnabled(true);
 	ui_->push_button_make_another_photo->setText("New Photo");
-}
-
-QPushButton* LoginCamera::GetAcceptPhotoButton() const
-{
-	return ui_->push_button_accept_photo;
 }
 
 void LoginCamera::SetupWindow()

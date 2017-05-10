@@ -1,29 +1,31 @@
 ﻿#pragma once
-#include"LoginApp.hpp"
-#include<QObject>
-#include<memory>
+#include "ui_LoginApp.h"
+#include <qstackedwidget.h>
 
 namespace BrowserLogin
 {
+
 class LoginWidget;
 class LoginCamera;
-class LoginAppPrivate : QObject
+class LoginAppPrivate
 {
-	Q_DISABLE_COPY(LoginAppPrivate)
-	Q_DECLARE_PUBLIC(LoginApp)
 public:
-	explicit LoginAppPrivate(QObject* parent = Q_NULLPTR);
-	virtual ~LoginAppPrivate() = default;
-	LoginApp* q_ptr; //q-pointer
+	LoginAppPrivate();
+	virtual ~LoginAppPrivate() = default; //for potential further implementation
 
-	void _q_PhotoAccepted(); //_q_ is a rule for naming private slots
+	void _q_PhotoAccepted(); 
 	void _q_OnPushButtonLoginClick();
 
-	void SetupWindow(); //TBD(interface)
+	void SetupWidgets();
 	void AskCameraAccess();
 	void SendImage(); // TBD
-	bool login_passed_ = false;
-	std::unique_ptr<LoginWidget> login_;
-	std::unique_ptr<LoginCamera> camera_login_;
+    LoginApp* q_ptr;
+	LoginWidget* login_;
+	LoginCamera* camera_login_;
+	QScopedPointer<Ui::LoginApp> ui_;
+private:
+	Q_DISABLE_COPY(LoginAppPrivate)
+	Q_DECLARE_PUBLIC(LoginApp)
 };
+
 }
