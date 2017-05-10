@@ -27,8 +27,9 @@ public:
 	void Start();
 	void Stop();
 
-	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 	StableFrame GetCurrentStableFrame() const;
+
+	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 	
 private:
 	// TODO: make it thread-safe
