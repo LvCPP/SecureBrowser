@@ -1,6 +1,6 @@
 #pragma once
-#include <QWidget>
 #include "ui_LoginWidget.h"
+#include <QWidget>
 
 namespace BrowserLogin
 {

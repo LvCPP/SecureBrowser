@@ -1,5 +1,5 @@
 #include "LoginWidget.h"
-#include <qmessagebox.h>
+#include <QMessageBox>
 using namespace BrowserLogin;
 
 LoginWidget::LoginWidget(QWidget* parent)

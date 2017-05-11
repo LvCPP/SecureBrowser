@@ -2,7 +2,7 @@
 #include "LoginAppPrivate.h"
 #include "LoginWidget.h"
 #include "LoginCamera.h"
-#include <qmessagebox.h>
+#include <QMessageBox>
 using namespace BrowserLogin;
 
 LoginAppPrivate::LoginAppPrivate(): ui_(new Ui::LoginApp())
