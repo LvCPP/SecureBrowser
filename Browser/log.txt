@@ -1,4 +1,0 @@
-[Function: main] [Line: 19] [11/05/17 at 12:56:28] [Info] Program initialized
-[Function: main] [Line: 22] [11/05/17 at 12:56:29] [Info] Start login
-[Function: main] [Line: 31] [11/05/17 at 12:57:19] [Info] User loged in. Start Browser
-[Function: main] [Line: 36] [11/05/17 at 12:57:53] [Info] Program finished with code 0

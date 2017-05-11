@@ -1,16 +1,22 @@
-#Visual Studio generated files
+# Visual Studio generated files
 .vs/
 *.user
 *.opendb
 *.db
-
-GeneratedFiles/
 Build/
 Release/
 Debug/
 x64/
 *.user
 
-Libraries/
+# Qt files
+GeneratedFiles/
+
+# NuGet packages
 packages/
+
+# Photos
 *.jpg
+
+# Logs
+*.txt
