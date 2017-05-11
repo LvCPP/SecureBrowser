@@ -1,4 +1,4 @@
-﻿#include "LoginCamera.hpp"
+﻿#include "LoginCamera.h"
 using namespace BrowserLogin;
 
 LoginCamera::LoginCamera(QWidget* parent) 
