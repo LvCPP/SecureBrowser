@@ -1,15 +1,15 @@
+#include "LoginWidget.h"
 #include <qmessagebox.h>
-#include "LoginWidget.hpp"
-
 using namespace BrowserLogin;
 
-LoginWidget::LoginWidget(QWidget * parent) : 
-	QWidget(parent)
-	,ui_(std::make_unique<Ui::LoginWidgetClass>())
+LoginWidget::LoginWidget(QWidget* parent)
+	: QWidget(parent)
+	, ui_(new Ui::LoginWidgetClass())
 {
 	SetupWindow();
 	connect(ui_->line_edit_username, &QLineEdit::textChanged, this, &LoginWidget::UsernameChanged);
 	connect(ui_->line_edit_password, &QLineEdit::textChanged, this, &LoginWidget::UsernameChanged);
+	connect(ui_->push_btn_login, &QPushButton::clicked, this, &LoginWidget::LoginButtonClicked);
 }
 
 void LoginWidget::UsernameChanged()
@@ -38,11 +38,6 @@ bool LoginWidget::IsUsernameAndPasswordValid()// TBD
 	if (username == "12345" && password == "12345")
 		return true;
 	return false;
-}
-
-QPushButton* LoginWidget::GetLoginButton() const
-{
-	return ui_->push_btn_login;
 }
 
 void LoginWidget::ResetPassword()

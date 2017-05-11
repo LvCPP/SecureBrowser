@@ -10,7 +10,7 @@ using namespace CameraInspector;
 
 namespace
 {
-constexpr char* CASCADE_FILE_PATH = "../Recources/haarcascade_frontalface_alt.xml";
+constexpr char* CASCADE_FILE_PATH = "../../Recources/haarcascade_frontalface_alt.xml";
 constexpr double SCALE_FACTOR = 1.1;
 constexpr int MIN_NEIGHBORS = 2;
 constexpr int FLAGS = cv::CASCADE_SCALE_IMAGE;
@@ -101,8 +101,14 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 	std::vector<cv::Rect> faces;
 	// Detect faces
 	pimpl_->GetFaceCascade().detectMultiScale(frame_gray, faces, SCALE_FACTOR, MIN_NEIGHBORS, FLAGS, cv::Size(30, 30));
-	Notify(static_cast<int>(faces.size()));
-#ifdef DEBUG
+	
+	const size_t new_faces_quantuty = faces.size();
+	if (faces_quantity_ != new_faces_quantuty)
+	{
+		faces_quantity_ = new_faces_quantuty;
+		Notify(static_cast<int>(new_faces_quantuty));
+	}
+#ifdef _DEBUG
 	for (size_t ic = 0; ic < faces.size(); ic++) // Iterate through all current elements (detected faces)
 	{
 		cv::Point pt1(faces[ic].x, faces[ic].y); // Display detected faces on main window - live stream from camera
@@ -110,5 +116,6 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 		rectangle(cv_frame, pt1, pt2, COLOR_GREEN, THICKNESS, LINE_TYPE, SHIFT);
 	}
 imshow("Debug window", cv_frame);
+cv::waitKey(10);
 #endif // DEBUG
 }

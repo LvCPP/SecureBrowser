@@ -2,127 +2,116 @@
 #include "PhotoMaker.h"
 #include "FileSystemFrameSaver.h"
 #include "FrameStorer.h"
+#include "FaceDetector.h"
 
-#include <opencv2\highgui\highgui.hpp>
+#include <opencv2\highgui\highgui.hpp>		// used only for displaying images and input control
 
 #include <Windows.h>
 #include <iostream>
+#include <thread>
 
 using namespace CameraInspector;
+using namespace Utils;
 
-void TImitFPS(cv::VideoCapture& video, PhotoMaker& maker);
-
-bool g_imit = true;
-
-int main()
+int TestPhotoMaker()
 {
-	cv::VideoCapture video(0);
-	cv::Mat frame_original;
+	An<WebCameraCapture> cam_cap;
 
-	cv::String f_original_window = "Original";
 	cv::String f_converted_window = "Converted";
-	cv::namedWindow(f_original_window, CV_WINDOW_AUTOSIZE);
 	cv::namedWindow(f_converted_window, CV_WINDOW_AUTOSIZE);
+	
+	std::cout << "\nPress Esc to capture the screen" << std::endl;
 
-	std::cout << "Height: " << video.get(CV_CAP_PROP_FRAME_HEIGHT)
-		<< "\nsWidth: " << video.get(CV_CAP_PROP_FRAME_WIDTH)
-		<< "\nPress Esc to capture the screen" << std::endl;
-
-	// Wait while camera initializes (don't need to do this on VS17)
-	Sleep(500);
-
+	char choose = 0;
 	while (cv::waitKey(30) != 27)
 	{
-		bool success = video.read(frame_original);
-
-		if (!success)
-		{
-			std::cout << "Trouble capturing webcam!" << std::endl;
-			system("pause");
-			return -1;
-		}
-
-		imshow(f_original_window, frame_original);
-
-		Frame my_frame(frame_original);
-		cv::Mat frame_after(my_frame.GetImpl());
-
-		imshow(f_converted_window, frame_after);
+		Frame tmp_frame = cam_cap->GetCurrentStableFrame();
+		cv::Mat to_show(tmp_frame.GetImpl());
+		imshow(f_converted_window, to_show);
 	}
 
-	cv::destroyWindow(f_original_window);
 	cv::destroyWindow(f_converted_window);
 	// -----------------------------------------------------------------------------------------------------------------------------
 
-	std::shared_ptr<IFrameSaver> share_saver = std::make_shared<FileSystemFrameSaver>(FileSystemFrameSaver());
-	dynamic_cast<FileSystemFrameSaver&>(*share_saver).SetPathToSave("");
+	std::shared_ptr<IFrameSaver> shared_saver = std::make_shared<FileSystemFrameSaver>(FileSystemFrameSaver());
+	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetPathToSave("");
 
 	// Create & configure maker
-	PhotoMaker maker;
-	maker.SetFrameSaver(share_saver);
+	std::shared_ptr<PhotoMaker> shared_maker = std::make_shared<PhotoMaker>(PhotoMaker());
+	shared_maker->SetFrameSaver(shared_saver);
 
-	// Create & configure camera
-	WebCameraCapture camera_01;
-	std::shared_ptr<IFrameHandler> share_maker = std::make_shared<PhotoMaker>(maker);
-	camera_01.AddFrameHandler(share_maker);
-	camera_01.Start();
+	cam_cap->AddFrameHandler(shared_maker);
+	cam_cap->Start();
 
-	// Imitate camera capture work
-	std::thread imit_fps = std::thread(TImitFPS, std::ref(video), std::ref(maker));
-
-	/*	User ID photo. Possible use example
-	FrameStorer id_photo(camera_01.GetFrame());
-	cv::imshow("ID", id_photo.Get().GetImpl());			// user doesn't like this and want another	(Cancel button)
-	
-	id_photo = FrameStorer(camera_01.GetFrame());
-	cv::imshow("ID", id_photo.Get().GetImpl());			// user like it, we want to save			(OK button)
-	FrameStorer.Save(share_saver);
-	*/
-
-	cv::Mat id_frame;
-	video.read(id_frame);
-	FrameStorer store_id(id_frame);
+	FrameStorer storer = cam_cap->GetCurrentStableFrame();
 
 	cv::namedWindow("Stored frame");
-	cv::imshow("Stored frame", store_id.Get().GetImpl());
+	cv::imshow("Stored frame", storer.Get().GetImpl());
 	cv::waitKey(0);
 	
-	// User approves
+	// Suppose, user approves
 	cv::destroyWindow("Stored frame");	
-	dynamic_cast<FileSystemFrameSaver&>(*share_saver).SetNameToSave("ID");	// optional
-	store_id.Save(share_saver);
+	
+	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetNameToSave("ID");	// optional
+	storer.Save(shared_saver);
 
-	// During test
-	dynamic_cast<FileSystemFrameSaver*>(share_saver.get())->SetNameToSave("shot_01");
-	maker.MakePhoto();
-	Sleep(100);
+	// During test ...
+	dynamic_cast<FileSystemFrameSaver*>(shared_saver.get())->SetNameToSave("shot_01");
+	shared_maker->MakePhoto();
 	std::cout << "Another photo saved!" << std::endl;
 
-	camera_01.Stop();
-	g_imit = false;
-	
-	if(imit_fps.joinable())
-		imit_fps.join();
+	cam_cap->Stop();
 
-	system("pause");
 	return 0;
 }
 
-void TImitFPS(cv::VideoCapture& video, PhotoMaker& maker)
+
+class DummyObserver : public IFaceDetectorObserver
 {
-	cv::Mat tmp_frame;
-	
-	while (g_imit)
+	void OnFaceQuantityChanged(int face_number)
 	{
-		if (!video.read(tmp_frame))
-		{
-			std::cout << "Trouble capturing webcam!" << std::endl;
-			system("pause");
-			exit(-1);
-		}
-		maker.ProcessFrame(Frame(tmp_frame));
-		
-		// 20 FPS
-		Sleep(50);
+		std::cout << "New face count : " << face_number << std::endl;
 	}
+};
+
+
+void TestFaceDetector()
+{
+	An<WebCameraCapture> cam_cap;
+
+	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>();
+
+	const std::shared_ptr<DummyObserver> observer = std::make_shared<DummyObserver>();
+	face_detector->Attach(observer);
+
+	cam_cap->AddFrameHandler(face_detector);
+	cam_cap->Start();
+
+	std::this_thread::sleep_for(std::chrono::seconds(60));
+	cam_cap->Stop();
+}
+
+int main(int argc, char** argv)
+{
+	if (argc != 2)
+	{
+		return -1;
+	}
+
+	const std::string select = argv[1];
+	if (select == "photo")
+	{
+		TestPhotoMaker();
+	}
+	else if (select == "face")
+	{
+		TestFaceDetector();
+	}
+	else
+	{
+		std::cout << "bad_choise" << std::endl;
+	}
+
+    system("pause");
+	return 0;
 }

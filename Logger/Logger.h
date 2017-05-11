@@ -3,40 +3,13 @@
 #include "MutexQueue.h"
 #include "MessageBuilder.h"
 #include "LoggerUtils.h"
+#include <An.hpp>
 #include <thread>
 #include <iostream>
 #include <atomic>
-#include <map>
 
 namespace BrowserLogger
 {
-
-enum class LogLevel
-{
-	Debug,
-	Info,
-	Warning,
-	Error,
-};
-
-struct LogMessage
-{
-	std::string message;
-	LogLevel level;
-};
-
-static const std::map<LogLevel, std::string> log_level_name{ { LogLevel::Debug, "Debug" }
-	, { LogLevel::Info, "Info" }
-	, { LogLevel::Warning, "Warning" }
-	, { LogLevel::Error, "Error" } };
-
-std::string DefaultFormat(const LogMessage& log_message)
-{
-	std::stringstream formatted_message;
-	formatted_message << "[" << GetFormattedDate() << " at " << GetFormattedTime() << "]" << " ["
-		<< log_level_name.at(log_message.level) << "] " << log_message.message << std::endl;
-	return formatted_message.str();
-}
 
 class Logger final
 {
@@ -47,17 +20,20 @@ public:
 	LOGGER_API ~Logger();
 
 	LOGGER_API void Flush();
+	LOGGER_API void SetOutput(std::ostream& write_to);
 
 	/* Main idea of output: 1) After call with LogLevel create temporary object of MessageBuilder.
 	 * 2)call other chained << operators for MessageBuilder
 	 * 3)return string by callback function in destructor of MessageBuilder */
-	LOGGER_API MessageBuilder operator<<(LogLevel level);
+	LOGGER_API MessageBuilder MakeMessageBuilder(LogLevel level, const std::string& file,
+		const std::string& function, unsigned int line, const tm& time);
 
 private:
 
 	void WriteThread();
 	void Write(const LogMessage& log_message);
-	void Log(const std::string& msg, LogLevel level);
+	void Log(const std::string& msg, LogLevel level, const std::string& file,
+		const std::string& function, unsigned int line, const tm& time);
 	void TryWrite();
 
 	std::mutex lock_writing_;
@@ -72,3 +48,15 @@ private:
 };
 
 } // namespace BrowserLogger
+
+namespace Utils
+{
+
+	template <>
+	inline void AnFill<BrowserLogger::Logger>(An<BrowserLogger::Logger>& an)
+	{
+		static BrowserLogger::Logger instance;
+		an = &instance;
+	}
+
+} // namespace Utils
