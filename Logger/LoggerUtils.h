@@ -13,10 +13,10 @@
 namespace BrowserLogger
 {
 
-#define logerror(logger) logger.MakeMessageBuilder(LogLevel::Error, __FILE__, __FUNCTION__, __LINE__, GetTimeStructure()) 
-#define logwarning(logger) logger.MakeMessageBuilder(LogLevel::Warning, __FILE__, __FUNCTION__, __LINE__, GetTimeStructure()) 
-#define loginfo(logger) logger.MakeMessageBuilder(LogLevel::Info, __FILE__, __FUNCTION__, __LINE__, GetTimeStructure()) 
-#define logdebug(logger) logger.MakeMessageBuilder(LogLevel::Debug, __FILE__, __FUNCTION__, __LINE__, GetTimeStructure()) 
+#define logerror(logger) (logger).MakeMessageBuilder(LogLevel::Error, __FILE__, __FUNCTION__, __LINE__, GetTimeStructure()) 
+#define logwarning(logger) (logger).MakeMessageBuilder(LogLevel::Warning, __FILE__, __FUNCTION__, __LINE__, GetTimeStructure()) 
+#define loginfo(logger) (logger).MakeMessageBuilder(LogLevel::Info, __FILE__, __FUNCTION__, __LINE__, GetTimeStructure()) 
+#define logdebug(logger) (logger).MakeMessageBuilder(LogLevel::Debug, __FILE__, __FUNCTION__, __LINE__, GetTimeStructure()) 
 
 static tm GetTimeStructure()
 {

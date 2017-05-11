@@ -10,6 +10,7 @@ class An
 public:
 	An() { Clear(); }
 
+	T& operator*() { return *Get0(); }
 	T* operator->() { return Get0(); }
 	const T* operator->() const { return Get0(); }
 	void operator=(T* t) { data_ = t; }

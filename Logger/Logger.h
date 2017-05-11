@@ -3,6 +3,7 @@
 #include "MutexQueue.h"
 #include "MessageBuilder.h"
 #include "LoggerUtils.h"
+#include <An.hpp>
 #include <thread>
 #include <iostream>
 #include <atomic>
@@ -19,6 +20,7 @@ public:
 	LOGGER_API ~Logger();
 
 	LOGGER_API void Flush();
+	LOGGER_API void SetOutput(std::ostream& write_to);
 
 	/* Main idea of output: 1) After call with LogLevel create temporary object of MessageBuilder.
 	 * 2)call other chained << operators for MessageBuilder
@@ -46,3 +48,15 @@ private:
 };
 
 } // namespace BrowserLogger
+
+namespace Utils
+{
+
+	template <>
+	inline void AnFill<BrowserLogger::Logger>(An<BrowserLogger::Logger>& an)
+	{
+		static BrowserLogger::Logger instance;
+		an = &instance;
+	}
+
+} // namespace Utils

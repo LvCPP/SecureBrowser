@@ -38,6 +38,11 @@ void Logger::Flush()
 	}
 }
 
+LOGGER_API void BrowserLogger::Logger::SetOutput(std::ostream& write_to)
+{
+	stream_.set_rdbuf(write_to.rdbuf());
+}
+
 LOGGER_API MessageBuilder Logger::MakeMessageBuilder(LogLevel level, const std::string& file,
 	const std::string& function, unsigned int line, const tm& time)
 {
