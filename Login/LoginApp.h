@@ -15,8 +15,8 @@ public:
 protected:
 	LoginAppPrivate* const d_ptr;
 private:
-	Q_PRIVATE_SLOT(d_func(), void _q_OnPushButtonLoginClick())
-	Q_PRIVATE_SLOT(d_func(), void _q_PhotoAccepted())
+	Q_PRIVATE_SLOT(d_func(), void OnPushButtonLoginClick())
+	Q_PRIVATE_SLOT(d_func(), void PhotoAccepted())
 	Q_DECLARE_PRIVATE(LoginApp)
 };
 

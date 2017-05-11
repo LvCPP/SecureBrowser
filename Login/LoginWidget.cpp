@@ -1,4 +1,4 @@
-#include "LoginWidget.hpp"
+#include "LoginWidget.h"
 #include <qmessagebox.h>
 using namespace BrowserLogin;
 

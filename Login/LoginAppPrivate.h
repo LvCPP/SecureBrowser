@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "ui_LoginApp.h"
 #include "LoginDynLib.h"
-#include <qstackedwidget.h>
 
 namespace BrowserLogin
 {
@@ -14,8 +13,8 @@ public:
 	LoginAppPrivate();
 	virtual ~LoginAppPrivate() = default;//for potential further implementation
 
-	void _q_PhotoAccepted(); 
-	void _q_OnPushButtonLoginClick();
+	void PhotoAccepted(); 
+	void OnPushButtonLoginClick();
 
 	void SetupWidgets();
 	void AskCameraAccess();

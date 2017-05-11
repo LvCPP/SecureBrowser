@@ -1,7 +1,7 @@
-﻿#include "LoginApp.hpp"
-#include "LoginAppPrivate.hpp"
-#include "LoginWidget.hpp"
-#include "LoginCamera.hpp"
+﻿#include "LoginApp.h"
+#include "LoginAppPrivate.h"
+#include "LoginWidget.h"
+#include "LoginCamera.h"
 #include <qmessagebox.h>
 using namespace BrowserLogin;
 
@@ -19,10 +19,10 @@ LoginApp::LoginApp(QWidget* parent)
 	d->SetupWidgets();
 	connect(d->login_,
 		&LoginWidget::LoginButtonClicked,
-		[d] {d->_q_OnPushButtonLoginClick(); });
+		[d] {d->OnPushButtonLoginClick(); });
 	connect(d->camera_login_,
 		&LoginCamera::AcceptPhotoButtonClicked,
-		[d] {d->_q_PhotoAccepted(); });
+		[d] {d->PhotoAccepted(); });
 }
 
 void LoginAppPrivate::SetupWidgets()
@@ -56,7 +56,7 @@ void LoginAppPrivate::AskCameraAccess()
 	}
 }
 
-void LoginAppPrivate::_q_OnPushButtonLoginClick()
+void LoginAppPrivate::OnPushButtonLoginClick()
 {
 	Q_Q(LoginApp);
 	if (login_->IsUsernameAndPasswordValid())
@@ -70,7 +70,7 @@ void LoginAppPrivate::_q_OnPushButtonLoginClick()
 	}
 }
 
-void LoginAppPrivate::_q_PhotoAccepted()
+void LoginAppPrivate::PhotoAccepted()
 {
 	Q_Q(LoginApp);
 	SendImage();
@@ -84,7 +84,6 @@ void LoginAppPrivate::SendImage()
 
 LoginApp::~LoginApp()
 {
-	//delete d_ptr->q_ptr;
 	delete d_ptr;
 }
 
