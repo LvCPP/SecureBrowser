@@ -1,5 +1,7 @@
 #pragma once
 #include "IFrameHandler.h"
+#include "StableFrame.h"
+#include "An.hpp"
 
 #include <memory>
 #include <vector>
@@ -14,26 +16,24 @@ namespace CameraInspector
 class WebCameraCapture
 {
 public:
+	WebCameraCapture();
+
 	WebCameraCapture(const WebCameraCapture&) = delete;
 	WebCameraCapture(WebCameraCapture&&) = delete;
 	WebCameraCapture& operator= (const WebCameraCapture&) = delete;
 	WebCameraCapture& operator= (WebCameraCapture&&) = delete;
 
-	static WebCameraCapture& Instance();
-
 	void Start();
 	void Stop();
 
+	StableFrame GetCurrentStableFrame() const;
+
 	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
-	cv::VideoCapture GetCamera() const noexcept;
-
+	
 private:
-	WebCameraCapture();
-	~WebCameraCapture() = default;
+	void WaitForInit();
 
-	// TODO: make it thread-safe
 	void ProcessHandlers();
-
 	std::vector<std::shared_ptr<IFrameHandler>> handlers_;
 	std::shared_ptr<cv::VideoCapture> camera_;
 	std::atomic<bool> is_working_;
@@ -41,3 +41,15 @@ private:
 };
 
 } // namespace CameraInspector
+
+namespace Utils
+{
+
+template <>
+inline void AnFill<CameraInspector::WebCameraCapture>(An<CameraInspector::WebCameraCapture>& an)
+{
+	static CameraInspector::WebCameraCapture wcc;
+	an = &wcc;
+}
+
+} // namespace Utils

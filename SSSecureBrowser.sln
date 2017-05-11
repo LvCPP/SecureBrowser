@@ -17,6 +17,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{A4E3C2AB-BBAC-4301-A88A-BCCA73A3A1F2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraInspector", "CameraInspector\CameraInspector.vcxproj", "{A15C1CDB-9898-4D4A-AC5D-801911C5C87B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C} = {3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8456BCEE-EB61-4ABF-88BB-F8FFACF97DFC}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraInspector_test", "Tools\CameraInspector_test\CameraInspector_test.vcxproj", "{966CF60D-A8AD-41A1-9790-EAFCB5F6100B}"
 	ProjectSection(ProjectDependencies) = postProject
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C} = {3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}
 		{A15C1CDB-9898-4D4A-AC5D-801911C5C87B} = {A15C1CDB-9898-4D4A-AC5D-801911C5C87B}
 	EndProjectSection
 EndProject
@@ -45,6 +49,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyboardInspectorTester", "
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyboardInspector", "KeyboardInspector\KeyboardInspector.vcxproj", "{88B06B02-6934-43AB-9C97-A366835F081C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{73BCFE26-F7C8-4FCB-8D10-7F561A661F18}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "Utils\Utils.vcxproj", "{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -130,6 +138,14 @@ Global
 		{88B06B02-6934-43AB-9C97-A366835F081C}.Release|x64.Build.0 = Release|x64
 		{88B06B02-6934-43AB-9C97-A366835F081C}.Release|x86.ActiveCfg = Release|Win32
 		{88B06B02-6934-43AB-9C97-A366835F081C}.Release|x86.Build.0 = Release|Win32
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}.Debug|x64.ActiveCfg = Debug|x64
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}.Debug|x64.Build.0 = Debug|x64
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}.Debug|x86.ActiveCfg = Debug|Win32
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}.Debug|x86.Build.0 = Debug|Win32
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}.Release|x64.ActiveCfg = Release|x64
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}.Release|x64.Build.0 = Release|x64
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}.Release|x86.ActiveCfg = Release|Win32
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,5 +155,6 @@ Global
 		{64108125-7392-477D-89FF-FD804F4599EF} = {A4E3C2AB-BBAC-4301-A88A-BCCA73A3A1F2}
 		{7A435297-FEAC-4443-A5A4-60F7F3E4F406} = {A4E3C2AB-BBAC-4301-A88A-BCCA73A3A1F2}
 		{2B2EF9F3-FB73-42EC-BC54-C57917F71664} = {A4E3C2AB-BBAC-4301-A88A-BCCA73A3A1F2}
+		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C} = {73BCFE26-F7C8-4FCB-8D10-7F561A661F18}
 	EndGlobalSection
 EndGlobal
