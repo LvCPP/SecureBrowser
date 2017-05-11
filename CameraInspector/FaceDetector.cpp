@@ -10,7 +10,7 @@ using namespace CameraInspector;
 
 namespace
 {
-constexpr char* CASCADE_FILE_PATH = "../../Recources/haarcascade_frontalface_alt.xml";
+constexpr char* CASCADE_FILE_PATH = "../../CameraInspector/Recources/haarcascade_frontalface_alt.xml";
 constexpr double SCALE_FACTOR = 1.1;
 constexpr int MIN_NEIGHBORS = 2;
 constexpr int FLAGS = cv::CASCADE_SCALE_IMAGE;
