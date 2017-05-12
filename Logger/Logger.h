@@ -16,11 +16,13 @@ class Logger final
 public:
 	explicit LOGGER_API Logger(LogLevel min_log_level = LogLevel::Debug,
 		std::ostream& write_to = std::cout,
-		std::function<std::string(const LogMessage&)> formatter = DefaultFormat);
+		const std::function<std::string(const LogMessage&)>& formatter = DefaultFormat);
 	LOGGER_API ~Logger();
 
 	LOGGER_API void Flush();
-	LOGGER_API void SetOutput(std::ostream& write_to);
+	LOGGER_API void SetMinimumLogLevel(LogLevel minimum_log_level);
+	LOGGER_API void SetOutput(const std::ostream& write_to);
+	LOGGER_API void SetFormatter(const std::function<std::string(const LogMessage&)>& formatter);
 
 	/* Main idea of output: 1) After call with LogLevel create temporary object of MessageBuilder.
 	 * 2)call other chained << operators for MessageBuilder

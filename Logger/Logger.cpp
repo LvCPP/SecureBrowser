@@ -5,7 +5,8 @@
 
 using namespace BrowserLogger;
 
-Logger::Logger(LogLevel min_log_level, std::ostream& write_to, std::function<std::string(const LogMessage&)> formatter)
+Logger::Logger(LogLevel min_log_level, std::ostream& write_to,
+	const std::function<std::string(const LogMessage&)>& formatter)
 	: stream_(write_to.rdbuf())
 	, is_running_(true)
 	, min_level_(min_log_level)
@@ -38,9 +39,19 @@ void Logger::Flush()
 	}
 }
 
-LOGGER_API void BrowserLogger::Logger::SetOutput(std::ostream& write_to)
+void Logger::SetMinimumLogLevel(LogLevel minimum_log_level)
+{
+	min_level_ = minimum_log_level;
+}
+
+void Logger::SetOutput(const std::ostream& write_to)
 {
 	stream_.set_rdbuf(write_to.rdbuf());
+}
+
+void Logger::SetFormatter(const std::function<std::string(const LogMessage&)>& formatter)
+{
+	formatter_ = formatter;
 }
 
 LOGGER_API MessageBuilder Logger::MakeMessageBuilder(LogLevel level, const std::string& file,
