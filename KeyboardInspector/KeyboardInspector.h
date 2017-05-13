@@ -5,8 +5,8 @@
 #include <memory>
 #include <functional>
 
-//namespace SBKeyboardInspector
-//{
+namespace SBKeyboardInspector
+{
 
 class KeyboardInspector
 {
@@ -27,8 +27,7 @@ private:
 };
 
 
-
-//} // end of namespace
+} // end of namespace
 
 
 

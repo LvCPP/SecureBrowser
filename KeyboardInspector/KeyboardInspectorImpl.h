@@ -4,8 +4,8 @@
 
 #include <thread>
 
-//namespace SBKeyboardInspector
-//{
+namespace SBKeyboardInspector
+{
 
 class KeyboardInspectorImpl
 {
@@ -35,4 +35,4 @@ private:
 	static std::unordered_map<KeySequence, KeySequenceHandler> key_seq_to_handler_;
 };
 
-//} // end of namespace
+} // end of namespace

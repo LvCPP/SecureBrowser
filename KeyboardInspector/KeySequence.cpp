@@ -1,6 +1,6 @@
 #include "KeySequence.h"
 
-//using namespace SBKeyboardInspector;
+using namespace SBKeyboardInspector;
 
 KeySequence::KeySequence(const std::bitset<VIRTUAL_KEY_COUNT>& keys)
 	: keys_(keys)

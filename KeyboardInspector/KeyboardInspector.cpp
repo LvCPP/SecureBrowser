@@ -1,7 +1,7 @@
 #include "KeyboardInspector.h"
 #include "KeyboardInspectorImpl.h"
 
-//using namespace SBKeyboardInspector;
+using namespace SBKeyboardInspector;
 
 struct KeySequenceIgnore
 {

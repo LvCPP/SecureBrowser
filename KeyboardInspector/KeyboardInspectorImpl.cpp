@@ -1,6 +1,6 @@
 #include "KeyboardInspectorImpl.h"
 
-//using namespace SBKeyboardInspector;
+using namespace SBKeyboardInspector;
 
 static constexpr UINT IS_RELEASED = 0x80;
 

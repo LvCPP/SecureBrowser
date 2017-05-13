@@ -1,10 +1,10 @@
 #include "KeyboardInspectorImpl.h"
 
-//#include <SDKDDKVer.h>
+#include <SDKDDKVer.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-//using namespace SBKeyboardInspector;
+using namespace SBKeyboardInspector;
 
 extern HMODULE h_instance;
 

@@ -5,8 +5,8 @@
 #include <string>
 #include <bitset>
 
-//namespace SBKeyboardInspector
-//{
+namespace SBKeyboardInspector
+{
 
 static constexpr std::size_t VIRTUAL_KEY_COUNT = 0xFF + 1;
 
@@ -29,17 +29,14 @@ public:
 private:
 	std::bitset<VIRTUAL_KEY_COUNT> keys_;
 };
-
-
-
-//} // end of namespace
+}
 
 namespace std
 {
 template<>
-struct hash<KeySequence>
+struct hash<SBKeyboardInspector::KeySequence>
 {
-	size_t operator()(const KeySequence& ks) const
+	size_t operator()(const SBKeyboardInspector::KeySequence& ks) const
 	{
 		return ks.GetHash();
 	}
