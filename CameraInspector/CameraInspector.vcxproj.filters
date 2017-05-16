@@ -25,6 +25,12 @@
     <Filter Include="Source Files\CameraInspector">
       <UniqueIdentifier>{e69a9218-a1c3-402d-a04f-dc0926923111}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\WebCamAPI">
+      <UniqueIdentifier>{06db9265-a38c-47d6-8342-822770b22d8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\WebCamAPI">
+      <UniqueIdentifier>{5d02ac33-9a45-466f-ad79-08f46f691282}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
