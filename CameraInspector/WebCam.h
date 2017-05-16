@@ -9,13 +9,15 @@ namespace CameraInspector
 class WebCam
 {
 public:
+	WebCam(std::string name, unsigned short id);
 	void Initialize(SimpleCapParams& parameters)
+		Frame GetFrame();
 	void DeInitialize();
-	Frame MakeFrame();
+	std::string GetName() const;
 
 private:
 	std::string name_;
 	unsigned short id_;
 };
 
-}
+} //namespace CameraInspector
