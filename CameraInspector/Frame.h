@@ -10,6 +10,7 @@ class Frame
 {
 public:
 	Frame();
+	Frame(Frame&& frame);
 	Frame(int width, int height, void* data);
 	Frame(cv::Mat mat);
 	virtual ~Frame() = default;

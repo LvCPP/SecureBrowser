@@ -104,6 +104,7 @@
     <ClCompile Include="FrameStorer.cpp" />
     <ClCompile Include="PhotoMaker.cpp" />
     <ClCompile Include="StableFrame.cpp" />
+    <ClCompile Include="WebCam.cpp" />
     <ClCompile Include="WebCameraCapture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +117,7 @@
     <ClInclude Include="IFaceDetectorObserver.h" />
     <ClInclude Include="PhotoMaker.h" />
     <ClInclude Include="StableFrame.h" />
+    <ClInclude Include="WebCam.h" />
     <ClInclude Include="WebCameraCapture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

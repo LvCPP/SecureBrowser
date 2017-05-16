@@ -57,6 +57,9 @@
     <ClCompile Include="PhotoMaker.cpp">
       <Filter>Source Files\CameraInspector</Filter>
     </ClCompile>
+    <ClCompile Include="WebCam.cpp">
+      <Filter>Source Files\WebCamAPI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Frame.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="WebCameraCapture.h">
       <Filter>Header Files\CameraInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="WebCam.h">
+      <Filter>Header Files\WebCamAPI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

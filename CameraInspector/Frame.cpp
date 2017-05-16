@@ -9,6 +9,13 @@ Frame::Frame()
 {
 }
 
+Frame::Frame(Frame&& frame)
+	: Frame(std::move(frame.cv_mat_impl_->rows),
+		std::move(frame.cv_mat_impl_->cols),
+		std::move(frame.cv_mat_impl_->data))
+{
+}
+
 Frame::Frame(int width, int height, void* data)
 	: Frame(cv::Mat(height, width, CV_8UC3, data))
 {
