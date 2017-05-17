@@ -10,8 +10,8 @@ class WebCam
 {
 public:
 	WebCam(std::string name, unsigned short id);
-	void Initialize(SimpleCapParams& parameters)
-		Frame GetFrame();
+	void Initialize(SimpleCapParams& parameters);
+	Frame GetFrame();
 	void DeInitialize();
 	std::string GetName() const;
 

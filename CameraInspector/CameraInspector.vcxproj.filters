@@ -31,6 +31,9 @@
     <Filter Include="Source Files\WebCamAPI">
       <UniqueIdentifier>{5d02ac33-9a45-466f-ad79-08f46f691282}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ESCAPI">
+      <UniqueIdentifier>{bcf52c89-6d98-4a32-9d7f-a6251ba65202}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -59,6 +62,12 @@
     </ClCompile>
     <ClCompile Include="WebCam.cpp">
       <Filter>Source Files\WebCamAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="WebCamController.cpp">
+      <Filter>Source Files\WebCamAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="escapi.cpp">
+      <Filter>ESCAPI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +103,12 @@
     </ClInclude>
     <ClInclude Include="WebCam.h">
       <Filter>Header Files\WebCamAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="WebCamController.h">
+      <Filter>Header Files\WebCamAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="escapi.h">
+      <Filter>ESCAPI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
