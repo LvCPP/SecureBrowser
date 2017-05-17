@@ -2,21 +2,21 @@
 
 using namespace CameraInspector;
 
-WebCam::WebCam()
+WebCam::WebCam(std::string name, unsigned short id)
 	: name_(name)
 	, id_(id)
 {
 }
 
-void WebCam::Initialize(SimpleCapParams& parameters)
+void WebCam::Initialize(CameraParameters& parameters)
 {
-	initCapture(id_, &parameters);
+	initCapture(id_, &((SimpleCapParams)parameters));
 }
 
-Frame WebCam::GetFrame()
+Frame WebCam::GetFrame(CameraParameters& parameters)
 {
 	doCapture(id_);
-	return Frame(cam.mWidth, cam.mHeight, reinterpret_cast<void*>(cam.mTargetBuf));
+	return Frame(parameters.width, parameters.height, reinterpret_cast<void*>(parameters.buffer.get()));
 }
 
 void WebCam::DeInitialize()

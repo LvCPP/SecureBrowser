@@ -1,16 +1,31 @@
+#pragma once
+#include <memory>
 /* Extremely Simple Capture API */
+
 
 struct SimpleCapParams
 {
-	/* Target buffer. 
-	 * Must be at least mWidth * mHeight * sizeof(int) of size! 
-	 */
-	int * mTargetBuf;
 	/* Buffer width */
 	int mWidth;
 	/* Buffer height */
 	int mHeight;
+	/* Target buffer.
+	* Must be at least mWidth * mHeight * sizeof(int) of size!
+	*/
+	int* mTargetBuf;
 };
+
+struct CameraParameters
+{
+	unsigned short width;
+	unsigned short height;
+	std::unique_ptr<int[]> buffer;
+
+	operator SimpleCapParams()
+	{
+		return SimpleCapParams({ width, height, (buffer.get()) });
+	}
+}; 
 
 enum CAPTURE_PROPETIES
 {

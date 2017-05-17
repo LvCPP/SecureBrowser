@@ -1,25 +1,24 @@
 #include "WebCamController.h"
+#include <algorithm>
 
-using namespace CAmeraInspector;
+using namespace CameraInspector;
+
+static constexpr int DEFAULT_WIDTH = 640;
+static constexpr int DEFAULT_HEIGHT = 480;
 
 WebCamController::WebCamController()
-	:
+	: activated_id_(-1)
+	, camera_params_{ DEFAULT_WIDTH, DEFAULT_HEIGHT, std::make_unique<int[]>(DEFAULT_WIDTH * DEFAULT_HEIGHT)}
 {
 	unsigned short devices_count = setupESCAPI();
-	
-	SimpleCapParams params;
-
-	params.mWidth = 640;
-	params.mHeight = 480;
-	params.mTargetBuf = new int[params.mWidth * params.mHeight];
 
 	for (auto i = 0; i < devices_count; ++i)
 	{
-		cameras.push_back(params);
-
-		char temp[256];
-		getCaptureDeviceName(i, temp, 256);
-		std::cout << "Device #" << i << ": " << temp << std::endl;
+		char temp[64];
+		getCaptureDeviceName(i, temp, 64);
+		cameras_.emplace_back(temp, i);
+		std::string temp_str(temp);
+		camera_ids_.emplace(temp_str, i);
 	}
 }
 
@@ -38,31 +37,32 @@ std::set<std::string> WebCamController::ListNamesOfCameras() const
 	return names;
 }
 
-short WebCamController::GetCamerasCount() const noexcept
+size_t WebCamController::GetCamerasCount() const noexcept
 {
 	return cameras_.size();
 }
 
 void WebCamController::ActivateCamera(std::string identifier)
 {	
-	std::vector<WebCam>::iterator iter = std::find_if(cameras_.begin(), cameras_.end(), [](const WebCam& wc) { return identifier == wc.GetName(); });
-	size_t index = std::distance(cameras_.begin(), iter);
-	if (index == cameras_.size())
-	{
-		throw std::exception("There's no such camera: " + iter);
-	}
+	cameras_[activated_id_].DeInitialize();
+	activated_id_ = camera_ids_[identifier];
+	cameras_[activated_id_].Initialize(camera_params_);
 }
 
-void WebCamController::ActivateCamera(std::string identifier, Relsolution resolution)
+void WebCamController::ActivateCamera(std::string identifier, Resolution resolution)
 {
+	//TODO: Setup resol
+	camera_params_.width = resolution.width;
+	camera_params_.height = resolution.height;
+	ActivateCamera(identifier);
 }
 
 Resolution WebCamController::GetResolution() const
 {
-	return Resolution(camera_params_.mWidth, camera_params_.mHeight);
+	return Resolution({ (unsigned short)camera_params_.width, (unsigned short)camera_params_.height });
 }
 
 Frame WebCamController::GetFrame()
 {
-	return cameras_[activated_id_].GetFrame();
+	return cameras_[activated_id_].GetFrame(camera_params_);
 }
