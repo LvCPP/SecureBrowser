@@ -2,10 +2,10 @@
 
 #include "WebCam.h"
 #include "Frame.h"
+#include <An.hpp>
 
 #include "escapi.h"
 
-#include <set>
 #include <map>
 #include <vector>
 #include <string>
@@ -21,10 +21,11 @@ struct Resolution
 
 class WebCamController
 {
+public:
 	WebCamController();
 	~WebCamController();
 
-	std::set<std::string> ListNamesOfCameras() const;
+	std::vector<std::string> ListNamesOfCameras() const;
 	size_t GetCamerasCount() const noexcept;
 	void ActivateCamera(std::string identifier);
 	void ActivateCamera(std::string identifier, Resolution resolution);
@@ -40,3 +41,15 @@ private:
 };
 
 } // namespace CameraInspector
+
+namespace Utils
+{
+
+template <>
+inline void AnFill<CameraInspector::WebCamController>(An<CameraInspector::WebCamController>& an)
+{
+	static CameraInspector::WebCamController wcc;
+	an = &wcc;
+}
+
+} // namespace Utils

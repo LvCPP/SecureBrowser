@@ -5,14 +5,14 @@
 
 struct SimpleCapParams
 {
-	/* Buffer width */
-	int mWidth;
-	/* Buffer height */
-	int mHeight;
 	/* Target buffer.
 	* Must be at least mWidth * mHeight * sizeof(int) of size!
 	*/
 	int* mTargetBuf;
+	/* Buffer width */
+	int mWidth;
+	/* Buffer height */
+	int mHeight;
 };
 
 struct CameraParameters
@@ -23,7 +23,7 @@ struct CameraParameters
 
 	operator SimpleCapParams()
 	{
-		return SimpleCapParams({ width, height, (buffer.get()) });
+		return SimpleCapParams({ buffer.get(), width, height });
 	}
 }; 
 

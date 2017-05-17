@@ -23,7 +23,7 @@ initCOMProc initCOM;
 int setupESCAPI()
 {
 	/* Load DLL dynamically */
-	SetDllDirectory((LPCWSTR)L"..\\lib\\");
+	SetDllDirectory((LPCWSTR)L"..\\3rd-party-libraries\\escapi\\");
 	HMODULE capdll = LoadLibraryA("escapi.dll");
 	if (capdll == NULL)
 		return 0;
