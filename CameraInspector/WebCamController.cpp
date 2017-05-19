@@ -10,6 +10,7 @@ static constexpr int DEFAULT_HEIGHT = 480;
 
 WebCamController::WebCamController()
 	: activated_id_(-1)
+	, is_activated_(false)
 	, camera_params_{ DEFAULT_WIDTH, DEFAULT_HEIGHT, std::make_unique<int[]>(DEFAULT_WIDTH * DEFAULT_HEIGHT)}
 {
 	unsigned short devices_count = setupESCAPI();
@@ -55,17 +56,21 @@ size_t WebCamController::GetCamerasCount() const noexcept
 
 void WebCamController::ActivateCamera(std::string identifier)
 {	
-	if(activated_id_ != (unsigned short)-1)
+	if(is_activated_)
 		cameras_[activated_id_].DeInitialize();
 	
 	activated_id_ = camera_ids_[identifier];
 	cameras_[activated_id_].Initialize(camera_params_);
+	
+	is_activated_ = true;
 }
 
 void WebCamController::ActivateCamera(std::string identifier, Resolution resolution)
 {
 	camera_params_.width = resolution.width;
 	camera_params_.height = resolution.height;
+	camera_params_.buffer.reset(nullptr);
+	camera_params_.buffer = std::make_unique<int[]>(camera_params_.width * camera_params_.height);
 	ActivateCamera(identifier);
 }
 
