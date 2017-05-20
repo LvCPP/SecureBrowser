@@ -13,6 +13,7 @@ public:
 	Frame(Frame&& frame);
 	Frame(int width, int height, void* data);
 	Frame(cv::Mat mat);
+	Frame(std::shared_ptr<cv::Mat> impl);
 	virtual ~Frame() = default;
 	
 	cv::Mat GetImpl() const noexcept;

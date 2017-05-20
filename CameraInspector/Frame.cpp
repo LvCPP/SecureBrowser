@@ -10,9 +10,7 @@ Frame::Frame()
 }
 
 Frame::Frame(Frame&& frame)
-	: Frame(std::move(frame.cv_mat_impl_->rows),
-		std::move(frame.cv_mat_impl_->cols),
-		std::move(frame.cv_mat_impl_->data))
+	: Frame(std::move(frame.cv_mat_impl_))
 {
 }
 
@@ -23,6 +21,11 @@ Frame::Frame(int width, int height, void* data)
 
 Frame::Frame(cv::Mat mat)
 	: cv_mat_impl_(std::make_shared<cv::Mat>(cv::Mat(mat.rows, mat.cols, CV_8UC3, mat.data)))
+{
+}
+
+Frame::Frame(std::shared_ptr<cv::Mat> impl)
+	: cv_mat_impl_(impl)
 {
 }
 
