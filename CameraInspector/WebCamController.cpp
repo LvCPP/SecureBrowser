@@ -14,7 +14,6 @@ WebCamController::WebCamController()
 	, camera_params_{ DEFAULT_WIDTH, DEFAULT_HEIGHT, std::make_unique<int[]>(DEFAULT_WIDTH * DEFAULT_HEIGHT)}
 {
 	unsigned short devices_count = setupESCAPI();
-	unsigned short repeater = 0;
 
 	for (auto i = 0; i < devices_count; ++i)
 	{
@@ -22,7 +21,14 @@ WebCamController::WebCamController()
 		getCaptureDeviceName(i, temp, 64);
 		std::string temp_str(temp);
 
-		if (temp_str.find("USB") != std::string::npos)
+		/*if (temp_str.find("USB") != std::string::npos)
+		{
+			std::stringstream ss;
+			ss << temp_str << " (" << ++repeater << ")";
+			temp_str = ss.str();
+		}*/
+		int repeater = 0;
+		while (camera_ids_.find(temp_str) != camera_ids_.end())
 		{
 			std::stringstream ss;
 			ss << temp_str << " (" << ++repeater << ")";
@@ -36,7 +42,7 @@ WebCamController::WebCamController()
 
 WebCamController::~WebCamController()
 {
-	// deinit lib
+	//TODO: deinit lib
 }
 
 std::vector<std::string> WebCamController::ListNamesOfCameras() const
@@ -69,8 +75,10 @@ void WebCamController::ActivateCamera(std::string identifier, Resolution resolut
 {
 	camera_params_.width = resolution.width;
 	camera_params_.height = resolution.height;
+	//reinit buffer
 	camera_params_.buffer.reset(nullptr);
 	camera_params_.buffer = std::make_unique<int[]>(camera_params_.width * camera_params_.height);
+
 	ActivateCamera(identifier);
 }
 
