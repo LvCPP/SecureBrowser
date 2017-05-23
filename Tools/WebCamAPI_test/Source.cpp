@@ -24,7 +24,7 @@ int main()
 	while (true)
 	{
 
-		Frame tmp_frame = wcc->GetFrame();
+		Frame tmp_frame = wcc->GetActiveCamera().GetFrame();
 		cv::Mat mat(tmp_frame.GetRows(), tmp_frame.GetCols(), CV_8UC4, tmp_frame.GetData());
 		cv::imshow("test cameras UI", mat);
 

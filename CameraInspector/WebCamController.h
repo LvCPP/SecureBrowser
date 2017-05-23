@@ -11,12 +11,6 @@
 namespace CameraInspector
 {
 
-struct Resolution
-{
-	unsigned short width;
-	unsigned short height;
-};
-
 class WebCamController
 {
 public:
@@ -26,17 +20,14 @@ public:
 	std::vector<std::string> ListNamesOfCameras() const;
 	size_t GetCamerasCount() const noexcept;
 	void ActivateCamera(std::string identifier);
-	void ActivateCamera(std::string identifier, Resolution resolution);
 	
-	Resolution GetResolution() const;
-	Frame GetFrame();
 	void Refresh();
+	WebCam GetActiveCamera() const;
 
 private:
 	std::vector<WebCam> cameras_;
 	std::vector<WebCam>::iterator activated_camera_;
 	bool is_activated_;
-	CameraParameters camera_params_;
 };
 
 } // namespace CameraInspector

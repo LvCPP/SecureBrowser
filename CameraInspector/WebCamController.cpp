@@ -4,12 +4,8 @@
 
 using namespace CameraInspector;
 
-static constexpr int DEFAULT_WIDTH = 640;
-static constexpr int DEFAULT_HEIGHT = 480;
-
 WebCamController::WebCamController()
 	: is_activated_(false)
-	, camera_params_{ DEFAULT_WIDTH, DEFAULT_HEIGHT, std::make_unique<int[]>(DEFAULT_WIDTH * DEFAULT_HEIGHT)}
 {
 	unsigned short devices_count = setupESCAPI();
 	Refresh();
@@ -46,30 +42,14 @@ void WebCamController::ActivateCamera(std::string identifier)
 		return cam.GetName() == identifier;
 	});
 	
-	activated_camera_->Initialize(camera_params_);
+	activated_camera_->Initialize();
 	
 	is_activated_ = true;
 }
 
-void WebCamController::ActivateCamera(std::string identifier, Resolution resolution)
+WebCam WebCamController::GetActiveCamera() const
 {
-	camera_params_.width = resolution.width;
-	camera_params_.height = resolution.height;
-
-	// Reinit buffer
-	camera_params_.buffer = std::make_unique<int[]>(camera_params_.width * camera_params_.height);
-
-	ActivateCamera(identifier);
-}
-
-Resolution WebCamController::GetResolution() const
-{
-	return Resolution({ camera_params_.width, camera_params_.height });
-}
-
-Frame WebCamController::GetFrame()
-{
-	return activated_camera_->GetFrame(camera_params_);
+	return *activated_camera_;
 }
 
 void WebCamController::Refresh()
