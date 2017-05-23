@@ -21,6 +21,9 @@ public:
 private slots:
 	void SlotEnter();       // For Enter in LineEdit
 	void SetUrl(const QUrl &url); // For clicked URL
+	void SetMyTitle();
+	void ShowProgressBar();
+	void HideProgressBar();
 
 private:
 	QScopedPointer<Ui::Browser> ui_;
