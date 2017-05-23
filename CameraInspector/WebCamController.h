@@ -34,7 +34,7 @@ public:
 	Frame GetFrame();
 
 private:
-	std::map<std::string, unsigned short> camera_ids_;
+	//std::map<std::string, unsigned short> camera_ids_;
 	std::vector<WebCam> cameras_;
 	unsigned short activated_id_;
 	bool is_activated_;

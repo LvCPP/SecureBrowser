@@ -21,22 +21,13 @@ WebCamController::WebCamController()
 		getCaptureDeviceName(i, temp, 64);
 		std::string temp_str(temp);
 
-		/*if (temp_str.find("USB") != std::string::npos)
-		{
-			std::stringstream ss;
-			ss << temp_str << " (" << ++repeater << ")";
-			temp_str = ss.str();
-		}*/
-		int repeater = 0;
-		while (camera_ids_.find(temp_str) != camera_ids_.end())
-		{
-			std::stringstream ss;
-			ss << temp_str << " (" << ++repeater << ")";
-			temp_str = ss.str();
-		}
-
+		std::stringstream ss;
+		static int repeater = 0;
+		ss << ++repeater << ": " << temp_str;
+		temp_str = ss.str();
+	
 		cameras_.emplace_back(temp_str, i);
-		camera_ids_.emplace(temp_str, i);
+		//camera_ids_.emplace(temp_str, i);
 	}
 }
 
@@ -65,7 +56,11 @@ void WebCamController::ActivateCamera(std::string identifier)
 	if(is_activated_)
 		cameras_[activated_id_].DeInitialize();
 	
-	activated_id_ = camera_ids_[identifier];
+	//activated_id_ = camera_ids_[identifier];
+	auto it = std::find_if(cameras_.begin(), cameras_.end(), [&] (WebCam cam)
+	{
+		return cam.GetName() == identifier;
+	});
 	cameras_[activated_id_].Initialize(camera_params_);
 	
 	is_activated_ = true;
