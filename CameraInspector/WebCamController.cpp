@@ -12,20 +12,7 @@ WebCamController::WebCamController()
 	, camera_params_{ DEFAULT_WIDTH, DEFAULT_HEIGHT, std::make_unique<int[]>(DEFAULT_WIDTH * DEFAULT_HEIGHT)}
 {
 	unsigned short devices_count = setupESCAPI();
-
-	for (auto i = 0; i < devices_count; ++i)
-	{
-		char temp[64];
-		getCaptureDeviceName(i, temp, 64);
-		std::string temp_str(temp);
-
-		std::stringstream ss;
-		static int repeater = 0;
-		ss << ++repeater << ": " << temp_str;
-		temp_str = ss.str();
-	
-		cameras_.emplace_back(temp_str, i);
-	}
+	Refresh();
 }
 
 WebCamController::~WebCamController()
@@ -83,4 +70,30 @@ Resolution WebCamController::GetResolution() const
 Frame WebCamController::GetFrame()
 {
 	return activated_camera_->GetFrame(camera_params_);
+}
+
+void WebCamController::Refresh()
+{
+	if (is_activated_)
+	{
+		activated_camera_->DeInitialize();
+		is_activated_ = false;
+	}
+
+	cameras_.clear();
+	int devices_count = countCaptureDevices();
+	int repeater = 0;
+
+	for (auto i = 0; i < devices_count; ++i)
+	{
+		char temp[64];
+		getCaptureDeviceName(i, temp, 64);
+		std::string temp_str(temp);
+
+		std::stringstream ss;
+		ss << ++repeater << ": " << temp_str;
+		temp_str = ss.str();
+
+		cameras_.emplace_back(temp_str, i);
+	}
 }

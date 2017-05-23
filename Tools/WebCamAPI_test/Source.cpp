@@ -16,23 +16,49 @@ int main()
 
 	auto cam_count = wcc->GetCamerasCount();
 
-	for (int i = 0; i < cam_count; ++i)
+	cv::namedWindow("test cameras UI");
+	int choose = -1;
+
+	wcc->ActivateCamera(cameras_names.at(0));
+
+	while (true)
 	{
-		std::string used_camera = cameras_names.at(i);
-		cv::namedWindow(used_camera);
-		wcc->ActivateCamera(used_camera);
 
-		do
+		Frame tmp_frame = wcc->GetFrame();
+		cv::Mat mat(tmp_frame.GetRows(), tmp_frame.GetCols(), CV_8UC4, tmp_frame.GetData());
+		cv::imshow("test cameras UI", mat);
+
+		switch (choose = cv::waitKey(10))
 		{
-			Frame tmp_frame = wcc->GetFrame();
-			cv::Mat mat(tmp_frame.GetRows(), tmp_frame.GetCols(), CV_8UC4, tmp_frame.GetData());
-			cv::imshow(used_camera, mat);
+		case -1:
+			break;
+		case 27:
+		{
+			wcc->Refresh();
 
-		} while (cv::waitKey(27) != 27);
-		
-		cv::destroyWindow(used_camera);
+			cameras_names = wcc->ListNamesOfCameras();
+
+			for (std::string name : cameras_names)
+				std::cout << name << std::endl;
+
+			wcc->ActivateCamera(cameras_names.at(0));
+
+			break;
+		}
+		case 49:
+		case 50:
+		case 51:
+			wcc->ActivateCamera(cameras_names.at(choose - 49));
+			break;
+		default:
+			std::cout << "Bad command: " << choose << std::endl;
+			choose = -1;
+			break;
+		}
 
 	}
+	
+	cv::destroyWindow("test cameras UI");
 
 	system("pause");
 	return 0;
