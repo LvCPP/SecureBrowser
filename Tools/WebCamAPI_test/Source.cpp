@@ -1,7 +1,5 @@
-#include <WebCamController.h>
-
+#include "WebCamController.h"
 #include <opencv2/highgui/highgui.hpp>
-
 #include <iostream>
 
 using namespace CameraInspector;
@@ -22,7 +20,7 @@ int main()
 	{
 		std::string used_camera = cameras_names.at(i);
 		cv::namedWindow(used_camera);
-			wcc->ActivateCamera(used_camera);
+		wcc->ActivateCamera(used_camera);
 
 		do
 		{
@@ -33,6 +31,7 @@ int main()
 		} while (cv::waitKey(27) != 27);
 		
 		cv::destroyWindow(used_camera);
+
 	}
 
 	system("pause");

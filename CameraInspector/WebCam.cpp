@@ -10,8 +10,7 @@ WebCam::WebCam(std::string name, unsigned short id)
 
 void WebCam::Initialize(CameraParameters& parameters)
 {
-	SimpleCapParams cpp = ((SimpleCapParams)parameters);
-	initCapture(id_, &cpp);
+	initCapture(id_, &(SimpleCapParams)parameters);
 }
 
 Frame WebCam::GetFrame(CameraParameters& parameters)

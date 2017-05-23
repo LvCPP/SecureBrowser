@@ -1,7 +1,6 @@
 #include "WebCamController.h"
 #include <algorithm>
 #include <sstream>
-#include <set>
 
 using namespace CameraInspector;
 
@@ -9,8 +8,7 @@ static constexpr int DEFAULT_WIDTH = 640;
 static constexpr int DEFAULT_HEIGHT = 480;
 
 WebCamController::WebCamController()
-	: activated_id_(-1)
-	, is_activated_(false)
+	: is_activated_(false)
 	, camera_params_{ DEFAULT_WIDTH, DEFAULT_HEIGHT, std::make_unique<int[]>(DEFAULT_WIDTH * DEFAULT_HEIGHT)}
 {
 	unsigned short devices_count = setupESCAPI();
@@ -27,13 +25,13 @@ WebCamController::WebCamController()
 		temp_str = ss.str();
 	
 		cameras_.emplace_back(temp_str, i);
-		//camera_ids_.emplace(temp_str, i);
 	}
 }
 
 WebCamController::~WebCamController()
 {
-	//TODO: deinit lib
+	if (is_activated_)
+		activated_camera_->DeInitialize();
 }
 
 std::vector<std::string> WebCamController::ListNamesOfCameras() const
@@ -54,14 +52,14 @@ size_t WebCamController::GetCamerasCount() const noexcept
 void WebCamController::ActivateCamera(std::string identifier)
 {	
 	if(is_activated_)
-		cameras_[activated_id_].DeInitialize();
+		activated_camera_->DeInitialize();
 	
-	//activated_id_ = camera_ids_[identifier];
-	auto it = std::find_if(cameras_.begin(), cameras_.end(), [&] (WebCam cam)
+	activated_camera_ = std::find_if(cameras_.begin(), cameras_.end(), [&](WebCam cam)
 	{
 		return cam.GetName() == identifier;
 	});
-	cameras_[activated_id_].Initialize(camera_params_);
+	
+	activated_camera_->Initialize(camera_params_);
 	
 	is_activated_ = true;
 }
@@ -70,8 +68,8 @@ void WebCamController::ActivateCamera(std::string identifier, Resolution resolut
 {
 	camera_params_.width = resolution.width;
 	camera_params_.height = resolution.height;
-	//reinit buffer
-	camera_params_.buffer.reset(nullptr);
+
+	// Reinit buffer
 	camera_params_.buffer = std::make_unique<int[]>(camera_params_.width * camera_params_.height);
 
 	ActivateCamera(identifier);
@@ -79,10 +77,10 @@ void WebCamController::ActivateCamera(std::string identifier, Resolution resolut
 
 Resolution WebCamController::GetResolution() const
 {
-	return Resolution({ (unsigned short)camera_params_.width, (unsigned short)camera_params_.height });
+	return Resolution({ camera_params_.width, camera_params_.height });
 }
 
 Frame WebCamController::GetFrame()
 {
-	return cameras_[activated_id_].GetFrame(camera_params_);
+	return activated_camera_->GetFrame(camera_params_);
 }

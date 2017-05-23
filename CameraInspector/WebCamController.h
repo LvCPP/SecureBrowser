@@ -1,11 +1,8 @@
 #pragma once
-
 #include "WebCam.h"
 #include "Frame.h"
 #include <An.hpp>
-
 #include "escapi.h"
-
 #include <map>
 #include <vector>
 #include <string>
@@ -36,7 +33,8 @@ public:
 private:
 	//std::map<std::string, unsigned short> camera_ids_;
 	std::vector<WebCam> cameras_;
-	unsigned short activated_id_;
+	//unsigned short activated_id_;
+	std::vector<WebCam>::iterator activated_camera_;
 	bool is_activated_;
 	CameraParameters camera_params_;
 };
