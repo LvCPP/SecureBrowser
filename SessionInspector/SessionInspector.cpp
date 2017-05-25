@@ -1,9 +1,5 @@
 #pragma  comment(lib,"Wtsapi32.lib")
 #include "SessionInspector.h"
-#include "FakeWindowService.h"
-#include <string>
-#include <iostream>
-#include <thread>
 #include <windows.h>
 #include <Wtsapi32.h>
 

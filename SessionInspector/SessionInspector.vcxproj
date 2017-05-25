@@ -125,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FakeWindowService.h" />
+    <ClInclude Include="IFakeWindowServiceObserver.h" />
     <ClInclude Include="SessionInspector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
