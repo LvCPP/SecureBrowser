@@ -1,6 +1,8 @@
-#pragma once
-#include <memory>
 /* Extremely Simple Capture API */
+#pragma once
+
+#include <functional>
+#include <memory>
 
 
 struct SimpleCapParams
@@ -25,7 +27,7 @@ struct CameraParameters
 	{
 		return SimpleCapParams({ buffer.get(), width, height });
 	}
-}; 
+};
 
 enum CAPTURE_PROPETIES
 {
@@ -48,6 +50,7 @@ enum CAPTURE_PROPETIES
 	CAPTURE_FOCUS,
 	CAPTURE_PROP_MAX
 };
+
 
 /* Sets up the ESCAPI DLL and the function pointers below. Call this first! */
 /* Returns number of capture devices found (same as countCaptureDevices, below) */
@@ -106,6 +109,21 @@ typedef int (*getCaptureErrorLineProc)(unsigned int deviceno);
 /* Return HRESULT of the catastrophic error, or 0 if none. */
 typedef int (*getCaptureErrorCodeProc)(unsigned int deviceno);
 
+/* initCaptureWithOptions allows additional options to be given. Otherwise it's identical with initCapture */
+typedef int (*initCaptureWithOptionsProc)(unsigned int deviceno, struct SimpleCapParams *aParams, unsigned int aOptions);
+
+/* Must-have step for camera loss detection. */
+typedef void(*registerForDeviceNotificationProc)(const std::function<void()>& callback);
+/* Must-have step for camera loss detection. */
+typedef void(*unregisterForDeviceNotificationProc)();
+
+// Options accepted by above:
+// Return raw data instead of converted rgb. Using this option assumes you know what you're doing.
+#define CAPTURE_OPTION_RAWDATA 1 
+// Mask to check for valid options - all options OR:ed together.
+#define CAPTURE_OPTIONS_MASK (CAPTURE_OPTION_RAWDATA) 
+
+
 #ifndef ESCAPI_DEFINITIONS_ONLY
 extern countCaptureDevicesProc countCaptureDevices;
 extern initCaptureProc initCapture;
@@ -119,4 +137,7 @@ extern getCapturePropertyAutoProc getCapturePropertyAuto;
 extern setCapturePropertyProc setCaptureProperty;
 extern getCaptureErrorLineProc getCaptureErrorLine;
 extern getCaptureErrorCodeProc getCaptureErrorCode;
+extern initCaptureWithOptionsProc initCaptureWithOptions;
+extern registerForDeviceNotificationProc registerForDeviceNotification;
+extern unregisterForDeviceNotificationProc unregisterForDeviceNotification;
 #endif

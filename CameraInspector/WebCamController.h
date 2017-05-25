@@ -7,6 +7,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <mutex>
 
 namespace CameraInspector
 {
@@ -18,8 +19,9 @@ public:
 	~WebCamController();
 
 	std::vector<std::string> ListNamesOfCameras() const;
+	const std::vector<WebCam>& GetCameras() const;
 	size_t GetCamerasCount() const noexcept;
-	void ActivateCamera(std::string identifier);
+	void ActivateCamera(WebCam&);
 	
 	void Refresh();
 	WebCam GetActiveCamera() const;
@@ -28,6 +30,7 @@ private:
 	std::vector<WebCam> cameras_;
 	std::vector<WebCam>::iterator activated_camera_;
 	bool is_activated_;
+	mutable std::mutex mx;
 };
 
 } // namespace CameraInspector

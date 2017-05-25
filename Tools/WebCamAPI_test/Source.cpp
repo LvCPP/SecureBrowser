@@ -1,6 +1,7 @@
 #include "WebCamController.h"
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
+#include <exception>
 
 using namespace CameraInspector;
 using namespace Utils;
@@ -9,24 +10,31 @@ int main()
 {
 	An<WebCamController> wcc;
 
-	std::vector<std::string> cameras_names = wcc->ListNamesOfCameras();
+	std::vector<WebCam> cameras_ = wcc->GetCameras();
 
-	for (std::string name : cameras_names)
-		std::cout << name << std::endl;
+	for (WebCam cam : cameras_)
+		std::cout << cam.GetName() << std::endl;
 
 	auto cam_count = wcc->GetCamerasCount();
 
 	cv::namedWindow("test cameras UI");
 	int choose = -1;
 
-	wcc->ActivateCamera(cameras_names.at(0));
+	wcc->ActivateCamera(cameras_.at(0));
 
-	while (true)
+	while (cv::waitKey(10) != 113)
 	{
+		try
+		{
+			Frame tmp_frame = wcc->GetActiveCamera().GetFrame();
 
-		Frame tmp_frame = wcc->GetActiveCamera().GetFrame();
-		cv::Mat mat(tmp_frame.GetRows(), tmp_frame.GetCols(), CV_8UC4, tmp_frame.GetData());
-		cv::imshow("test cameras UI", mat);
+			cv::Mat mat(tmp_frame.GetRows(), tmp_frame.GetCols(), CV_8UC4, tmp_frame.GetData());
+			cv::imshow("test cameras UI", mat);
+		}
+		catch (std::exception ex)
+		{
+			std::cout << ex.what() << std::endl;
+		}
 
 		switch (choose = cv::waitKey(10))
 		{
@@ -36,19 +44,15 @@ int main()
 		{
 			wcc->Refresh();
 
-			cameras_names = wcc->ListNamesOfCameras();
-
-			for (std::string name : cameras_names)
-				std::cout << name << std::endl;
-
-			wcc->ActivateCamera(cameras_names.at(0));
+			for (WebCam cam : cameras_)
+				std::cout << cam.GetName() << std::endl;
 
 			break;
 		}
 		case 49:
 		case 50:
 		case 51:
-			wcc->ActivateCamera(cameras_names.at(choose - 49));
+			wcc->ActivateCamera(cameras_.at(choose - 49));
 			break;
 		default:
 			std::cout << "Bad command: " << choose << std::endl;

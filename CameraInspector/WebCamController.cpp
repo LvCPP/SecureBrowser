@@ -1,6 +1,8 @@
 #include "WebCamController.h"
 #include <algorithm>
 #include <sstream>
+#include <functional>
+#include <exception>
 
 using namespace CameraInspector;
 
@@ -8,11 +10,13 @@ WebCamController::WebCamController()
 	: is_activated_(false)
 {
 	unsigned short devices_count = setupESCAPI();
+	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this));
 	Refresh();
 }
 
 WebCamController::~WebCamController()
 {
+	unregisterForDeviceNotification();
 	if (is_activated_)
 		activated_camera_->DeInitialize();
 }
@@ -27,19 +31,24 @@ std::vector<std::string> WebCamController::ListNamesOfCameras() const
 	return names;
 }
 
+const std::vector<WebCam>& WebCamController::GetCameras() const
+{
+	return cameras_;
+}
+
 size_t WebCamController::GetCamerasCount() const noexcept
 {
 	return cameras_.size();
 }
 
-void WebCamController::ActivateCamera(std::string identifier)
+void WebCamController::ActivateCamera(WebCam& camera)
 {	
 	if(is_activated_)
 		activated_camera_->DeInitialize();
 	
 	activated_camera_ = std::find_if(cameras_.begin(), cameras_.end(), [&](WebCam cam)
 	{
-		return cam.GetName() == identifier;
+		return cam.GetName() == camera.GetName();
 	});
 	
 	activated_camera_->Initialize();
@@ -49,11 +58,17 @@ void WebCamController::ActivateCamera(std::string identifier)
 
 WebCam WebCamController::GetActiveCamera() const
 {
-	return *activated_camera_;
+	std::lock_guard<std::mutex> lock(mx);
+	if (is_activated_)
+		return *activated_camera_;
+	else
+		throw std::exception("Camera is refreshing now");
 }
 
+// TODO: flag
 void WebCamController::Refresh()
 {
+	std::lock_guard<std::mutex> lock(mx);
 	if (is_activated_)
 	{
 		activated_camera_->DeInitialize();
@@ -76,4 +91,6 @@ void WebCamController::Refresh()
 
 		cameras_.emplace_back(temp_str, i);
 	}
+
+	ActivateCamera(cameras_.at(0));
 }
