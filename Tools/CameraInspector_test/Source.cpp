@@ -3,6 +3,7 @@
 #include "FileSystemFrameSaver.h"
 #include "FrameStorer.h"
 #include "FaceDetector.h"
+#include "FaceCountObserver.h"
 
 #include <opencv2\highgui\highgui.hpp>		// used only for displaying images and input control
 
@@ -10,8 +11,10 @@
 #include <iostream>
 #include <thread>
 
+
 using namespace CameraInspector;
 using namespace Utils;
+using namespace std;
 
 int TestPhotoMaker()
 {
@@ -65,53 +68,50 @@ int TestPhotoMaker()
 	return 0;
 }
 
-
-class DummyObserver : public IFaceDetectorObserver
-{
-	void OnFaceQuantityChanged(int face_number)
-	{
-		std::cout << "New face count : " << face_number << std::endl;
-	}
-};
-
-
 void TestFaceDetector()
 {
 	An<WebCameraCapture> cam_cap;
 
 	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>();
 
-	const std::shared_ptr<DummyObserver> observer = std::make_shared<DummyObserver>();
+	const std::shared_ptr<FaceCountObserver> observer = std::make_shared<FaceCountObserver>();
 	face_detector->Attach(observer);
 
 	cam_cap->AddFrameHandler(face_detector);
+	face_detector->SetFrequency(3s);
 	cam_cap->Start();
-
-	std::this_thread::sleep_for(std::chrono::seconds(60));
+	std::this_thread::sleep_for(std::chrono::seconds(20000));
 	cam_cap->Stop();
 }
 
 int main(int argc, char** argv)
 {
-	if (argc != 2)
-	{
-		return -1;
-	}
-
-	const std::string select = argv[1];
-	if (select == "photo")
-	{
-		TestPhotoMaker();
-	}
-	else if (select == "face")
-	{
-		TestFaceDetector();
-	}
-	else
-	{
-		std::cout << "bad_choise" << std::endl;
-	}
-
-    system("pause");
+	TestFaceDetector();
+	system("pause");
 	return 0;
 }
+
+//int main(int argc, char** argv)
+//{
+//	if (argc != 2)
+//	{
+//		return -1;
+//	}
+//
+//	const std::string select = argv[1];
+//	if (select == "photo")
+//	{
+//		TestPhotoMaker();
+//	}
+//	else if (select == "face")
+//	{
+//		TestFaceDetector();
+//	}
+//	else
+//	{
+//		std::cout << "bad_choise" << std::endl;
+//	}
+//
+//    system("pause");
+//	return 0;
+//}

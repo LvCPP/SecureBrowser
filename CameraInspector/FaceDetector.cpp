@@ -5,8 +5,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <memory>
+#include <thread>
 
 using namespace CameraInspector;
+using namespace std;
 
 namespace
 {
@@ -30,6 +32,7 @@ public:
 	cv::CascadeClassifier& GetFaceCascade() { return face_cascade_; }
 private:
 	cv::CascadeClassifier face_cascade_;
+	//std::shared_ptr<CameraInspector::PhotoMaker> make_photo_;
 };
 
 struct ObserverInfo
@@ -51,9 +54,12 @@ struct ObserverInfo
 };
 
 FaceDetector::FaceDetector()
-	: faces_quantity_(0)
+	: faces_quantity_(1)
 	, pimpl_ (std::make_unique<FaceDetectorImpl>())
+	, last_time_proceeded_(std::chrono::high_resolution_clock::now())
+	, frequency_(5s)
 {
+
 };
 
 void FaceDetector::Attach(const std::shared_ptr<IFaceDetectorObserver>& observer)
@@ -91,8 +97,19 @@ void FaceDetector::Notify(int face_count)
 	});
 }
 
+void FaceDetector::SetFrequency(std::chrono::seconds frequency)
+{
+	frequency_ = frequency;
+}
+
 void FaceDetector::ProcessFrame(const Frame& frame)
 {
+	auto currentTime = chrono::high_resolution_clock::now();
+	bool isTimeToProceed = chrono::duration_cast<chrono::seconds>
+		(currentTime - last_time_proceeded_).count() > frequency_.count();
+	if (!isTimeToProceed)
+		return;
+	last_time_proceeded_ = currentTime;
 	cv::Mat cv_frame = frame.GetImpl();
 	cv::Mat frame_gray;
 
@@ -100,14 +117,13 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 
 	std::vector<cv::Rect> faces;
 	// Detect faces
+
 	pimpl_->GetFaceCascade().detectMultiScale(frame_gray, faces, SCALE_FACTOR, MIN_NEIGHBORS, FLAGS, cv::Size(30, 30));
-	
+
 	const size_t new_faces_quantuty = faces.size();
-	if (faces_quantity_ != new_faces_quantuty)
-	{
-		faces_quantity_ = new_faces_quantuty;
+	if(new_faces_quantity != faces_quantity_)
 		Notify(static_cast<int>(new_faces_quantuty));
-	}
+
 #ifdef _DEBUG
 	for (size_t ic = 0; ic < faces.size(); ic++) // Iterate through all current elements (detected faces)
 	{
@@ -115,7 +131,7 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 		cv::Point pt2((faces[ic].x + faces[ic].width), (faces[ic].y + faces[ic].height));
 		rectangle(cv_frame, pt1, pt2, COLOR_GREEN, THICKNESS, LINE_TYPE, SHIFT);
 	}
-imshow("Debug window", cv_frame);
-cv::waitKey(10);
+	imshow("Debug window", cv_frame);
+	cv::waitKey(10);
 #endif // DEBUG
 }

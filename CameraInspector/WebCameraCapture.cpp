@@ -66,6 +66,7 @@ void WebCameraCapture::ProcessHandlers()
 {
 	while (is_working_)
 	{
+		//Sleep
 		cv::Mat mat_to_process;
 		camera_->read(mat_to_process);
 
