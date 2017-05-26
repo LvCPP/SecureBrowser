@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Browser</string>
+   <string>SecureBrowser</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -19,7 +19,7 @@
      <item>
       <widget class="QPushButton" name="push_btn_back">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to go back&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Back&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Back&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -36,7 +36,7 @@
      <item>
       <widget class="QPushButton" name="push_btn_forward">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to go forward&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Forward&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string/>
@@ -50,7 +50,7 @@
      <item>
       <widget class="QPushButton" name="push_btn_reload">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to reload this page&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reload&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string/>
@@ -64,7 +64,7 @@
      <item>
       <widget class="QPushButton" name="push_btn_stop">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to stop loading this page&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Stop&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string/>
@@ -80,11 +80,33 @@
      </item>
      <item>
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <italic>true</italic>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="frameShape">
-        <enum>QFrame::Box</enum>
+        <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="text">
         <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="push_btn_close">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Close&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>Resources/closed.ico</normaloff>Resources/closed.ico</iconset>
        </property>
       </widget>
      </item>

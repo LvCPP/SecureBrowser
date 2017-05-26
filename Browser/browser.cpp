@@ -8,21 +8,26 @@ Browser::Browser(QWidget *parent)
 	, ui_(new Ui::Browser())
 {
 	ui_->setupUi(this);
-	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
-	//setWindowState(Qt::WindowMaximized);
+	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint);
 	setWindowState(Qt::WindowFullScreen);
 	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
 	connect(ui_->push_btn_reload, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
 	connect(ui_->push_btn_stop, &QPushButton::clicked, ui_->web_view, &QWebEngineView::stop);
+	connect(ui_->push_btn_close, &QPushButton::clicked, this, &Browser::close);
 	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->load_progress_page, &QProgressBar::setValue);
 	connect(ui_->web_view, &QWebEngineView::loadStarted, this, &Browser::ShowProgressBar);
 	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::HideProgressBar);
 	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetMyTitle);
-	ui_->web_view->load(QUrl("https://www.google.com.ua"));
+	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
+	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
+	ui_->push_btn_back->setEnabled(false);
+	ui_->push_btn_forward->setEnabled(false);
+	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
+	ui_->web_view->load(QUrl("https://www.google.com.ua"));
 }
 
 Browser::~Browser()
@@ -48,9 +53,29 @@ void Browser::SetMyTitle()
 void Browser::ShowProgressBar()
 {
 	ui_->load_progress_page->show();
+	ui_->push_btn_reload->setEnabled(false);
+	ui_->push_btn_stop->setEnabled(true);
 }
 
 void Browser::HideProgressBar()
 {
 	ui_->load_progress_page->hide();
+	ui_->push_btn_reload->setEnabled(true);
+	ui_->push_btn_stop->setEnabled(false);
+}
+
+void Browser::ButtonBackHistory()
+{
+	if (ui_->web_view->history()->canGoBack())
+		ui_->push_btn_back->setEnabled(true);
+	else
+		ui_->push_btn_back->setEnabled(false);
+}
+
+void Browser::ButtonForwardHistory()
+{
+	if (ui_->web_view->history()->canGoForward())
+		ui_->push_btn_forward->setEnabled(true);
+	else
+		ui_->push_btn_forward->setEnabled(false);
 }
