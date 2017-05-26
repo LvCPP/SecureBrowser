@@ -31,7 +31,7 @@ std::vector<std::string> WebCamController::ListNamesOfCameras() const
 	return names;
 }
 
-const std::vector<WebCam>& WebCamController::GetCameras() const
+const std::vector<WebCam>& WebCamController::GetCameras() const noexcept
 {
 	return cameras_;
 }

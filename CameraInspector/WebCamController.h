@@ -19,7 +19,7 @@ public:
 	~WebCamController();
 
 	std::vector<std::string> ListNamesOfCameras() const;
-	const std::vector<WebCam>& GetCameras() const;
+	const std::vector<WebCam>& GetCameras() const noexcept;
 	size_t GetCamerasCount() const noexcept;
 	void ActivateCamera(WebCam&);
 	
