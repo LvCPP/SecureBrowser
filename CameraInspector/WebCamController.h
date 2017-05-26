@@ -18,12 +18,12 @@ public:
 	WebCamController();
 	~WebCamController();
 
-	std::vector<std::string> ListNamesOfCameras() const;
 	std::vector<WebCam>& GetCameras() noexcept;
+	std::vector<std::string> ListNamesOfCameras() const;
 	size_t GetCamerasCount() const noexcept;
 	void ActivateCamera(WebCam&);
-	
-	void Refresh(bool is_arriving = false);
+
+	void Refresh(bool b = false, bool is_from_lib = false);
 	WebCam GetActiveCamera() const;
 
 private:

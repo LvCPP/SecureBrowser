@@ -5,9 +5,9 @@ using namespace CameraInspector;
 static constexpr unsigned short DEFAULT_WIDTH = 640;
 static constexpr unsigned short DEFAULT_HEIGHT = 480;
 
-inline CameraParameters& GetParameters()
+inline SimpleCapParams& GetParameters()
 {
-	static CameraParameters params{ DEFAULT_WIDTH, DEFAULT_HEIGHT, std::make_unique<int[]>(DEFAULT_WIDTH * DEFAULT_HEIGHT) };
+	static SimpleCapParams params{ new int [DEFAULT_WIDTH * DEFAULT_HEIGHT], DEFAULT_WIDTH, DEFAULT_HEIGHT };
 	return params;
 }
 
@@ -20,7 +20,7 @@ WebCam::WebCam(std::string name, std::string unique_name, unsigned short id)
 
 void WebCam::Initialize()
 {
-	if (initCapture(id_, &(SimpleCapParams)GetParameters()) == 0)
+	if (initCapture(id_, &GetParameters()) == 0)
 		throw std::exception("Initialization capture failed");
 }
 
@@ -32,8 +32,8 @@ void WebCam::DeInitialize()
 Frame WebCam::GetFrame()
 {
 	doCapture(id_);
-	CameraParameters& parameters(GetParameters());
-	return Frame(parameters.width, parameters.height, reinterpret_cast<void*>(parameters.buffer.get()));
+	SimpleCapParams& parameters(GetParameters());
+	return Frame(parameters.mWidth, parameters.mHeight, reinterpret_cast<void*>(parameters.mTargetBuf));
 }
 
 std::string WebCam::GetName() const

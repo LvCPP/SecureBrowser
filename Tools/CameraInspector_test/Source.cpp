@@ -17,10 +17,6 @@ using namespace Utils;
 int TestPhotoMaker()
 {
 	An<WebCameraCapture> cam_cap;
-	An<WebCamController> cam_con;
-
-	std::vector<WebCam>& cameras_ = cam_con->GetCameras();
-	cam_con->ActivateCamera(cameras_.at(0));
 
 	cv::String f_converted_window = "Converted";
 	cv::namedWindow(f_converted_window, CV_WINDOW_AUTOSIZE);
@@ -102,6 +98,10 @@ int main(int argc, char** argv)
 	{
 		return -1;
 	}
+
+	An<WebCamController> cam_con;
+	std::vector<WebCam>& cameras_ = cam_con->GetCameras();
+	cam_con->ActivateCamera(cameras_.at(0));
 
 	const std::string select = argv[1];
 	if (select == "photo")

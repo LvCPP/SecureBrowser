@@ -17,18 +17,6 @@ struct SimpleCapParams
 	int mHeight;
 };
 
-struct CameraParameters
-{
-	unsigned short width;
-	unsigned short height;
-	std::unique_ptr<int[]> buffer;
-
-	operator SimpleCapParams()
-	{
-		return SimpleCapParams({ buffer.get(), width, height });
-	}
-};
-
 enum CAPTURE_PROPETIES
 {
 	CAPTURE_BRIGHTNESS,
