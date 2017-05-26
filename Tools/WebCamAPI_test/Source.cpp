@@ -6,11 +6,12 @@
 using namespace CameraInspector;
 using namespace Utils;
 
+
 int main() 
 {
 	An<WebCamController> wcc;
 
-	std::vector<WebCam> cameras_ = wcc->GetCameras();
+	std::vector<WebCam>& cameras_ = wcc->GetCameras();
 
 	for (WebCam cam : cameras_)
 		std::cout << cam.GetName() << std::endl;
@@ -22,23 +23,25 @@ int main()
 
 	wcc->ActivateCamera(cameras_.at(0));
 
-	while (cv::waitKey(10) != 113)
+	while(choose != 113)
 	{
+		choose = cv::waitKey(10);
+
 		try
 		{
 			Frame tmp_frame = wcc->GetActiveCamera().GetFrame();
-
 			cv::Mat mat(tmp_frame.GetRows(), tmp_frame.GetCols(), CV_8UC4, tmp_frame.GetData());
 			cv::imshow("test cameras UI", mat);
 		}
-		catch (std::exception ex)
+		catch (const std::exception& ex)
 		{
 			std::cout << ex.what() << std::endl;
 		}
 
-		switch (choose = cv::waitKey(10))
+		switch (choose)
 		{
-		case -1:
+		case 113: //reserved for q = exit
+		case -1: // no key pressed
 			break;
 		case 27:
 		{
@@ -56,10 +59,8 @@ int main()
 			break;
 		default:
 			std::cout << "Bad command: " << choose << std::endl;
-			choose = -1;
 			break;
 		}
-
 	}
 	
 	cv::destroyWindow("test cameras UI");

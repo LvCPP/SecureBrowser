@@ -19,18 +19,18 @@ public:
 	~WebCamController();
 
 	std::vector<std::string> ListNamesOfCameras() const;
-	const std::vector<WebCam>& GetCameras() const noexcept;
+	std::vector<WebCam>& GetCameras() noexcept;
 	size_t GetCamerasCount() const noexcept;
 	void ActivateCamera(WebCam&);
 	
-	void Refresh();
+	void Refresh(bool is_arriving = false);
 	WebCam GetActiveCamera() const;
 
 private:
 	std::vector<WebCam> cameras_;
 	std::vector<WebCam>::iterator activated_camera_;
 	bool is_activated_;
-	mutable std::mutex mx;
+	mutable std::mutex busy_;
 };
 
 } // namespace CameraInspector

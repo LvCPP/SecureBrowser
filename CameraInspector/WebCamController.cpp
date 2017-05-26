@@ -10,7 +10,7 @@ WebCamController::WebCamController()
 	: is_activated_(false)
 {
 	unsigned short devices_count = setupESCAPI();
-	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this));
+	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this, std::placeholders::_1));
 	Refresh();
 }
 
@@ -31,7 +31,7 @@ std::vector<std::string> WebCamController::ListNamesOfCameras() const
 	return names;
 }
 
-const std::vector<WebCam>& WebCamController::GetCameras() const noexcept
+std::vector<WebCam>& WebCamController::GetCameras() noexcept
 {
 	return cameras_;
 }
@@ -46,9 +46,9 @@ void WebCamController::ActivateCamera(WebCam& camera)
 	if(is_activated_)
 		activated_camera_->DeInitialize();
 	
-	activated_camera_ = std::find_if(cameras_.begin(), cameras_.end(), [&](WebCam cam)
+	activated_camera_ = std::find_if(cameras_.begin(), cameras_.end(), [&](WebCam cam) -> bool
 	{
-		return cam.GetName() == camera.GetName();
+		return cam.GetUniqueName() == camera.GetUniqueName();
 	});
 	
 	activated_camera_->Initialize();
@@ -58,39 +58,47 @@ void WebCamController::ActivateCamera(WebCam& camera)
 
 WebCam WebCamController::GetActiveCamera() const
 {
-	std::lock_guard<std::mutex> lock(mx);
+	std::lock_guard<std::mutex> lock(busy_);
 	if (is_activated_)
 		return *activated_camera_;
 	else
 		throw std::exception("Camera is refreshing now");
 }
 
-// TODO: flag
-void WebCamController::Refresh()
+void WebCamController::Refresh(bool is_arriving)
 {
-	std::lock_guard<std::mutex> lock(mx);
+	std::lock_guard<std::mutex> lock(busy_);
+	std::string previous_camera_name("");
 	if (is_activated_)
 	{
+		previous_camera_name = activated_camera_->GetUniqueName();
 		activated_camera_->DeInitialize();
-		is_activated_ = false;
 	}
 
 	cameras_.clear();
 	int devices_count = countCaptureDevices();
-	int repeater = 0;
 
 	for (auto i = 0; i < devices_count; ++i)
 	{
 		char temp[64];
+
 		getCaptureDeviceName(i, temp, 64);
-		std::string temp_str(temp);
+		std::string device_name_str(temp);
 
-		std::stringstream ss;
-		ss << ++repeater << ": " << temp_str;
-		temp_str = ss.str();
+		getCaptureDeviceUniqueName(i, temp, 64);
+		std::string unique_name_str(temp);
 
-		cameras_.emplace_back(temp_str, i);
+		cameras_.emplace_back(device_name_str, unique_name_str, i);
 	}
+	
+	activated_camera_ = std::find_if(cameras_.begin(), cameras_.end(), [&](WebCam cam) -> bool
+	{
+		return cam.GetUniqueName() == previous_camera_name;
+	});
 
-	ActivateCamera(cameras_.at(0));
+	if (activated_camera_ == cameras_.end())
+	{
+		activated_camera_ = cameras_.begin();
+	}
+	activated_camera_->Initialize();
 }

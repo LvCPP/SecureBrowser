@@ -7,6 +7,7 @@ deinitCaptureProc deinitCapture;
 doCaptureProc doCapture;
 isCaptureDoneProc isCaptureDone;
 getCaptureDeviceNameProc getCaptureDeviceName;
+getCaptureDeviceUniqueNameProc getCaptureDeviceUniqueName;
 ESCAPIVersionProc ESCAPIVersion;
 getCapturePropertyValueProc getCapturePropertyValue;
 getCapturePropertyAutoProc getCapturePropertyAuto;
@@ -16,7 +17,6 @@ getCaptureErrorCodeProc getCaptureErrorCode;
 initCaptureWithOptionsProc initCaptureWithOptions;
 registerForDeviceNotificationProc registerForDeviceNotification;
 unregisterForDeviceNotificationProc unregisterForDeviceNotification;
-
 
 /* Internal: initialize COM */
 typedef void (*initCOMProc)();
@@ -28,7 +28,7 @@ int setupESCAPI()
 	HMODULE capdll = LoadLibraryA("escapi.dll");
 	if (capdll == NULL)
 		return 0;
-	
+
 	/* Fetch function entry points */
 	countCaptureDevices = (countCaptureDevicesProc)GetProcAddress(capdll, "countCaptureDevices");
 	initCapture = (initCaptureProc)GetProcAddress(capdll, "initCapture");
@@ -37,6 +37,7 @@ int setupESCAPI()
 	isCaptureDone = (isCaptureDoneProc)GetProcAddress(capdll, "isCaptureDone");
 	initCOM = (initCOMProc)GetProcAddress(capdll, "initCOM");
 	getCaptureDeviceName = (getCaptureDeviceNameProc)GetProcAddress(capdll, "getCaptureDeviceName");
+	getCaptureDeviceUniqueName = (getCaptureDeviceUniqueNameProc)GetProcAddress(capdll, "getCaptureDeviceUniqueName");
 	ESCAPIVersion = (ESCAPIVersionProc)GetProcAddress(capdll, "ESCAPIVersion");
 	getCapturePropertyValue = (getCapturePropertyValueProc)GetProcAddress(capdll, "getCapturePropertyValue");
 	getCapturePropertyAuto = (getCapturePropertyAutoProc)GetProcAddress(capdll, "getCapturePropertyAuto");
@@ -46,8 +47,8 @@ int setupESCAPI()
 	initCaptureWithOptions = (initCaptureWithOptionsProc)GetProcAddress(capdll, "initCaptureWithOptions");
 	registerForDeviceNotification = (registerForDeviceNotificationProc)GetProcAddress(capdll, "registerForDeviceNotification");
 	unregisterForDeviceNotification = (unregisterForDeviceNotificationProc)GetProcAddress(capdll, "unregisterForDeviceNotification");
-	
-	
+
+
 	/* Check that we got all the entry points */
 	if (initCOM == NULL ||
 		ESCAPIVersion == NULL ||
@@ -66,14 +67,15 @@ int setupESCAPI()
 		registerForDeviceNotification == NULL ||
 		unregisterForDeviceNotification == NULL)
 		return 0;
-	
+
 	/* Verify DLL version is at least what we want */
 	if (ESCAPIVersion() < 0x301)
 		return 0;
-	
+
 	/* Initialize COM.. */
 	initCOM();
-	
+
 	/* and return the number of capture devices found. */
 	return countCaptureDevices();
 }
+
