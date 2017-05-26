@@ -15,18 +15,23 @@ Frame::Frame(Frame&& frame)
 }
 
 Frame::Frame(int width, int height, void* data)
-	: Frame(cv::Mat(height, width, CV_8UC3, data))
+	: Frame(cv::Mat(height, width, CV_8UC4, data))
 {
 }
 
 Frame::Frame(cv::Mat mat)
-	: cv_mat_impl_(std::make_shared<cv::Mat>(cv::Mat(mat.rows, mat.cols, CV_8UC3, mat.data)))
+	: cv_mat_impl_(std::make_shared<cv::Mat>(cv::Mat(mat.rows, mat.cols, CV_8UC4, mat.data)))
 {
 }
 
 Frame::Frame(std::shared_ptr<cv::Mat> impl)
 	: cv_mat_impl_(impl)
 {
+}
+
+bool Frame::IsEmpty() const
+{
+	return cv_mat_impl_->data == nullptr;
 }
 
 cv::Mat Frame::GetImpl() const noexcept

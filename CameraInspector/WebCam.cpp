@@ -20,7 +20,8 @@ WebCam::WebCam(std::string name, std::string unique_name, unsigned short id)
 
 void WebCam::Initialize()
 {
-	initCapture(id_, &(SimpleCapParams)GetParameters());
+	if (initCapture(id_, &(SimpleCapParams)GetParameters()) == 0)
+		throw std::exception("Initialization capture failed");
 }
 
 void WebCam::DeInitialize()

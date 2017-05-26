@@ -6,7 +6,6 @@
 using namespace CameraInspector;
 using namespace Utils;
 
-
 int main() 
 {
 	An<WebCamController> wcc;

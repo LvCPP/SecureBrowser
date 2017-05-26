@@ -8,8 +8,6 @@
 #include <atomic>
 #include <thread>
 
-namespace cv { class VideoCapture; }
-
 namespace CameraInspector
 {
 
@@ -31,11 +29,11 @@ public:
 	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 	
 private:
+	static Frame ReadFromCamera();
 	void WaitForInit();
 
 	void ProcessHandlers();
 	std::vector<std::shared_ptr<IFrameHandler>> handlers_;
-	std::shared_ptr<cv::VideoCapture> camera_;
 	std::atomic<bool> is_working_;
 	std::thread worker_;
 };

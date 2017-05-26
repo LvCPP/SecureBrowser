@@ -3,6 +3,7 @@
 #include "FileSystemFrameSaver.h"
 #include "FrameStorer.h"
 #include "FaceDetector.h"
+#include "WebCamController.h"
 
 #include <opencv2\highgui\highgui.hpp>		// used only for displaying images and input control
 
@@ -16,11 +17,15 @@ using namespace Utils;
 int TestPhotoMaker()
 {
 	An<WebCameraCapture> cam_cap;
+	An<WebCamController> cam_con;
+
+	std::vector<WebCam>& cameras_ = cam_con->GetCameras();
+	cam_con->ActivateCamera(cameras_.at(0));
 
 	cv::String f_converted_window = "Converted";
 	cv::namedWindow(f_converted_window, CV_WINDOW_AUTOSIZE);
 	
-	std::cout << "\nPress Esc to capture the screen" << std::endl;
+	std::cout << "Press Esc to capture the screen" << std::endl;
 
 	char choose = 0;
 	while (cv::waitKey(30) != 27)

@@ -5,7 +5,6 @@
 #include <exception>
 
 using namespace CameraInspector;
-
 WebCamController::WebCamController()
 	: is_activated_(false)
 {
@@ -95,10 +94,14 @@ void WebCamController::Refresh(bool is_arriving)
 	{
 		return cam.GetUniqueName() == previous_camera_name;
 	});
-
+	
+	if (cameras_.empty())
+		throw std::exception("No available web cameras!");
+	
 	if (activated_camera_ == cameras_.end())
 	{
 		activated_camera_ = cameras_.begin();
 	}
+	
 	activated_camera_->Initialize();
 }
