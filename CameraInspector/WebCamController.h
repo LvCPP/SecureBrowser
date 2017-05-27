@@ -3,8 +3,6 @@
 #include "Frame.h"
 #include <An.hpp>
 #include "escapi.h"
-#include <Windows.h>
-#include <map>
 #include <vector>
 #include <string>
 #include <mutex>
@@ -18,12 +16,13 @@ public:
 	WebCamController();
 	~WebCamController();
 
-	std::vector<WebCam>& GetCameras() noexcept;
 	std::vector<std::string> ListNamesOfCameras() const;
-	size_t GetCamerasCount() const noexcept;
+	
 	void ActivateCamera(WebCam&);
-
-	void Refresh(bool b = false, bool is_from_lib = false);
+	void Refresh(bool b = false);
+	
+	std::vector<WebCam>& GetCameras() noexcept;
+	size_t GetCamerasCount() const noexcept;
 	WebCam GetActiveCamera() const;
 
 private:

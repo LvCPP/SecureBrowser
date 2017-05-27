@@ -1,7 +1,5 @@
 #include "FileSystemFrameSaver.h"
-
 #include <opencv2\highgui\highgui.hpp>
-
 #include <vector>
 
 constexpr int QUALITY_HIGH = 92;

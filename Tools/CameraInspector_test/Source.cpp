@@ -4,6 +4,7 @@
 #include "FrameStorer.h"
 #include "FaceDetector.h"
 #include "WebCamController.h"
+#include "CameraException.h"
 
 #include <opencv2\highgui\highgui.hpp>		// used only for displaying images and input control
 
@@ -26,9 +27,18 @@ int TestPhotoMaker()
 	char choose = 0;
 	while (cv::waitKey(30) != 27)
 	{
-		Frame tmp_frame = cam_cap->GetCurrentStableFrame();
-		cv::Mat to_show(tmp_frame.GetImpl());
-		imshow(f_converted_window, to_show);
+		try
+		{
+			Frame tmp_frame = cam_cap->GetCurrentStableFrame();
+			cv::Mat to_show(tmp_frame.GetImpl());
+			imshow(f_converted_window, to_show);
+		}
+		catch (CameraException& ex)
+		{
+			std::cout << ex.what() << std::endl;
+			cv::destroyWindow(f_converted_window);
+			return -1;
+		}
 	}
 
 	cv::destroyWindow(f_converted_window);
@@ -100,8 +110,18 @@ int main(int argc, char** argv)
 	}
 
 	An<WebCamController> cam_con;
-	std::vector<WebCam>& cameras_ = cam_con->GetCameras();
-	cam_con->ActivateCamera(cameras_.at(0));
+
+	try
+	{
+		std::vector<WebCam>& cameras_ = cam_con->GetCameras();
+		cam_con->ActivateCamera(cameras_.at(0));
+	}
+	catch (std::exception& ex)
+	{
+		std::cout << ex.what() << std::endl;
+		system("pause");
+		return -1;
+	}
 
 	const std::string select = argv[1];
 	if (select == "photo")
@@ -117,6 +137,5 @@ int main(int argc, char** argv)
 		std::cout << "bad_choise" << std::endl;
 	}
 
-    system("pause");
 	return 0;
 }

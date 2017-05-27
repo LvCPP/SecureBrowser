@@ -1,14 +1,14 @@
 #include "WebCamController.h"
+#include "CameraException.h"
 #include <algorithm>
-#include <sstream>
 
 using namespace CameraInspector;
 
 WebCamController::WebCamController()
 	: is_activated_(false)
 {
-	unsigned short devices_count = setupESCAPI();
-	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this, std::placeholders::_1, true));
+	setupESCAPI();
+	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this, std::placeholders::_1));
 	Refresh();
 }
 
@@ -17,11 +17,6 @@ WebCamController::~WebCamController()
 	unregisterForDeviceNotification();
 	if (is_activated_)
 		activated_camera_->DeInitialize();
-}
-
-std::vector<WebCam>& WebCamController::GetCameras() noexcept
-{
-	return cameras_;
 }
 
 std::vector<std::string> WebCamController::ListNamesOfCameras() const
@@ -34,11 +29,6 @@ std::vector<std::string> WebCamController::ListNamesOfCameras() const
 	return names;
 }
 
-size_t WebCamController::GetCamerasCount() const noexcept
-{
-	return cameras_.size();
-}
-
 void WebCamController::ActivateCamera(WebCam& camera)
 {
 	if (is_activated_)
@@ -49,21 +39,16 @@ void WebCamController::ActivateCamera(WebCam& camera)
 		return cam.GetUniqueName() == camera.GetUniqueName();
 	});
 
+	// If user wants to activate camera, that isn't connected
+	if (activated_camera_ == cameras_.end())
+		throw CameraException("Camera wasn't found");
+
 	activated_camera_->Initialize();
 
 	is_activated_ = true;
 }
 
-WebCam WebCamController::GetActiveCamera() const
-{
-	std::lock_guard<std::mutex> lock(busy_);
-	if (is_activated_)
-		return *activated_camera_;
-	else
-		throw std::exception("Camera is not available right now");
-}
-
-void WebCamController::Refresh(bool is_arriving, bool is_from_lib)
+void WebCamController::Refresh(bool is_arriving)
 {
 	std::lock_guard<std::mutex> lock(busy_);
 	std::string previous_camera_name("");
@@ -94,14 +79,31 @@ void WebCamController::Refresh(bool is_arriving, bool is_from_lib)
 		return cam.GetUniqueName() == previous_camera_name;
 	});
 
-	if (cameras_.empty())
-		throw std::exception("No available cameras!");
-
+	// If used camera was disconnected, activate first camera
 	if (activated_camera_ == cameras_.end())
-	{
 		activated_camera_ = cameras_.begin();
-	}
 
-	if (is_from_lib)
+	if (is_activated_ && !cameras_.empty())
 		activated_camera_->Initialize();
+	else
+		is_activated_ = false;
+}
+
+std::vector<WebCam>& WebCamController::GetCameras() noexcept
+{
+	return cameras_;
+}
+
+size_t WebCamController::GetCamerasCount() const noexcept
+{
+	return cameras_.size();
+}
+
+WebCam WebCamController::GetActiveCamera() const
+{
+	std::lock_guard<std::mutex> lock(busy_);
+	if (is_activated_)
+		return *activated_camera_;
+	else
+		throw CameraException("Camera is not available right now");
 }

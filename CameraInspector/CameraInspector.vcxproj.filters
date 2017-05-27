@@ -110,5 +110,8 @@
     <ClInclude Include="escapi.h">
       <Filter>ESCAPI</Filter>
     </ClInclude>
+    <ClInclude Include="CameraException.h">
+      <Filter>Header Files\WebCamAPI</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

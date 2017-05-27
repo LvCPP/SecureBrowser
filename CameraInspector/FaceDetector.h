@@ -3,6 +3,7 @@
 #include "IFaceDetectorObserver.h"
 #include "Frame.h"
 #include <vector>
+#include <memory>
 
 class FaceDetectorImpl;// forward-declare private "implementation" class
 struct ObserverInfo;

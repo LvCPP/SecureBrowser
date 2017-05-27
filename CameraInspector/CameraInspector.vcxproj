@@ -110,6 +110,7 @@
     <ClCompile Include="WebCameraCapture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraException.h" />
     <ClInclude Include="escapi.h" />
     <ClInclude Include="FaceDetector.h" />
     <ClInclude Include="FileSystemFrameSaver.h" />

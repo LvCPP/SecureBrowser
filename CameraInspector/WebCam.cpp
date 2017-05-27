@@ -1,4 +1,5 @@
 #include "WebCam.h"
+#include "CameraException.h"
 
 using namespace CameraInspector;
 
@@ -21,7 +22,7 @@ WebCam::WebCam(std::string name, std::string unique_name, unsigned short id)
 void WebCam::Initialize()
 {
 	if (initCapture(id_, &GetParameters()) == 0)
-		throw std::exception("Initialization capture failed");
+		throw CameraException("Initialization capture failed");
 }
 
 void WebCam::DeInitialize()
