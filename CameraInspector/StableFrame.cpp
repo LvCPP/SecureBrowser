@@ -1,5 +1,4 @@
 #include "StableFrame.h"
-
 #include <opencv2\highgui\highgui.hpp>
 
 using namespace CameraInspector;
@@ -20,7 +19,7 @@ StableFrame::StableFrame(const Frame& frame)
 }
 
 StableFrame::StableFrame(int width, int height, void* data) 
-	: StableFrame(cv::Mat(height, width, CV_8UC3, data))
+	: StableFrame(cv::Mat(height, width, CV_8UC4, data))
 {
 }
 

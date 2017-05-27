@@ -70,7 +70,7 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libraries\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libraries\escapi;$(SolutionDir)Libraries\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -91,22 +91,27 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libraries\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libraries\escapi;$(SolutionDir)Libraries\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="escapi.cpp" />
     <ClCompile Include="FaceDetector.cpp" />
     <ClCompile Include="FileSystemFrameSaver.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="FrameStorer.cpp" />
     <ClCompile Include="PhotoMaker.cpp" />
     <ClCompile Include="StableFrame.cpp" />
+    <ClCompile Include="WebCam.cpp" />
+    <ClCompile Include="WebCamController.cpp" />
     <ClCompile Include="WebCameraCapture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraException.h" />
+    <ClInclude Include="escapi.h" />
     <ClInclude Include="FaceDetector.h" />
     <ClInclude Include="FileSystemFrameSaver.h" />
     <ClInclude Include="Frame.h" />
@@ -116,6 +121,8 @@
     <ClInclude Include="IFaceDetectorObserver.h" />
     <ClInclude Include="PhotoMaker.h" />
     <ClInclude Include="StableFrame.h" />
+    <ClInclude Include="WebCam.h" />
+    <ClInclude Include="WebCamController.h" />
     <ClInclude Include="WebCameraCapture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

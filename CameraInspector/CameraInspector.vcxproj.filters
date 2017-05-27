@@ -13,63 +13,105 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Frame">
+      <UniqueIdentifier>{796b49fc-f766-4ad7-b410-a015f57b59d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Frame">
+      <UniqueIdentifier>{6e39b2a4-bf04-46f7-8677-d8abf60d1a03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CameraInspector">
+      <UniqueIdentifier>{63a2ffd8-b36a-4303-a22f-9a1af0e0e575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CameraInspector">
+      <UniqueIdentifier>{e69a9218-a1c3-402d-a04f-dc0926923111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\WebCamAPI">
+      <UniqueIdentifier>{06db9265-a38c-47d6-8342-822770b22d8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\WebCamAPI">
+      <UniqueIdentifier>{5d02ac33-9a45-466f-ad79-08f46f691282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ESCAPI">
+      <UniqueIdentifier>{bcf52c89-6d98-4a32-9d7f-a6251ba65202}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FaceDetector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystemFrameSaver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Frame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PhotoMaker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WebCameraCapture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StableFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Frame</Filter>
     </ClCompile>
     <ClCompile Include="FrameStorer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="StableFrame.cpp">
+      <Filter>Source Files\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="WebCameraCapture.cpp">
+      <Filter>Source Files\CameraInspector</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceDetector.cpp">
+      <Filter>Source Files\CameraInspector</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystemFrameSaver.cpp">
+      <Filter>Source Files\CameraInspector</Filter>
+    </ClCompile>
+    <ClCompile Include="PhotoMaker.cpp">
+      <Filter>Source Files\CameraInspector</Filter>
+    </ClCompile>
+    <ClCompile Include="WebCam.cpp">
+      <Filter>Source Files\WebCamAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="WebCamController.cpp">
+      <Filter>Source Files\WebCamAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="escapi.cpp">
+      <Filter>ESCAPI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileSystemFrameSaver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Frame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IFrameHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IFrameSaver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PhotoMaker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WebCameraCapture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FaceDetector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StableFrame.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Frame</Filter>
     </ClInclude>
     <ClInclude Include="FrameStorer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="StableFrame.h">
+      <Filter>Header Files\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceDetector.h">
+      <Filter>Header Files\CameraInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystemFrameSaver.h">
+      <Filter>Header Files\CameraInspector</Filter>
     </ClInclude>
     <ClInclude Include="IFaceDetectorObserver.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\CameraInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="IFrameHandler.h">
+      <Filter>Header Files\CameraInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="IFrameSaver.h">
+      <Filter>Header Files\CameraInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="PhotoMaker.h">
+      <Filter>Header Files\CameraInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="WebCameraCapture.h">
+      <Filter>Header Files\CameraInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="WebCam.h">
+      <Filter>Header Files\WebCamAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="WebCamController.h">
+      <Filter>Header Files\WebCamAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="escapi.h">
+      <Filter>ESCAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraException.h">
+      <Filter>Header Files\WebCamAPI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

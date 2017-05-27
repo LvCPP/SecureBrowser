@@ -1,7 +1,6 @@
 #pragma once
 #include "IFrameHandler.h"
 #include "IFrameSaver.h"
-#include "StableFrame.h"
 
 #include <memory>
 #include <mutex>

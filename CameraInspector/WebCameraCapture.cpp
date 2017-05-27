@@ -1,14 +1,14 @@
 #include "WebCameraCapture.h"
+#include "WebCamController.h"
 #include "Frame.h"
 
-#include <opencv2\highgui\highgui.hpp>
 #include <Windows.h>
 
 using namespace CameraInspector;
+using namespace Utils;
 
 WebCameraCapture::WebCameraCapture()
-	: camera_(std::make_shared<cv::VideoCapture>(0))
-	, is_working_(false)
+	: is_working_(false)
 {
 	WaitForInit();
 }
@@ -42,9 +42,7 @@ void WebCameraCapture::Stop()
 
 StableFrame WebCameraCapture::GetCurrentStableFrame() const
 {
-	cv::Mat r_mat;
-	camera_->read(r_mat);
-	return StableFrame(r_mat);
+	return StableFrame(ReadFromCamera());
 }
 
 void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler)
@@ -54,24 +52,24 @@ void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& han
 
 void WebCameraCapture::WaitForInit()
 {
-	cv::Mat init_mat;
-	while (init_mat.empty())
+	while (ReadFromCamera().IsEmpty())
 	{
-		camera_->read(init_mat);
 		Sleep(0);
 	}
+}
+
+Frame WebCameraCapture::ReadFromCamera()
+{
+	return An<WebCamController>()->GetActiveCamera().GetFrame();
 }
 
 void WebCameraCapture::ProcessHandlers()
 {
 	while (is_working_)
 	{
-		cv::Mat mat_to_process;
-		camera_->read(mat_to_process);
-
 		for (auto it = handlers_.begin(); it != handlers_.end(); ++it)
 		{
-			(*it)->ProcessFrame(mat_to_process);
+			(*it)->ProcessFrame(ReadFromCamera());
 		}
 		// I think we should unload the system by calling Sleep in this loop
 	}
