@@ -11,6 +11,24 @@ struct ObserverInfo;
 namespace SI
 {
 
+
+struct ObserverInfo
+{
+	ObserverInfo(const std::shared_ptr<IFakeWindowServiceObserver>& observer)
+		: id(GetPointerId(observer))
+		, ptr(observer)
+	{
+	};
+
+	static size_t GetPointerId(const std::shared_ptr<IFakeWindowServiceObserver>& observer)
+	{
+		return reinterpret_cast<size_t>(observer.get());
+	}
+
+	size_t id;
+	std::weak_ptr<IFakeWindowServiceObserver> ptr;
+};
+
 class FakeWindowService
 {
 public:

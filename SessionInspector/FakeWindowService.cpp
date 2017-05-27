@@ -9,42 +9,20 @@
 
 using namespace SI;
 
-struct ObserverInfo
-{
-	ObserverInfo(const std::shared_ptr<IFakeWindowServiceObserver>& observer)
-		: id(GetPointerId(observer))
-		, ptr(observer)
-	{
-	};
-
-	static size_t GetPointerId(const std::shared_ptr<IFakeWindowServiceObserver>& observer)
-	{
-		return reinterpret_cast<size_t>(observer.get());
-	}
-
-	size_t id;
-	std::weak_ptr<IFakeWindowServiceObserver> ptr;
-};
 
 bool FakeWindowService::Start()
 {
-	fake_window_handle_ = ::CreateWindowA("STATIC", "fake", WS_MINIMIZE, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
-	if (fake_window_handle_ != NULL)
-	{
-		::WTSRegisterSessionNotification(fake_window_handle_, NOTIFY_FOR_ALL_SESSIONS);
-
-		worker_ = std::thread(&FakeWindowService::StartWindowRoutine, this, fake_window_handle_);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	worker_ = std::thread(&FakeWindowService::StartWindowRoutine, this, fake_window_handle_);
+	return true;
 }
 
 bool FakeWindowService::Stop()
 {
-	bool result = DestroyWindow(fake_window_handle_);
+	bool result = CloseWindow(fake_window_handle_);
+	std::cout << result << std::endl;
+	result= PostMessage(fake_window_handle_, WM_QUIT, 0, 0);
+	std::cout << result << std::endl;
+	std::cout << fake_window_handle_;
 	worker_.join();
 	return result;
 }
@@ -86,10 +64,20 @@ void FakeWindowService::Notify()
 
 bool FakeWindowService::StartWindowRoutine(HWND fake_window)
 {
+	fake_window_handle_ = ::CreateWindowA("STATIC", "fake", WS_MINIMIZE, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
+	std::cout << fake_window_handle_;
+	::SetWindowTextA(fake_window_handle_, "Fake Window!");
+	if (fake_window_handle_ == NULL)
+	{
+		return false;
+	}
+
+	::WTSRegisterSessionNotification(fake_window_handle_, NOTIFY_FOR_ALL_SESSIONS);
+
 	MSG msg;
 	BOOL result;
 
-	while ((result = GetMessage(&msg, fake_window, 0, 0)) != 0)
+	while ((result = GetMessage(&msg, NULL, 0, 0)) != 0)
 	{
 		if (result == -1)
 		{
