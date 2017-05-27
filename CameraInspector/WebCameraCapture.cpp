@@ -53,7 +53,9 @@ void WebCameraCapture::AddFrameHandler(const std::shared_ptr<IFrameHandler>& han
 void WebCameraCapture::WaitForInit()
 {
 	while (ReadFromCamera().IsEmpty())
+	{
 		Sleep(0);
+	}
 }
 
 Frame WebCameraCapture::ReadFromCamera()

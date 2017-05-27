@@ -24,7 +24,9 @@ std::vector<std::string> WebCamController::ListNamesOfCameras() const
 	std::vector<std::string> names;
 
 	for (WebCam wc : cameras_)
+	{
 		names.push_back(wc.GetName());
+	}
 
 	return names;
 }
@@ -41,7 +43,9 @@ void WebCamController::ActivateCamera(WebCam& camera)
 
 	// If user wants to activate camera, that isn't connected
 	if (activated_camera_ == cameras_.end())
+	{
 		throw CameraException("Camera wasn't found");
+	}
 
 	activated_camera_->Initialize();
 
@@ -52,6 +56,7 @@ void WebCamController::Refresh(bool is_arriving)
 {
 	std::lock_guard<std::mutex> lock(busy_);
 	std::string previous_camera_name("");
+
 	if (is_activated_)
 	{
 		previous_camera_name = activated_camera_->GetUniqueName();
@@ -81,12 +86,18 @@ void WebCamController::Refresh(bool is_arriving)
 
 	// If used camera was disconnected, activate first camera
 	if (activated_camera_ == cameras_.end())
+	{
 		activated_camera_ = cameras_.begin();
+	}
 
 	if (is_activated_ && !cameras_.empty())
+	{
 		activated_camera_->Initialize();
+	}
 	else
+	{
 		is_activated_ = false;
+	}
 }
 
 std::vector<WebCam>& WebCamController::GetCameras() noexcept
@@ -103,7 +114,11 @@ WebCam WebCamController::GetActiveCamera() const
 {
 	std::lock_guard<std::mutex> lock(busy_);
 	if (is_activated_)
+	{
 		return *activated_camera_;
+	}
 	else
+	{
 		throw CameraException("Camera is not available right now");
+	}
 }

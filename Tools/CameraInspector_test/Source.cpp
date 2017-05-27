@@ -19,6 +19,11 @@ int TestPhotoMaker()
 {
 	An<WebCameraCapture> cam_cap;
 
+	Frame params = cam_cap->GetCurrentStableFrame();
+	std::cout << "Width: " << params.GetCols()
+		<< "\nHeight: " << params.GetRows()
+		<< "\nData: " << reinterpret_cast<unsigned int*>(params.GetData())[0] << " ..." << std::endl;
+
 	cv::String f_converted_window = "Converted";
 	cv::namedWindow(f_converted_window, CV_WINDOW_AUTOSIZE);
 	
