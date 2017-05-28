@@ -1,24 +1,38 @@
 #include "browser.h"
-#include <windows.h>
-#include "LoginApp.h"
+#include <LoginApp.h>
 #include <Logger.h>
+#include <LoginApp2.h>
+#include <WebCamController.h>
+//#include <LoginUtils.h>
+#include <windows.h>
 #include <fstream>
 #include <QtWidgets/QApplication>
 
+using namespace CameraInspector;
 using namespace SecureBrowser;
 using namespace BrowserLogin;
 using namespace BrowserLogger;
 using namespace Utils;
+using namespace Login;
 
 int main(int argc, char* argv[])
 {
+//	An<WebCamController> wcc;
+//	wcc->ActivateCamera(wcc->GetCameras().at(0));
+//
+//	An<WebCamController> wccc;
+//	wccc->GetCameras();
+//	//wcc->ActivateCamera(wcc->GetCameras().at(0));
+
 	An<Logger> logger;
 	std::ofstream file("log.txt", std::ios::out);
 	logger->SetOutput(file);
 
 	loginfo(*logger) << "Program initialized";
+	
 	QApplication a(argc, argv);
-	LoginApp app;
+	LoginApp2 app;
+	
 	loginfo(*logger) << "Start login";
 	if (!app.exec())
 	{
@@ -36,6 +50,5 @@ int main(int argc, char* argv[])
 	loginfo(*logger) << "Program finished with code " << result;
 	logger->Flush();
 	file.close();
-
 	return result;
 }
