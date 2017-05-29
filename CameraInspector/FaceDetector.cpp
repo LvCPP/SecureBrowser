@@ -120,9 +120,9 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 
 	pimpl_->GetFaceCascade().detectMultiScale(frame_gray, faces, SCALE_FACTOR, MIN_NEIGHBORS, FLAGS, cv::Size(30, 30));
 
-	const size_t new_faces_quantuty = faces.size();
+	const size_t new_faces_quantity = faces.size();
 	if(new_faces_quantity != faces_quantity_)
-		Notify(static_cast<int>(new_faces_quantuty));
+		Notify(static_cast<int>(new_faces_quantity));
 
 #ifdef _DEBUG
 	for (size_t ic = 0; ic < faces.size(); ic++) // Iterate through all current elements (detected faces)

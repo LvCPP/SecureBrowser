@@ -9,8 +9,11 @@ namespace CameraInspector
 class FaceCountObserver : public IFaceDetectorObserver
 {
 public:
-	FaceCountObserver();
+	FaceCountObserver(std::shared_ptr<PhotoMaker> photo_maker);
+
 	void OnFaceQuantityChanged(size_t face_count);
+
+private:
 	std::shared_ptr<PhotoMaker> photo_maker_;
 };
 

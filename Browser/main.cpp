@@ -15,7 +15,6 @@ int main(int argc, char* argv[])
 	An<Logger> logger;
 	std::ofstream file("log.txt", std::ios::out);
 	logger->SetOutput(file);
-
 	loginfo(*logger) << "Program initialized";
 	QApplication a(argc, argv);
 	LoginApp app;

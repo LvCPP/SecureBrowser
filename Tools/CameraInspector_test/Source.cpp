@@ -74,10 +74,16 @@ void TestFaceDetector()
 
 	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>();
 
-	const std::shared_ptr<FaceCountObserver> observer = std::make_shared<FaceCountObserver>();
+	std::shared_ptr<IFrameSaver> shared_saver = std::make_shared<FileSystemFrameSaver>(FileSystemFrameSaver());
+	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetPathToSave("");
+	std::shared_ptr<PhotoMaker> shared_maker = std::make_shared<PhotoMaker>(PhotoMaker());
+	shared_maker->SetFrameSaver(shared_saver);
+
+	const std::shared_ptr<FaceCountObserver> observer = std::make_shared<FaceCountObserver>(shared_maker);
 	face_detector->Attach(observer);
 
 	cam_cap->AddFrameHandler(face_detector);
+	cam_cap->AddFrameHandler(shared_maker);
 	face_detector->SetFrequency(3s);
 	cam_cap->Start();
 	std::this_thread::sleep_for(std::chrono::seconds(20000));
