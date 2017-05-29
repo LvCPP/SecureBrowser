@@ -2,23 +2,21 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 #include <exception>
-#include <thread>
 
 using namespace CameraInspector;
 using namespace Utils;
 
-bool g_is_working;
-
-void ShowDevices(unsigned int delay_ms);
+void ShowDevices();
 
 int main() 
 {
-	g_is_working = true;
-	std::thread shower = std::thread(&ShowDevices, 1500);
-
 	An<WebCamController> wcc;
 	std::vector<WebCam>& cameras_ = wcc->GetCameras();
 	wcc->ActivateCamera(cameras_.at(0));
+
+	ShowDevices();
+
+	wcc->SetRefreshCallback(ShowDevices);
 
 	cv::namedWindow("test cameras UI");
 	int choose = -1;
@@ -59,25 +57,17 @@ int main()
 	
 	cv::destroyWindow("test cameras UI");
 
-	g_is_working = false;
-	if (shower.joinable())
-		shower.join();
 
 	system("pause");
 	return 0;
 }
 
-void ShowDevices(unsigned int delay_ms)
+void ShowDevices()
 {
 	std::vector<WebCam>& cameras_ = An<WebCamController>()->GetCameras();
 
-	while (g_is_working)
-	{
-		system("cls");
+	system("cls");
 
-		for (WebCam cam : cameras_)
-			std::cout << cam.GetName() << std::endl;
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
-	}
+	for (WebCam cam : cameras_)
+		std::cout << cam.GetName() << std::endl;
 }
