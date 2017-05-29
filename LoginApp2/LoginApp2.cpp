@@ -2,6 +2,7 @@
 
 #include <QList>
 #include <QString>
+#include <QWizard>
 
 using namespace Login;
 
@@ -39,11 +40,8 @@ void LoginApp2::CreateWindow()
 
 void LoginApp2::CreateWizardButtonsLayout()
 {
-	QList<QWizard::WizardButton> layout
-		<< QWizard::Stretch
-		<< QWizard::NextButton
-		<< QWizard::CancelButton
-		<< QWizard::FinishButton;
+	QList<QWizard::WizardButton> layout;
+	layout << QWizard::Stretch << QWizard::NextButton << QWizard::CancelButton << QWizard::FinishButton;
 	// this layout can be changed
 	// All the QWizardButtons are: 
 	// QWizard::BackButton, QWizard::NextButton, QWizard::CommitButton,

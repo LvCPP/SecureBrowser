@@ -1,4 +1,6 @@
 #pragma once
+#include <QWidget>
+#include <QWizardPage>
 
 #include "LoginApp2.h"
 

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "LoginApp2.h"
+#include <QCheckBox>
+#include <QPushButton>
+#include <QLineEdit>
 
 namespace Login
 {
@@ -28,6 +31,10 @@ private:
 	void MoodleAuthenticated();
 	
 	bool login_checked_;
+	QCheckBox* agree_checkbox_;
+	QPushButton* login_button_;
+	QLineEdit* username_lineedit_;
+	QLineEdit* password_lineedit_;
 
 private slots:
 	bool CheckLogin();

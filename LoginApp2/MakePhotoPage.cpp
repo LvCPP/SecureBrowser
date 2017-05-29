@@ -68,7 +68,7 @@ void MakePhotoPage::CreateCameraSelectComboBox()
 	for (std::string name : cam_names)
 		camera_list_ << QString::fromStdString(name);
 
-	camera_select_combobox_->addItems(camera_list);
+	camera_select_combobox_->addItems(camera_list_);
 	camera_select_combobox_->setStyleSheet(white_color);
 }
 
@@ -108,7 +108,7 @@ void MakePhotoPage::CreateButtons()
 
 void MakePhotoPage::OnCameraChoose(int id)
 {
-	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(id));
+	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(0));
 }
 
 void MakePhotoPage::CreateProgressBar()
@@ -147,7 +147,7 @@ void MakePhotoPage::InitCamera()
 {
 	if (is_update_)
 	{
-		An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(1));
+		An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(0));
 		is_enabled_ = true;
 		worker_ = std::thread(&MakePhotoPage::CameraThread, this);
 	}

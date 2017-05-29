@@ -33,10 +33,10 @@ LoginPage::LoginPage(QWidget *parent)
 
 	CreateLoginButton();
 
-	connect(agree_checkbox, SIGNAL(toggled(bool)), login_button, SLOT(setEnabled(bool)));
+	connect(agree_checkbox_, SIGNAL(toggled(bool)), login_button_, SLOT(setEnabled(bool)));
 
 	login_checked_ = false;
-	connect(login_button, SIGNAL(clicked()), this, SLOT(CheckLogin()));
+	connect(login_button_, SIGNAL(clicked()), this, SLOT(CheckLogin()));
 }
 
 LoginPage::~LoginPage()
@@ -71,10 +71,10 @@ void LoginPage::CreateUsernameLabel()
 
 void LoginPage::CreateUsernameLineedit()
 {
-	QLineEdit* username_lineedit = new QLineEdit(this);
-	username_lineedit->setGeometry(QRect(360, 180, 150, 25));
-	username_lineedit->setFont(arial_14);
-	registerField("Username*", username_lineedit);
+	username_lineedit_ = new QLineEdit(this);
+	username_lineedit_->setGeometry(QRect(360, 180, 150, 25));
+	username_lineedit_->setFont(arial_14);
+	registerField("Username*", username_lineedit_);
 }
 
 void LoginPage::CreatePasswordLabel()
@@ -88,18 +88,18 @@ void LoginPage::CreatePasswordLabel()
 
 void LoginPage::CreatePasswordLineEdit()
 {
-	QLineEdit* password_lineedit = new QLineEdit(this);
-	password_lineedit->setGeometry(QRect(360, 225, 150, 25));
-	password_lineedit->setFont(arial_14);
-	password_lineedit->setEchoMode(QLineEdit::Password);
-	registerField("Password*", password_lineedit);
+	password_lineedit_ = new QLineEdit(this);
+	password_lineedit_->setGeometry(QRect(360, 225, 150, 25));
+	password_lineedit_->setFont(arial_14);
+	password_lineedit_->setEchoMode(QLineEdit::Password);
+	registerField("Password*", password_lineedit_);
 }
 
 void LoginPage::CreateAgreeCheckBox()
 {
-	QCheckBox* agree_checkbox = new QCheckBox(this);
-	agree_checkbox->setGeometry(275, 275, 30, 25);
-	registerField("agree_checkbox*", agree_checkbox);
+	agree_checkbox_ = new QCheckBox(this);
+	agree_checkbox_->setGeometry(275, 275, 30, 25);
+	registerField("agree_checkbox_*", agree_checkbox_);
 }
 
 void LoginPage::CreateAgreeLabel()
@@ -116,21 +116,21 @@ void LoginPage::CreateAgreeLabel()
 
 void LoginPage::CreateLoginButton()
 {
-	QPushButton* login_button = new QPushButton(this);
-	login_button->setGeometry(QRect(310, 325, 130, 60));
-	login_button->setText("Login");
+	login_button_ = new QPushButton(this);
+	login_button_->setGeometry(QRect(310, 325, 130, 60));
+	login_button_->setText("Login");
 	QFont button_font;
 	button_font.setFamily(QStringLiteral("Arial"));
 	button_font.setPointSize(14);
-	login_button->setDisabled(true);
-	login_button->setFont(button_font);
-	login_button->setStyleSheet(gray_color);
+	login_button_->setDisabled(true);
+	login_button_->setFont(button_font);
+	login_button_->setStyleSheet(gray_color);
 }
 
 bool LoginPage::CheckLogin()
 {
-	QString  username = username_lineedit->text();
-	QString password = password_lineedit->text();
+	QString  username = username_lineedit_->text();
+	QString password = password_lineedit_->text();
 
 	if (username == "12345" && password == "12345")
 	{
@@ -148,7 +148,7 @@ bool LoginPage::CheckLogin()
 
 int LoginPage::nextId() const
 {
-	bool login_button_enabled = login_button->isEnabled();
+	bool login_button_enabled = login_button_->isEnabled();
 	if (login_checked_ && login_button_enabled)
 		return LoginApp2::MAKE_PHOTO_PAGE;
 	else
