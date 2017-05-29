@@ -15,7 +15,7 @@ Browser::Browser(QWidget *parent)
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
 	connect(ui_->push_btn_reload, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
 	connect(ui_->push_btn_stop, &QPushButton::clicked, ui_->web_view, &QWebEngineView::stop);
-	connect(ui_->push_btn_close, &QPushButton::clicked, this, &Browser::close);
+	connect(ui_->push_btn_close, &QPushButton::clicked, this, &Browser::CloseButton);
 	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->load_progress_page, &QProgressBar::setValue);
 	connect(ui_->web_view, &QWebEngineView::loadStarted, this, &Browser::ShowProgressBar);
 	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::HideProgressBar);
@@ -27,7 +27,7 @@ Browser::Browser(QWidget *parent)
 	ui_->push_btn_forward->setEnabled(false);
 	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
-	ui_->web_view->load(QUrl("https://www.google.com.ua"));
+	ui_->web_view->load(QUrl("https://softserve.academy"));
 }
 
 Browser::~Browser()
@@ -78,4 +78,12 @@ void Browser::ButtonForwardHistory()
 		ui_->push_btn_forward->setEnabled(true);
 	else
 		ui_->push_btn_forward->setEnabled(false);
+}
+
+void Browser::CloseButton()
+{
+	QMessageBox::StandardButtons reply;
+	reply = QMessageBox::question(this, "Warning", "Are you sure you want to quit?", QMessageBox::Yes | QMessageBox::No);
+	if (reply == QMessageBox::Yes)
+		Browser::close();
 }

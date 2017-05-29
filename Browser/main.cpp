@@ -9,8 +9,8 @@
 using namespace SecureBrowser;
 using namespace BrowserLogin;
 using namespace BrowserLogger;
-using namespace Utils;
 using namespace SBKeyboardInspector;
+using namespace Utils;
 
 int main(int argc, char* argv[])
 {
