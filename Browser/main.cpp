@@ -12,8 +12,22 @@ using namespace BrowserLogger;
 using namespace Utils;
 using namespace SBKeyboardInspector;
 
+bool IsAlreadyRunning();
+
 int main(int argc, char* argv[])
 {
+	if (!IsAlreadyRunning())
+	{
+		MessageBox(
+			NULL,
+			(LPCWSTR)L"Program is already running!",
+			(LPCWSTR)L"Error",
+			MB_ICONERROR
+		);
+
+		return -1;
+	}
+
 	An<Logger> logger;
 
 	std::ofstream file("log.txt", std::ios::out);
@@ -165,4 +179,17 @@ int main(int argc, char* argv[])
 	ki.Stop();
 
 	return result;
+}
+
+bool IsAlreadyRunning()
+{
+	CreateMutexA(0, FALSE, "Local\\SecureBrowser");
+
+	switch (GetLastError())
+	{
+	case ERROR_ALREADY_EXISTS:
+		return false;	// Quit. Mutex is released automatically;
+	default:			// Mutex successfully created
+		return true;
+	}
 }
