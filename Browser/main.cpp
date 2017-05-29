@@ -3,7 +3,6 @@
 #include <Logger.h>
 #include <LoginApp2.h>
 #include <WebCamController.h>
-//#include <LoginUtils.h>
 #include <windows.h>
 #include <fstream>
 #include <QtWidgets/QApplication>
@@ -17,13 +16,6 @@ using namespace Login;
 
 int main(int argc, char* argv[])
 {
-//	An<WebCamController> wcc;
-//	wcc->ActivateCamera(wcc->GetCameras().at(0));
-//
-//	An<WebCamController> wccc;
-//	wccc->GetCameras();
-//	//wcc->ActivateCamera(wcc->GetCameras().at(0));
-
 	An<Logger> logger;
 	std::ofstream file("log.txt", std::ios::out);
 	logger->SetOutput(file);

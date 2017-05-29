@@ -1,8 +1,11 @@
 #include "MakePhotoPage.h"
-#include "WebCamController.h"
 
-#include <qbytearray.h>
-#include <qstring.h>
+#include "WebCamController.h"
+#include <QFont>
+#include <QString>
+#include <QProgressBar>
+#include <QImage>
+#include <QPixmap>
 
 #include <vector>
 #include <string>
@@ -10,6 +13,10 @@
 using namespace Utils;
 using namespace CameraInspector;
 using namespace Login;
+
+static const QString white_color = "background-color: rgb(255, 255, 255);";
+static const QString gray_color = "background-color: rgb(225, 225, 225);";
+static const QFont arial_12("Arial", 12);
 
 MakePhotoPage::MakePhotoPage(QWidget *parent)
 	: QWizardPage(parent)
@@ -21,8 +28,9 @@ MakePhotoPage::MakePhotoPage(QWidget *parent)
 	CreateCameraArea();
 	CreateButtons();
 
-	connect(make_photo_button, SIGNAL(clicked()), this, SLOT(MakePhoto()));
-	connect(camera_select_combobox, SIGNAL(activated(int)), this, SLOT(OnCameraChoose(int)));
+	connect(make_photo_button_, SIGNAL(clicked()), this, SLOT(MakePhoto()));
+	connect(camera_select_combobox_, SIGNAL(activated(int)), this, SLOT(OnCameraChoose(int)));
+	connect(accept_button_, SIGNAL(clicked()), this, SLOT(CreateProgressBar()));
 }
 
 MakePhotoPage::~MakePhotoPage()
@@ -32,7 +40,7 @@ MakePhotoPage::~MakePhotoPage()
 int MakePhotoPage::nextId() const
 {
 	is_enabled_ = false;
-	if (camera_select_combobox->currentText() == "")
+	if (camera_select_combobox_->currentText() == "")
 		return LoginApp2::MAKE_PHOTO_PAGE;
 	else
 		return LoginApp2::LAST_PAGE;
@@ -40,13 +48,8 @@ int MakePhotoPage::nextId() const
 
 void MakePhotoPage::CreateCameraSelectLabel()
 {
-	camera_select_label = new QLabel(this);
-	x = 230;
-	y = 40;
-	width = 350;
-	height = 22;
-	camera_select_label->setGeometry(QRect(x, y, width, height));
-	QFont arial_12("Arial", 12);
+	QLabel* camera_select_label = new QLabel(this);
+	camera_select_label->setGeometry(QRect(230, 40, 350, 22));
 	camera_select_label->setFont(arial_12);
 	camera_select_label->setText("Please select your web-camera for face detecting:");
 }
@@ -56,101 +59,64 @@ void MakePhotoPage::CreateCameraSelectComboBox()
 	An<WebCamController> wcc;
 	std::vector<std::string> cam_names = wcc->ListNamesOfCameras();
 	
-	//Model-view QT
-	camera_select_label = new QLabel(this);
-	white_color = "background-color: rgb(255, 255, 255);";
-	camera_select_combobox = new QComboBox(this);
-	x = 240;
-	y = 70;
-	width = 330;
-	height = 23;
-	camera_select_combobox->setGeometry(QRect(x, y, width, height));
-	QFont arial_12("Arial", 12);
+	//Model-view QT to be done
+	QLabel* camera_select_label = new QLabel(this);
+	camera_select_combobox_ = new QComboBox(this);
+	camera_select_combobox_->setGeometry(QRect(240, 70, 330, 23));
+	camera_select_combobox_->setFont(arial_12);
 	
 	for (std::string name : cam_names)
-		camera_list << QString::fromStdString(name);
+		camera_list_ << QString::fromStdString(name);
 
-	camera_select_combobox->addItems(camera_list);
-	camera_select_combobox->setStyleSheet(white_color);
+	camera_select_combobox_->addItems(camera_list);
+	camera_select_combobox_->setStyleSheet(white_color);
 }
-#include <thread>
+
 void MakePhotoPage::CreateCameraArea()
 {
-
 	image_label_ = new QLabel(this);
 	image_label_->setGeometry(190, 110, 440, 330);
 	image_label_->show();
-	//mdi_area = new QMdiArea(this);
-	//x = 190;
-	//y = 110;
-	//width = 430;
-	//height = 330;
-	//mdi_area->setGeometry(QRect(x, y, width, height));
-
-/*	for (int i = 0; i < 20; ++i)
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		An<WebCamController>()->GetActiveCamera().GetFrame();
-	}*/
-
-	//image_scene = new QGraphicsScene(this);
-	//image_scene->setSceneRect(100, 100, 430, 330);
-	//image_scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-	//image = new QPixmap();
-	//Frame f_img = An<WebCamController>()->GetActiveCamera().GetFrame();
-	//QByteArray img_data(reinterpret_cast<const char*>(f_img.GetData()), 640 * 480 * 4);
-	//image->loadFromData(img_data);
-	//
-	//image_scene->addPixmap(*image);
-	//
-	//image_view = new QGraphicsView(image_scene, this);
-	////image_view->setSceneRect(190, 110, 430, 330);
-	//image_view->setScene(image_scene);
-	//image_view->show();
 }
 
 void MakePhotoPage::CreateButtons()
 {
+	QFont button_font;
 	button_font.setFamily(QStringLiteral("Arial"));
 	button_font.setPointSize(10);
-	gray_color = "background-color: rgb(225, 225, 225);";
+	
+	make_photo_button_ = new QPushButton(this);
+	make_photo_button_->setGeometry(QRect(210, 470, 90, 30));
+	make_photo_button_->setFont(button_font);
+	make_photo_button_->setStyleSheet(gray_color);
+	make_photo_button_->setText("Make photo");
 
-	make_photo_button = new QPushButton(this);
-	x = 210;
-	y = 470;
-	width = 90;
-	height = 30;
-	make_photo_button->setGeometry(QRect(x, y, width, height));
-	make_photo_button->setFont(button_font);
-	make_photo_button->setStyleSheet(gray_color);
-	make_photo_button->setText("Make photo");
+	accept_button_ = new QPushButton(this);
+	accept_button_->setGeometry(QRect(360, 470, 90, 30));
+	accept_button_->setFont(button_font);
+	accept_button_->setStyleSheet(gray_color);
+	accept_button_->setText("Accept");
+	accept_button_->setDisabled(true);
 
-	x = 360;
-	y = 470;
-	width = 90;
-	height = 30;
-	accept_button = new QPushButton(this);
-	accept_button->setGeometry(QRect(x, y, width, height));
-	accept_button->setFont(button_font);
-	accept_button->setStyleSheet(gray_color);
-	accept_button->setText("Accept");
-	accept_button->setDisabled(true);
-
-	x = 500;
-	y = 470;
-	width = 90;
-	height = 30;
-	decline_button = new QPushButton(this);
-	decline_button->setGeometry(QRect(x, y, width, height));
-	decline_button->setFont(button_font);
-	decline_button->setStyleSheet(gray_color);
-	decline_button->setText("Decline");
-	decline_button->setDisabled(true);
+	decline_button_ = new QPushButton(this);
+	decline_button_->setGeometry(QRect(500, 470, 90, 30));
+	decline_button_->setFont(button_font);
+	decline_button_->setStyleSheet(gray_color);
+	decline_button_->setText("Decline");
+	decline_button_->setDisabled(true);
 }
 
 void MakePhotoPage::OnCameraChoose(int id)
 {
 	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(id));
+}
+
+void MakePhotoPage::CreateProgressBar()
+{
+	/*QProgressBar* progress_bar = new QProgressBar;
+	progress_bar->setRange(0, 5);
+	progress_bar->setMinimumWidth(20);
+	progress_bar->setAlignment(Qt::AlignBottom);*/
 }
 
 void MakePhotoPage::CameraThread()
@@ -189,31 +155,8 @@ void MakePhotoPage::InitCamera()
 
 void MakePhotoPage::MakePhoto()
 {
-	decline_button->setEnabled(true);
-	accept_button->setEnabled(true);
+	decline_button_->setEnabled(true);
+	accept_button_->setEnabled(true);
 	is_update_ = false;
-
-	//for (int i = 0; i < 20; ++i)
-	//{
-	//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	//	An<WebCamController>()->GetActiveCamera().GetFrame();
-	//}
-
-	//Frame f_img = An<WebCamController>()->GetActiveCamera().GetFrame();
-
-	//QImage img(640, 480, QImage::Format_RGBA8888);
-	//for (int y = 0; y < 480; ++y)
-	//{
-	//	for (int x = 0; x < 640; ++x)
-	//	{
-	//		int index(y * 640 + x);
-	//		img.setPixel(x, y, reinterpret_cast<int*>(f_img.GetData())[index]);
-	//	}
-	//}
-
-	//QLabel image_label_;
-	//image_label_.setPixmap(QPixmap::fromImage(img));
-	//image_label_.setGeometry(100, 100, 640, 480);
-	//image_label_.show();
 }
 

@@ -1,10 +1,11 @@
 #pragma once
 
 #include "LoginApp2.h"
+#include <QPushButton>
+#include <QString>
+#include <QLabel>
+#include <QComboBox>
 
-#include <qgraphicsscene.h>
-#include <qgraphicsview.h>
-#include <qimage.h>
 #include <thread>
 
 namespace Login
@@ -30,31 +31,19 @@ public slots:
 private slots:
 	void MakePhoto();
 	void OnCameraChoose(int id);
+	void CreateProgressBar();
 
 private:
 	void CameraThread();
 
-	QLabel* camera_select_label;
+	QComboBox* camera_select_combobox_;
+	QStringList camera_list_;
 	QLabel* image_label_;
-	QComboBox* camera_select_combobox;
-	QString white_color;
-	QStringList camera_list;
-	//QMdiArea* mdi_area;
 
-	QGraphicsView* image_view;
-	QGraphicsScene* image_scene;
-	QPixmap* image;
-
-	QString gray_color;
-	QFont button_font;
-	QPushButton* make_photo_button;
-	QPushButton* accept_button;
-	QPushButton* decline_button;
-	int x;
-	int y;
-	int width;
-	int height;
-
+	QPushButton* make_photo_button_;
+	QPushButton* accept_button_;
+	QPushButton* decline_button_;
+	
 	std::thread worker_;
 	mutable bool is_enabled_;
 	bool is_update_;

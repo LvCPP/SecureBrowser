@@ -1,7 +1,11 @@
-#include "LoginApp2.h"
 #include "WelcomePage.h"
 
+#include <QString>
+#include <QFrame>
+
 using namespace Login;
+
+static QString backgr_name = "background-image: url(:/Resources/images/intro_background.jpg);";
 
 WelcomePage::WelcomePage(QWidget *parent)
 	: QWizardPage(parent)
@@ -16,11 +20,8 @@ WelcomePage::~WelcomePage()
 
 void WelcomePage::CreateWelcomePageBackground()
 {
-	backgr_name = "background-image: url(:/Resources/images/intro_background.jpg);";
-	welcome_frame = new QFrame(this);
-	frame_width = 800;
-	frame_height = 520;
-	welcome_frame->setGeometry(QRect(0, 0, frame_width, frame_height));
+	QFrame* welcome_frame = new QFrame(this);
+	welcome_frame->setGeometry(QRect(0, 0, 800, 520));
 	welcome_frame->setStyleSheet(backgr_name);
 }
 
