@@ -73,7 +73,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Libraries\escapi;$(SolutionDir)Libraries\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /d "$(SolutionDir)3rd-party-libraries\escapi\escapi.dll" "$(SolutionDir)Build\Debug\"</Command>
+      <Command>xcopy /d /y "$(SolutionDir)3rd-party-libraries\escapi\escapi.dll" "$(SolutionDir)Build\Debug\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -97,7 +97,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Libraries\escapi;$(SolutionDir)Libraries\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /d "$(SolutionDir)3rd-party-libraries\escapi\escapi.dll" "$(SolutionDir)Build\Release\"</Command>
+      <Command>xcopy /d /y "$(SolutionDir)3rd-party-libraries\escapi\escapi.dll" "$(SolutionDir)Build\Release\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

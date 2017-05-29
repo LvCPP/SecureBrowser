@@ -1,16 +1,18 @@
 #include "browser.h"
-#include <windows.h>
-#include "LoginApp.h"
 #include <Logger.h>
 #include <KeyboardInspector.h>
-#include <fstream>
+#include <LoginApp2.h>
+#include <WebCamController.h>
 #include <QtWidgets/QApplication>
+#include <windows.h>
+#include <fstream>
 
+using namespace CameraInspector;
 using namespace SecureBrowser;
-using namespace BrowserLogin;
 using namespace BrowserLogger;
 using namespace Utils;
 using namespace SBKeyboardInspector;
+using namespace Login;
 
 bool IsAlreadyRunning();
 
@@ -34,8 +36,10 @@ int main(int argc, char* argv[])
 	logger->SetOutput(file);
 
 	loginfo(*logger) << "Program initialized";
+	
 	QApplication a(argc, argv);
-	LoginApp app;
+	LoginApp2 app;
+	
 	loginfo(*logger) << "Start login";
 	if (!app.exec())
 	{
@@ -177,7 +181,6 @@ int main(int argc, char* argv[])
 	file.close();
 
 	ki.Stop();
-
 	return result;
 }
 

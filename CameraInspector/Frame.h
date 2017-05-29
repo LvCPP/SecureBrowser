@@ -15,7 +15,8 @@ public:
 	Frame(cv::Mat mat);
 	Frame(std::shared_ptr<cv::Mat> impl);
 	virtual ~Frame() = default;
-	
+	Frame& operator= (Frame&& rhs);
+		
 	bool IsEmpty() const;
 
 	cv::Mat GetImpl() const noexcept;

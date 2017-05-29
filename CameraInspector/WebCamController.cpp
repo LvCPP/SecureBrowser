@@ -98,6 +98,14 @@ void WebCamController::Refresh(bool is_arriving)
 	{
 		is_activated_ = false;
 	}
+	
+	if(callback_)
+		callback_();
+}
+
+void WebCamController::SetRefreshCallback(std::function<void()> callback)
+{
+	callback_ = callback;
 }
 
 std::vector<WebCam>& WebCamController::GetCameras() noexcept
