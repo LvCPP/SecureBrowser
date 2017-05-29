@@ -98,6 +98,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FaceCountObserver.cpp" />
     <ClCompile Include="FaceDetector.cpp" />
     <ClCompile Include="FileSystemFrameSaver.cpp" />
     <ClCompile Include="Frame.cpp" />
@@ -107,6 +108,7 @@
     <ClCompile Include="WebCameraCapture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FaceCountObserver.h" />
     <ClInclude Include="FaceDetector.h" />
     <ClInclude Include="FileSystemFrameSaver.h" />
     <ClInclude Include="Frame.h" />

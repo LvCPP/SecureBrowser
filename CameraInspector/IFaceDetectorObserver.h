@@ -6,6 +6,6 @@ class IFaceDetectorObserver
 {
 public:
 	virtual ~IFaceDetectorObserver() = default;
-	virtual void OnFaceQuantityChanged(int face_count) = 0;
+	virtual void OnFaceQuantityChanged(size_t face_count) = 0;
 };
 }
