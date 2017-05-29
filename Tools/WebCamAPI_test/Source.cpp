@@ -6,21 +6,20 @@
 using namespace CameraInspector;
 using namespace Utils;
 
+void ShowDevices();
+
 int main() 
 {
 	An<WebCamController> wcc;
-
 	std::vector<WebCam>& cameras_ = wcc->GetCameras();
+	wcc->ActivateCamera(cameras_.at(0));
 
-	for (WebCam cam : cameras_)
-		std::cout << cam.GetName() << std::endl;
+	ShowDevices();
 
-	auto cam_count = wcc->GetCamerasCount();
+	wcc->SetRefreshCallback(ShowDevices);
 
 	cv::namedWindow("test cameras UI");
 	int choose = -1;
-
-	wcc->ActivateCamera(cameras_.at(0));
 
 	while(choose != 113)
 	{
@@ -43,14 +42,8 @@ int main()
 		case -1: // no key pressed
 			break;
 		case 27:
-		{
 			wcc->Refresh();
-
-			for (WebCam cam : cameras_)
-				std::cout << cam.GetName() << std::endl;
-
 			break;
-		}
 		case 49:
 		case 50:
 		case 51:
@@ -64,6 +57,17 @@ int main()
 	
 	cv::destroyWindow("test cameras UI");
 
+
 	system("pause");
 	return 0;
+}
+
+void ShowDevices()
+{
+	std::vector<WebCam>& cameras_ = An<WebCamController>()->GetCameras();
+
+	system("cls");
+
+	for (WebCam cam : cameras_)
+		std::cout << cam.GetName() << std::endl;
 }
