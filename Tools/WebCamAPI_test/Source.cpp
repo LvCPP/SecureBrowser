@@ -2,25 +2,26 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 #include <exception>
+#include <thread>
 
 using namespace CameraInspector;
 using namespace Utils;
 
+bool g_is_working;
+
+void ShowDevices(unsigned int delay_ms);
+
 int main() 
 {
+	g_is_working = true;
+	std::thread shower = std::thread(&ShowDevices, 1500);
+
 	An<WebCamController> wcc;
-
 	std::vector<WebCam>& cameras_ = wcc->GetCameras();
-
-	for (WebCam cam : cameras_)
-		std::cout << cam.GetName() << std::endl;
-
-	auto cam_count = wcc->GetCamerasCount();
+	wcc->ActivateCamera(cameras_.at(0));
 
 	cv::namedWindow("test cameras UI");
 	int choose = -1;
-
-	wcc->ActivateCamera(cameras_.at(0));
 
 	while(choose != 113)
 	{
@@ -43,14 +44,8 @@ int main()
 		case -1: // no key pressed
 			break;
 		case 27:
-		{
 			wcc->Refresh();
-
-			for (WebCam cam : cameras_)
-				std::cout << cam.GetName() << std::endl;
-
 			break;
-		}
 		case 49:
 		case 50:
 		case 51:
@@ -64,6 +59,25 @@ int main()
 	
 	cv::destroyWindow("test cameras UI");
 
+	g_is_working = false;
+	if (shower.joinable())
+		shower.join();
+
 	system("pause");
 	return 0;
+}
+
+void ShowDevices(unsigned int delay_ms)
+{
+	std::vector<WebCam>& cameras_ = An<WebCamController>()->GetCameras();
+
+	while (g_is_working)
+	{
+		system("cls");
+
+		for (WebCam cam : cameras_)
+			std::cout << cam.GetName() << std::endl;
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
+	}
 }
