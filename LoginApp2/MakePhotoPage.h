@@ -1,12 +1,16 @@
 #pragma once
 
 #include "LoginApp2.h"
+#include "../CameraInspector/StableFrame.h"
+
 #include <QPushButton>
 #include <QString>
 #include <QLabel>
 #include <QComboBox>
 
 #include <thread>
+
+using namespace CameraInspector;
 
 namespace Login
 {
@@ -19,8 +23,7 @@ public:
 	~MakePhotoPage();
 
 	int nextId() const override;
-
-	void InitCamera();
+	void initializePage() override;
 
 	void CreateCameraSelectLabel();
 	void CreateCameraSelectComboBox();
@@ -30,10 +33,15 @@ public:
 private slots:
 	void MakePhoto();
 	void OnCameraChoose(int id);
-	void CreateProgressBar();
+	void DeclineButtonClicked();
+	void AcceptButtonClicked();
 
 private:
 	void CameraThread();
+	void RefreshComboBox();
+	void InitCamera();
+
+	Frame id_frame_;
 
 	QComboBox* camera_select_combobox_;
 	QStringList camera_list_;
@@ -42,10 +50,11 @@ private:
 	QPushButton* make_photo_button_;
 	QPushButton* accept_button_;
 	QPushButton* decline_button_;
-	
+		
 	std::thread worker_;
 	mutable bool is_enabled_;
 	bool is_update_;
+	bool photo_made_;
 };
 
 }

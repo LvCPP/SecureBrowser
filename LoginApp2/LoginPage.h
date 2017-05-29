@@ -17,8 +17,6 @@ public:
 	~LoginPage();
 
 	int nextId() const override;
-
-	void SetInitCameraFunction(const std::function<void()>& init_camera);
 	
 private:
 	void CreateLoginPageBackground();
@@ -38,8 +36,6 @@ private:
 	QPushButton* login_button_;
 	QLineEdit* username_lineedit_;
 	QLineEdit* password_lineedit_;
-
-	std::function<void()> init_camera_;
 
 private slots:
 	bool CheckLogin();

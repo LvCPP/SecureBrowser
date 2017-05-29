@@ -29,6 +29,15 @@ Frame::Frame(std::shared_ptr<cv::Mat> impl)
 {
 }
 
+Frame& CameraInspector::Frame::operator=(Frame&& rhs)
+{
+	if (this == &rhs)
+		return *this;
+
+	cv_mat_impl_ = std::make_shared<cv::Mat>(std::move(rhs.GetImpl()));
+	return *this;
+}
+
 bool Frame::IsEmpty() const
 {
 	return cv_mat_impl_->data == nullptr;

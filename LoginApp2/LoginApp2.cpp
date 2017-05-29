@@ -68,7 +68,6 @@ void LoginApp2::SetPageSequence()
 	MakePhotoPage* make_photo = new MakePhotoPage(this);
 	LoginPage* login_page = new LoginPage(this);
 	//QAbstractButton *nextButton = this->button(QWizard::NextButton);
-	login_page->SetInitCameraFunction(std::bind(&MakePhotoPage::InitCamera, make_photo));
 	//connect(nextButton, SIGNAL(clicked()), make_photo, SLOT(InitCamera()));
 
 	setPage(WELCOME_PAGE, new WelcomePage);

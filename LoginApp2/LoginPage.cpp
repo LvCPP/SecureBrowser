@@ -151,7 +151,6 @@ int LoginPage::nextId() const
 	bool login_button_enabled = login_button_->isEnabled();
 	if (login_checked_ && login_button_enabled)
 	{
-		init_camera_();
 		return LoginApp2::MAKE_PHOTO_PAGE;
 	}
 	else
@@ -159,12 +158,6 @@ int LoginPage::nextId() const
 		return LoginApp2::LOGIN_PAGE;
 	}
 }
-
-void LoginPage::SetInitCameraFunction(const std::function<void()>& init_camera)
-{
-	init_camera_ = init_camera;
-}
-
 
 void LoginPage::MoodleAuthenticated()
 {

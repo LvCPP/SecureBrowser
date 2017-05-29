@@ -1,14 +1,15 @@
 #include "MakePhotoPage.h"
-
 #include "WebCamController.h"
+#include "../CameraInspector/FileSystemFrameSaver.h"
+
 #include <QFont>
 #include <QString>
-#include <QProgressBar>
 #include <QImage>
 #include <QPixmap>
 
 #include <vector>
 #include <string>
+#include <functional>
 
 using namespace Utils;
 using namespace CameraInspector;
@@ -22,6 +23,7 @@ MakePhotoPage::MakePhotoPage(QWidget *parent)
 	: QWizardPage(parent)
 	, is_enabled_(true)
 	, is_update_(true)
+	, photo_made_(false)
 {
 	CreateCameraSelectLabel();
 	CreateCameraSelectComboBox();
@@ -30,9 +32,8 @@ MakePhotoPage::MakePhotoPage(QWidget *parent)
 
 	connect(make_photo_button_, SIGNAL(clicked()), this, SLOT(MakePhoto()));
 	connect(camera_select_combobox_, SIGNAL(activated(int)), this, SLOT(OnCameraChoose(int)));
-	connect(accept_button_, SIGNAL(clicked()), this, SLOT(CreateProgressBar()));
-	connect(decline_button_, SIGNAL(clicked()), this, SLOT(CreateProgressBar()));
-
+	connect(decline_button_, SIGNAL(clicked()), this, SLOT(DeclineButtonClicked()));
+	connect(accept_button_, SIGNAL(clicked()), this, SLOT(AcceptButtonClicked()));
 }
 
 MakePhotoPage::~MakePhotoPage()
@@ -45,10 +46,15 @@ int MakePhotoPage::nextId() const
 	{
 		return LoginApp2::MAKE_PHOTO_PAGE;
 	}
-	else
+	else if(photo_made_)
 	{
 		return LoginApp2::LAST_PAGE;
 	}
+}
+
+void MakePhotoPage::initializePage()
+{
+	InitCamera();
 }
 
 void MakePhotoPage::CreateCameraSelectLabel()
@@ -61,19 +67,13 @@ void MakePhotoPage::CreateCameraSelectLabel()
 
 void MakePhotoPage::CreateCameraSelectComboBox()
 {
-	An<WebCamController> wcc;
-	std::vector<std::string> cam_names = wcc->ListNamesOfCameras();
-	
-	//Model-view QT to be done
 	QLabel* camera_select_label = new QLabel(this);
 	camera_select_combobox_ = new QComboBox(this);
 	camera_select_combobox_->setGeometry(QRect(240, 70, 330, 23));
 	camera_select_combobox_->setFont(arial_12);
-	
-	for (std::string name : cam_names)
-		camera_list_ << QString::fromStdString(name);
 
-	camera_select_combobox_->addItems(camera_list_);
+	RefreshComboBox();
+	
 	camera_select_combobox_->setStyleSheet(white_color);
 }
 
@@ -116,21 +116,13 @@ void MakePhotoPage::OnCameraChoose(int id)
 	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(id));
 }
 
-void MakePhotoPage::CreateProgressBar()
-{
-	/*QProgressBar* progress_bar = new QProgressBar;
-	progress_bar->setRange(0, 5);
-	progress_bar->setMinimumWidth(20);
-	progress_bar->setAlignment(Qt::AlignBottom);*/
-}
-
 void MakePhotoPage::CameraThread()
 {
 	while (is_enabled_)
 	{
 		if (is_update_)
 		{
-			Frame f_img = An<WebCamController>()->GetActiveCamera().GetFrame();
+			id_frame_ = An<WebCamController>()->GetActiveCamera().GetFrame();
 
 			QImage img(640, 480, QImage::Format_RGBA8888);
 			for (int y = 0; y < 480; ++y)
@@ -138,7 +130,7 @@ void MakePhotoPage::CameraThread()
 				for (int x = 0; x < 640; ++x)
 				{
 					int index(y * 640 + x);
-					img.setPixel(x, y, reinterpret_cast<int*>(f_img.GetData())[index]);
+					img.setPixel(x, y, reinterpret_cast<int*>(id_frame_.GetData())[index]);
 				}
 			}
 			img = img.scaled(430, 330, Qt::KeepAspectRatio);
@@ -148,18 +140,52 @@ void MakePhotoPage::CameraThread()
 	}
 }
 
+void MakePhotoPage::RefreshComboBox()
+{
+	An<WebCamController> wcc;
+	std::vector<std::string> cam_names = wcc->ListNamesOfCameras();
+
+	camera_list_.clear();
+	camera_select_combobox_->clear();
+	for (std::string name : cam_names)
+		camera_list_ << QString::fromStdString(name);
+
+	camera_select_combobox_->addItems(camera_list_);
+}
+
 void MakePhotoPage::InitCamera()
 {
-	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(0));
+	An<WebCamController> wcc;
+	wcc->ActivateCamera(wcc->GetCameras().at(0));
+	wcc->SetRefreshCallback(std::bind(&MakePhotoPage::RefreshComboBox, this));
 	is_enabled_ = true;
 	worker_ = std::thread(&MakePhotoPage::CameraThread, this);
 }
 
 void MakePhotoPage::MakePhoto()
 {
+	is_update_ = false;
 	decline_button_->setEnabled(true);
 	accept_button_->setEnabled(true);
-	is_update_ = false;
-	make_photo_button->setEnabled(false);
+	make_photo_button_->setEnabled(false);
+}
+
+void MakePhotoPage::DeclineButtonClicked()
+{
+	make_photo_button_->setEnabled(true);
+	accept_button_->setEnabled(false);
+	decline_button_->setEnabled(false);
+	
+	is_update_ = true;
+}
+
+void Login::MakePhotoPage::AcceptButtonClicked()
+{
+	accept_button_->setEnabled(false);
+
+	FileSystemFrameSaver saver;
+	saver.SetNameToSave("ID_photo");
+	saver.Save(id_frame_);
+	photo_made_ = true;
 }
 
