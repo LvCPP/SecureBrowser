@@ -2,11 +2,13 @@
 
 #include <QWidget>
 #include <qwebenginehistory.h>
+#include <qmessagebox.h>
 
 namespace Ui 
 { 
 class Browser;
 class QWebEngineHistory;
+class QMessageBox;
 }
 
 namespace SecureBrowser
@@ -28,6 +30,7 @@ private slots:
 	void HideProgressBar();
 	void ButtonBackHistory();
 	void ButtonForwardHistory();
+	void CloseButton();
 
 private:
 	QScopedPointer<Ui::Browser> ui_;
