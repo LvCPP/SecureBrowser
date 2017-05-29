@@ -53,24 +53,29 @@ void LoginApp2::CreateWizardButtonsLayout()
 
 void LoginApp2::SetPageSequence()
 {
-	if (FirstRun())
-	{
-		setPage(WELCOME_PAGE, new WelcomePage);
-		setPage(LOGIN_PAGE, new LoginPage);
-		setStartId(WELCOME_PAGE);
-	}
-	else
-	{
-		setPage(LOGIN_PAGE, new LoginPage);
-		setStartId(LOGIN_PAGE);
-	}
+	//if (FirstRun())
+	//{
+	//	setPage(WELCOME_PAGE, new WelcomePage);
+	//	setPage(LOGIN_PAGE, new LoginPage);
+	//	setStartId(WELCOME_PAGE);
+	//}
+	//else
+	//{
+	//	setPage(LOGIN_PAGE, new LoginPage);
+	//	setStartId(LOGIN_PAGE);
+	//}
 	
 	MakePhotoPage* make_photo = new MakePhotoPage(this);
-	QAbstractButton *nextButton = this->button(QWizard::NextButton);
-	connect(nextButton, SIGNAL(clicked()), make_photo, SLOT(InitCamera()));
+	LoginPage* login_page = new LoginPage(this);
+	//QAbstractButton *nextButton = this->button(QWizard::NextButton);
+	login_page->SetInitCameraFunction(std::bind(&MakePhotoPage::InitCamera, make_photo));
+	//connect(nextButton, SIGNAL(clicked()), make_photo, SLOT(InitCamera()));
 
+	setPage(WELCOME_PAGE, new WelcomePage);
+	setPage(LOGIN_PAGE, login_page);// new LoginPage);
 	setPage(MAKE_PHOTO_PAGE, make_photo);
 	setPage(LAST_PAGE, new LastPage);
+	setStartId(WELCOME_PAGE);
 	
 	SetFirstRunSetting();
 	//RemoveFirstRunSetting(); // comments should be deleted if you want to show the welcome page

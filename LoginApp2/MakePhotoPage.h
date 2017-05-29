@@ -20,13 +20,12 @@ public:
 
 	int nextId() const override;
 
+	void InitCamera();
+
 	void CreateCameraSelectLabel();
 	void CreateCameraSelectComboBox();
 	void CreateCameraArea();
 	void CreateButtons();
-
-public slots:
-	void InitCamera();
 
 private slots:
 	void MakePhoto();

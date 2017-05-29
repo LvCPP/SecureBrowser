@@ -20,7 +20,7 @@ static const QFont arial_12("Arial", 12);
 
 MakePhotoPage::MakePhotoPage(QWidget *parent)
 	: QWizardPage(parent)
-	, is_enabled_(false)
+	, is_enabled_(true)
 	, is_update_(true)
 {
 	CreateCameraSelectLabel();
@@ -31,6 +31,8 @@ MakePhotoPage::MakePhotoPage(QWidget *parent)
 	connect(make_photo_button_, SIGNAL(clicked()), this, SLOT(MakePhoto()));
 	connect(camera_select_combobox_, SIGNAL(activated(int)), this, SLOT(OnCameraChoose(int)));
 	connect(accept_button_, SIGNAL(clicked()), this, SLOT(CreateProgressBar()));
+	connect(decline_button_, SIGNAL(clicked()), this, SLOT(CreateProgressBar()));
+
 }
 
 MakePhotoPage::~MakePhotoPage()
@@ -39,11 +41,14 @@ MakePhotoPage::~MakePhotoPage()
 
 int MakePhotoPage::nextId() const
 {
-	is_enabled_ = false;
 	if (camera_select_combobox_->currentText() == "")
+	{
 		return LoginApp2::MAKE_PHOTO_PAGE;
+	}
 	else
+	{
 		return LoginApp2::LAST_PAGE;
+	}
 }
 
 void MakePhotoPage::CreateCameraSelectLabel()
@@ -108,7 +113,7 @@ void MakePhotoPage::CreateButtons()
 
 void MakePhotoPage::OnCameraChoose(int id)
 {
-	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(0));
+	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(id));
 }
 
 void MakePhotoPage::CreateProgressBar()
@@ -145,12 +150,9 @@ void MakePhotoPage::CameraThread()
 
 void MakePhotoPage::InitCamera()
 {
-	if (is_update_)
-	{
-		An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(0));
-		is_enabled_ = true;
-		worker_ = std::thread(&MakePhotoPage::CameraThread, this);
-	}
+	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(0));
+	is_enabled_ = true;
+	worker_ = std::thread(&MakePhotoPage::CameraThread, this);
 }
 
 void MakePhotoPage::MakePhoto()
@@ -158,5 +160,6 @@ void MakePhotoPage::MakePhoto()
 	decline_button_->setEnabled(true);
 	accept_button_->setEnabled(true);
 	is_update_ = false;
+	make_photo_button->setEnabled(false);
 }
 
