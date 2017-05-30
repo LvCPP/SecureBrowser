@@ -71,8 +71,7 @@ LRESULT CALLBACK WindowsInspector::CBTProc(INT code, WPARAM wparam, LPARAM lpara
 
 void WindowsInspector::MessageLoop()
 {
-	window_hook = SetWindowsHookEx(WH_CBT, WindowsInspector::CBTProc, GetModuleHandle(0)/*hInst_*/, 0);
-
+	window_hook = SetWindowsHookEx(WH_CBT, WindowsInspector::CBTProc, GetModuleHandleA(0), 0);
 	while (GetMessage(&message, NULL, 0, 0))
 	{
 		TranslateMessage(&message);
@@ -89,7 +88,7 @@ void WindowsInspector::StartWindowsInspector()
 void WindowsInspector::StopWindowsInspector()
 {
 	PostThreadMessage(GetThreadId(worker_.native_handle()), WM_QUIT, 0, 0);
-	OutputDebugStringA("WINDOWSD INSPECTOR STOPPED WORKING\n");
+	OutputDebugStringA("WINDOWS INSPECTOR STOPPED WORKING\n");
 	UnhookWindowsHookEx(window_hook);
 }
 
@@ -99,8 +98,3 @@ void WindowsInspector::StopAndWait()
 	if (worker_.joinable())
 		worker_.join();
 }
-
-
-
-
-
