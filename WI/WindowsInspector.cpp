@@ -17,11 +17,11 @@ WindowsInspector::~WindowsInspector()
 
 BOOL CALLBACK WindowsInspector::EnumWindowsProc()
 {
-	HWND hwnd = GetForegroundWindow(); //get handle of currently active window
+	HWND hwnd = GetForegroundWindow();
 	char wnd_title[255] = "";
 	DWORD* processID = new DWORD;
 	TCHAR processname[255];
-	if (IsWindowVisible(hwnd)) // check whether window is visible
+	if (IsWindowVisible(hwnd))
 	{
 		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION 
 			| PROCESS_VM_READ , FALSE, *processID);
@@ -32,7 +32,7 @@ BOOL CALLBACK WindowsInspector::EnumWindowsProc()
 		std::cout << *processID << std::endl;
 		std::cout << processname << std::endl;
 	}
-	return true; // function must return true if you want to continue enumeration
+	return true;
 }
 
 LRESULT CALLBACK WindowsInspector::CBTProc(INT code, WPARAM wparam, LPARAM lparam)
@@ -63,8 +63,6 @@ LRESULT CALLBACK WindowsInspector::CBTProc(INT code, WPARAM wparam, LPARAM lpara
 	case HCBT_SETFOCUS:
 		OutputDebugStringA("Focus on window:\n");
 		break;
-	case HCBT_SYSCOMMAND:
-		break;
 	default:
 		break;
 	}
@@ -73,7 +71,7 @@ LRESULT CALLBACK WindowsInspector::CBTProc(INT code, WPARAM wparam, LPARAM lpara
 
 void WindowsInspector::MessageLoop()
 {
-	window_hook = SetWindowsHookEx(WH_CBT, WindowsInspector::CBTProc, hInst_, 0);
+	window_hook = SetWindowsHookEx(WH_CBT, WindowsInspector::CBTProc, GetModuleHandle(0)/*hInst_*/, 0);
 
 	while (GetMessage(&message, NULL, 0, 0))
 	{
@@ -85,13 +83,13 @@ void WindowsInspector::MessageLoop()
 void WindowsInspector::StartWindowsInspector()
 {
 	worker_ = std::thread(&WindowsInspector::MessageLoop, this);
-	OutputDebugStringA("KEYBOARD INSPECTOR STARTED WORKING\n");
+	OutputDebugStringA("WINDOWS INSPECTOR STARTED WORKING\n");
 }
 
 void WindowsInspector::StopWindowsInspector()
 {
 	PostThreadMessage(GetThreadId(worker_.native_handle()), WM_QUIT, 0, 0);
-	OutputDebugStringA("KEYBOARD INSPECTOR STOPPED WORKING\n");
+	OutputDebugStringA("WINDOWSD INSPECTOR STOPPED WORKING\n");
 	UnhookWindowsHookEx(window_hook);
 }
 
