@@ -1,30 +1,33 @@
 #pragma once
-#pragma once
+#include "WindowsInspectorUtils.h"
 #include <atomic>
 #include <thread>
 #include <windows.h>
 #include <iostream>
 #include <tchar.h>
 #include <psapi.h>
-#include "WindowsInspectorUtils.h"
 
-//namespace WindowsInspector
-//{
-//
-//class WI
-//{
-//public:
-//void StartWindowsInspector();
-//void StopWindowsInspector();
-WINDOWSINSPECTOR_API LRESULT CALLBACK CBTProc(INT code, WPARAM wparam, LPARAM lparam);
-WINDOWSINSPECTOR_API bool installHook();
-WINDOWSINSPECTOR_API BOOL CALLBACK EnumWindowsProc();
+namespace SBWindowsInspector
+{
 
-//private:
-//	std::atomic<bool> is_working_;
-//	std::thread worker_;
-//
-//
-//};
-//
-//}
+class WindowsInspector
+{
+public:
+	WINDOWSINSPECTOR_API WindowsInspector();
+	WINDOWSINSPECTOR_API ~WindowsInspector();
+
+	WINDOWSINSPECTOR_API void StartWindowsInspector();
+	WINDOWSINSPECTOR_API void StopWindowsInspector();
+	void StopAndWait();
+	static LRESULT CALLBACK CBTProc(INT code, WPARAM wparam, LPARAM lparam);
+	static BOOL CALLBACK EnumWindowsProc();
+
+protected:
+	void MessageLoop();
+
+private:
+	std::thread worker_;
+
+};
+
+}

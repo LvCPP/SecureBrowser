@@ -1,19 +1,13 @@
 #include <WindowsInspector.h>
+using namespace SBWindowsInspector;
 
 int main()
 {
-	/*if (!installHook())
-	system("pause");*/
+	WindowsInspector wi;
+	wi.StartWindowsInspector();
+	Sleep(1500000);
+	wi.StopWindowsInspector();
 
-	installHook();
-	//EnumWindowsProc();
-	MSG msg;
-
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
 
 	system("pause");
 	return 0;

@@ -1,13 +1,21 @@
 #include "WindowsInspector.h"
-#include <string>
 
-//using namespace WindowsInspector;
+using namespace SBWindowsInspector;
 
-HHOOK llCBTHookHandle;
-HINSTANCE _hInst = NULL;
-std::thread worker_;
+HHOOK window_hook;
+HINSTANCE hInst_ = NULL;
+MSG message;
 
-BOOL CALLBACK /*WI::*/EnumWindowsProc()
+WindowsInspector::WindowsInspector()
+{
+
+}
+WindowsInspector::~WindowsInspector()
+{
+	StopAndWait();
+}
+
+BOOL CALLBACK WindowsInspector::EnumWindowsProc()
 {
 	HWND hwnd = GetForegroundWindow(); //get handle of currently active window
 	char wnd_title[255] = "";
@@ -15,9 +23,8 @@ BOOL CALLBACK /*WI::*/EnumWindowsProc()
 	TCHAR processname[255];
 	if (IsWindowVisible(hwnd)) // check whether window is visible
 	{
-		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION |
-			PROCESS_VM_READ,
-			FALSE, *processID);
+		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION 
+			| PROCESS_VM_READ , FALSE, *processID);
 		GetWindowText(hwnd, (LPWSTR)wnd_title, sizeof(wnd_title));
 		GetWindowThreadProcessId(hwnd, processID);
 		GetModuleBaseName(hProcess, NULL, processname, sizeof(processname));
@@ -28,28 +35,27 @@ BOOL CALLBACK /*WI::*/EnumWindowsProc()
 	return true; // function must return true if you want to continue enumeration
 }
 
-LRESULT CALLBACK /*WI::*/CBTProc(INT code, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK WindowsInspector::CBTProc(INT code, WPARAM wparam, LPARAM lparam)
 {
-	//while(is_working_)
 	if (code < 0)
 		return CallNextHookEx(NULL, code, wparam, lparam);
 	switch (code)
 	{
 	case  HCBT_ACTIVATE:
-		EnumWindowsProc();
+		WindowsInspector::EnumWindowsProc();
 		OutputDebugStringA("Window activated\n");
 		break;
 	case HCBT_CREATEWND:
 		OutputDebugStringA("Window created\n");
-		EnumWindowsProc();
+		WindowsInspector::EnumWindowsProc();
 		break;
 	case HCBT_DESTROYWND:
 		OutputDebugStringA("Window destroyed\n");
-		EnumWindowsProc();
+		WindowsInspector::EnumWindowsProc();
 		break;
 	case HCBT_MINMAX:
 		OutputDebugStringA("Window minimize or maximized\n");
-		EnumWindowsProc();
+		WindowsInspector::EnumWindowsProc();
 		break;
 	case HCBT_MOVESIZE:
 		OutputDebugStringA("Window moved\n");
@@ -63,34 +69,40 @@ LRESULT CALLBACK /*WI::*/CBTProc(INT code, WPARAM wparam, LPARAM lparam)
 		break;
 	}
 	return CallNextHookEx(NULL, code, wparam, lparam);
-
 }
 
-bool /*WI::*/installHook()
+void WindowsInspector::MessageLoop()
 {
-	llCBTHookHandle = SetWindowsHookEx(WH_CBT, (HOOKPROC)CBTProc, GetModuleHandle(0), 0/*GetCurrentThreadId()*/);
-	return llCBTHookHandle != NULL;
+	window_hook = SetWindowsHookEx(WH_CBT, WindowsInspector::CBTProc, hInst_, 0);
+
+	while (GetMessage(&message, NULL, 0, 0))
+	{
+		TranslateMessage(&message);
+		DispatchMessage(&message);
+	}
 }
 
-//void StartWindowsInspector()
-//{
-//OutputDebugStringA("WINDOWS INSPECTOR STARTED WORKING\n");
-////if (!is_working_)
-////{
-////is_working_ = true;
-//worker_ = std::thread(&CBTProc);
-//}
-//
-//
-//void StopWindowsInspector()
-//{
-//OutputDebugStringA("WINDOWS INSPECTOR STARTED WORKING\n");
-////if (is_working_)
-////{
-////is_working_ = false;
-//if (worker_.joinable())
-//worker_.join();
-//}
+void WindowsInspector::StartWindowsInspector()
+{
+	worker_ = std::thread(&WindowsInspector::MessageLoop, this);
+	OutputDebugStringA("KEYBOARD INSPECTOR STARTED WORKING\n");
+}
+
+void WindowsInspector::StopWindowsInspector()
+{
+	PostThreadMessage(GetThreadId(worker_.native_handle()), WM_QUIT, 0, 0);
+	OutputDebugStringA("KEYBOARD INSPECTOR STOPPED WORKING\n");
+	UnhookWindowsHookEx(window_hook);
+}
+
+void WindowsInspector::StopAndWait()
+{
+	StopWindowsInspector();
+	if (worker_.joinable())
+		worker_.join();
+}
+
+
 
 
 
