@@ -14,11 +14,11 @@ namespace CameraInspector
 class FaceDetector : public IFrameHandler
 {
 public:
-	FaceDetector();
-	~FaceDetector() = default;
-	void Attach(const std::shared_ptr<IFaceDetectorObserver>& observer);
-	void Detach(const std::shared_ptr<IFaceDetectorObserver>& observer);
-	void ProcessFrame(const Frame& frame) override;
+	CI_API FaceDetector();
+	CI_API ~FaceDetector() = default;
+	CI_API void Attach(const std::shared_ptr<IFaceDetectorObserver>& observer);
+	CI_API void Detach(const std::shared_ptr<IFaceDetectorObserver>& observer);
+	CI_API void ProcessFrame(const Frame& frame) override;
 private:
 	void Notify(int face_count);
 

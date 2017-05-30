@@ -113,5 +113,8 @@
     <ClInclude Include="CameraException.h">
       <Filter>Header Files\WebCamAPI</Filter>
     </ClInclude>
+    <ClInclude Include="CameraInspectorUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -54,11 +54,11 @@ private:
 namespace Utils
 {
 
-	template <>
-	inline void AnFill<BrowserLogger::Logger>(An<BrowserLogger::Logger>& an)
-	{
-		static BrowserLogger::Logger instance;
-		an = &instance;
-	}
+template <>
+inline void AnFill<BrowserLogger::Logger>(An<BrowserLogger::Logger>& an)
+{
+	static BrowserLogger::Logger instance;
+	an = &instance;
+}
 
 } // namespace Utils

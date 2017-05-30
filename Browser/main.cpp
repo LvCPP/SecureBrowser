@@ -18,6 +18,9 @@ bool IsAlreadyRunning();
 
 int main(int argc, char* argv[])
 {
+	// test call Singletone from different modules (next time it will be called from LoginApp2)
+	An<WebCamController>()->GetCameras();	
+
 	if (!IsAlreadyRunning())
 	{
 		MessageBox(

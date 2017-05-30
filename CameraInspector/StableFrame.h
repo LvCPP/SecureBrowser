@@ -7,14 +7,14 @@ namespace CameraInspector
 class StableFrame : public Frame
 {
 public:
-	StableFrame();
-	StableFrame(const StableFrame& sframe);
-	StableFrame(const Frame& frame);
-	StableFrame(int width, int height, void* data);
-	StableFrame(const cv::Mat& mat);
-	virtual ~StableFrame() = default;
+	CI_API StableFrame();
+	CI_API StableFrame(const StableFrame& sframe);
+	CI_API StableFrame(const Frame& frame);
+	CI_API StableFrame(int width, int height, void* data);
+	CI_API StableFrame(const cv::Mat& mat);
+	CI_API virtual ~StableFrame() = default;
 
-	StableFrame& operator= (const StableFrame& sframe);
+	CI_API StableFrame& operator= (const StableFrame& sframe);
 };
 
 } // namespace CameraInspector

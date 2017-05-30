@@ -9,11 +9,11 @@ namespace CameraInspector
 class FrameStorer
 {
 public:
-	FrameStorer(StableFrame frame);
+	CI_API FrameStorer(StableFrame frame);
 
-	void Save(std::shared_ptr<IFrameSaver>& saver) const;
+	CI_API void Save(std::shared_ptr<IFrameSaver>& saver) const;
 
-	const Frame& Get() const;
+	CI_API const Frame& Get() const;
 
 private:
 	StableFrame stored_frame_;

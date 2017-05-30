@@ -1,11 +1,12 @@
 #pragma once
+#include "CameraInspectorUtils.h"
 
 namespace CameraInspector
 {
 class IFaceDetectorObserver
 {
 public:
-	virtual ~IFaceDetectorObserver() = default;
-	virtual void OnFaceQuantityChanged(int face_count) = 0;
+	CI_API virtual ~IFaceDetectorObserver() = default;
+	CI_API virtual void OnFaceQuantityChanged(int face_count) = 0;
 };
 }

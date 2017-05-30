@@ -14,17 +14,17 @@ namespace CameraInspector
 class WebCamController
 {
 public:
-	WebCamController();
-	~WebCamController();
+	CI_API WebCamController();
+	CI_API ~WebCamController();
 
-	std::vector<std::string> ListNamesOfCameras() const;
-	void ActivateCamera(WebCam&);
-	void Refresh(bool is_arriving = false);
-	
-	void SetRefreshCallback(std::function<void()> callback);
-	std::vector<WebCam>& GetCameras() noexcept;
-	size_t GetCamerasCount() const noexcept;
-	WebCam GetActiveCamera() const;
+	CI_API std::vector<std::string> ListNamesOfCameras() const;
+	CI_API void ActivateCamera(WebCam&);
+	CI_API void Refresh(bool is_arriving = false);
+
+	CI_API void SetRefreshCallback(std::function<void()> callback);
+	CI_API std::vector<WebCam>& GetCameras() noexcept;
+	CI_API size_t GetCamerasCount() const noexcept;
+	CI_API WebCam GetActiveCamera() const;
 
 private:
 	std::vector<WebCam> cameras_;
