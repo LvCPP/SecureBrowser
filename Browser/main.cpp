@@ -15,19 +15,17 @@ using namespace Login;
 using namespace Utils;
 
 bool IsAlreadyRunning();
+void WaitTillAnyCameraConnected();
 
 int main(int argc, char* argv[])
 {
-	// test call Singletone from different modules (next time it will be called from LoginApp2)
-	An<WebCamController>()->GetCameras();	
+	WaitTillAnyCameraConnected();
 
-	if (!IsAlreadyRunning())
+	if (IsAlreadyRunning())
 	{
 		MessageBox(
 			NULL,
-			//(LPCWSTR)
 			L"Program is already running!",
-			//(LPCWSTR)
 			L"Error",
 			MB_ICONERROR
 		);
@@ -196,8 +194,30 @@ bool IsAlreadyRunning()
 	switch (GetLastError())
 	{
 	case ERROR_ALREADY_EXISTS:
-		return false;	// Quit. Mutex is released automatically;
+		return true;	// Quit. Mutex is released automatically;
 	default:			// Mutex successfully created
-		return true;
+		return false;
+	}
+}
+
+void WaitTillAnyCameraConnected()
+{
+	while (An<WebCamController>()->GetCamerasCount() == 0)
+	{
+		int choose = MessageBox(
+			NULL,
+			L"You need to connect webcam to continue",
+			L"Error",
+			MB_ICONSTOP | MB_RETRYCANCEL | MB_DEFBUTTON4
+		);
+
+		switch (choose)
+		{
+		case IDCANCEL:
+			exit(-1);
+		default:
+			// Retry pressed
+			break;
+		}
 	}
 }
