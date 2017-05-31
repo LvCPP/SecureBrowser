@@ -19,10 +19,7 @@ bool FakeWindowService::Start()
 bool FakeWindowService::Stop()
 {
 	bool result = CloseWindow(fake_window_handle_);
-	std::cout << result << std::endl;
 	result= PostMessage(fake_window_handle_, WM_QUIT, 0, 0);
-	std::cout << result << std::endl;
-	std::cout << fake_window_handle_;
 	worker_.join();
 	return result;
 }
@@ -65,7 +62,6 @@ void FakeWindowService::Notify()
 bool FakeWindowService::StartWindowRoutine(HWND fake_window)
 {
 	fake_window_handle_ = ::CreateWindowA("STATIC", "fake", WS_MINIMIZE, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
-	std::cout << fake_window_handle_;
 	::SetWindowTextA(fake_window_handle_, "Fake Window!");
 	if (fake_window_handle_ == NULL)
 	{

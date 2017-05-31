@@ -24,6 +24,7 @@ public:
 
 	// Making photos means saving them, so we need any class that can do it for us
 	CI_API void SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver);
+	CI_API std::shared_ptr<IFrameSaver> GetSaver();
 
 private:
 	void Save(const Frame& frame) const;

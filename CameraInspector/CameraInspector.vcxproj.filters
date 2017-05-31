@@ -69,6 +69,9 @@
     <ClCompile Include="escapi.cpp">
       <Filter>ESCAPI</Filter>
     </ClCompile>
+    <ClCompile Include="FaceCountObserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Frame.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="CameraInspectorUtils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceCountObserver.h">
+      <Filter>Header Files\CameraInspector</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

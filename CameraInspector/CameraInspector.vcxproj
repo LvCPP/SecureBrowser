@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="escapi.cpp" />
+    <ClCompile Include="FaceCountObserver.cpp" />
     <ClCompile Include="FaceDetector.cpp" />
     <ClCompile Include="FileSystemFrameSaver.cpp" />
     <ClCompile Include="Frame.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="CameraException.h" />
     <ClInclude Include="CameraInspectorUtils.h" />
     <ClInclude Include="escapi.h" />
+    <ClInclude Include="FaceCountObserver.h" />
     <ClInclude Include="FaceDetector.h" />
     <ClInclude Include="FileSystemFrameSaver.h" />
     <ClInclude Include="Frame.h" />

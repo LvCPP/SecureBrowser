@@ -38,10 +38,10 @@ int main(int argc, char* argv[])
 
 	std::ofstream file("log.txt", std::ios::out);
 	logger->SetOutput(file);
-
 	loginfo(*logger) << "Program initialized";
 	
 	QApplication a(argc, argv);
+	An<WebCamController>()->RegisterForDeviceNotification();
 	LoginApp2 app;
 	
 	loginfo(*logger) << "Start login";
