@@ -1,6 +1,10 @@
 #include "KeyboardInspectorImpl.h"
+#include <An.hpp>
+#include <Logger.h>
 
 using namespace SBKeyboardInspector;
+using namespace Utils;
+using namespace BrowserLogger;
 
 static constexpr UINT IS_RELEASED = 0x80;
 
@@ -89,8 +93,7 @@ LRESULT CALLBACK KeyboardInspectorImpl::LowLevelKeyboardProc(int code, WPARAM wP
 
 	if (ignore_key_)
 	{
-		OutputDebugStringA("KEY IGNORED: ");
-		OutputDebugStringA((current_key_seq_.GetText() + "\n").c_str());
+		logwarning(*An<Logger>()) << "KEY IGNORED: " << current_key_seq_.GetText();
 		return 1;
 	}
 

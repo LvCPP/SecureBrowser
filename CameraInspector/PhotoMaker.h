@@ -12,18 +12,19 @@ namespace CameraInspector
 class PhotoMaker : public IFrameHandler
 {
 public:
-	PhotoMaker();
-	PhotoMaker(const PhotoMaker& maker);
-	PhotoMaker(const std::shared_ptr<IFrameSaver>& saver);
-	virtual ~PhotoMaker() = default;
+	CI_API PhotoMaker();
+	CI_API PhotoMaker(const PhotoMaker& maker);
+	CI_API PhotoMaker(const std::shared_ptr<IFrameSaver>& saver);
+	CI_API virtual ~PhotoMaker() = default;
 
 	// Calls <fps> times per second
-	void ProcessFrame(const Frame& frame) override;
+	CI_API void ProcessFrame(const Frame& frame) override;
 	// Save next frame
-	void MakePhoto() noexcept;
+	CI_API void MakePhoto() noexcept;
 
 	// Making photos means saving them, so we need any class that can do it for us
-	void SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver);
+	CI_API void SetFrameSaver(const std::shared_ptr<IFrameSaver>& saver);
+	CI_API std::shared_ptr<IFrameSaver> GetSaver();
 
 private:
 	void Save(const Frame& frame) const;

@@ -71,6 +71,18 @@ void WebCameraCapture::ProcessHandlers()
 		{
 			(*it)->ProcessFrame(ReadFromCamera());
 		}
-		// I think we should unload the system by calling Sleep in this loop
+		Sleep(0);
 	}
 }
+
+namespace Utils
+{
+
+template<> 
+void AnFill<CameraInspector::WebCameraCapture>(An<CameraInspector::WebCameraCapture>& an)
+{
+	static CameraInspector::WebCameraCapture wcc;
+	an = &wcc;
+}
+
+} // namespace Utils

@@ -1,32 +1,54 @@
 #include "browser.h"
 #include <Logger.h>
 #include <KeyboardInspector.h>
+#include "FakeWindowService.h"
+#include "SessionInspector.h"
+#include "WebCameraCapture.h"
+#include "WindowsInspector.h"
+#include "PhotoMaker.h"
+#include "FileSystemFrameSaver.h"
+#include "FrameStorer.h"
+#include "FaceDetector.h"
+#include "CameraException.h"
+#include "FaceCountObserver.h"
 #include <LoginApp2.h>
 #include <WebCamController.h>
 #include <QtWidgets/QApplication>
 #include <windows.h>
 #include <fstream>
+#include <chrono>
 
-using namespace CameraInspector;
 using namespace SecureBrowser;
 using namespace BrowserLogger;
+using namespace SBWindowsInspector;
+using namespace CameraInspector;
+using namespace SI;
 using namespace SBKeyboardInspector;
 using namespace Login;
 using namespace Utils;
 
+void SetupKeyboardInspector(KeyboardInspector& ki);
 bool IsAlreadyRunning();
+void WaitTillAnyCameraConnected();
+void Cleanup(std::ofstream& file_to_close);
 
 int main(int argc, char* argv[])
 {
-	if (!IsAlreadyRunning())
+	WaitTillAnyCameraConnected();
+
+	if (IsAlreadyRunning())
 	{
 		MessageBox(
 			NULL,
+<<<<<<< HEAD
 			(LPCWSTR)L"Program is already running!",
 			(LPCWSTR)L"Error",
+=======
+			L"Program is already running!",
+			L"Error",
+>>>>>>> 64f2ca84b5e929ead48ee7078b279fc393021a2e
 			MB_ICONERROR
 		);
-
 		return -1;
 	}
 
@@ -34,26 +56,74 @@ int main(int argc, char* argv[])
 
 	std::ofstream file("log.txt", std::ios::out);
 	logger->SetOutput(file);
-
 	loginfo(*logger) << "Program initialized";
 	
 	QApplication a(argc, argv);
+
+	An<WebCamController>()->RegisterForDeviceNotification();
 	LoginApp2 app;
 	
 	loginfo(*logger) << "Start login";
 	if (!app.exec())
 	{
 		logerror(*logger) << "User aborted logging in. Finish program.";
-		logger->Flush();
-		file.close();
+		Cleanup(file);
 		return 0;
 	}
 
+<<<<<<< HEAD
 
 	loginfo(*logger) << "User loged in. Start Browser";
 
+=======
+	// Inspectors setting up
+>>>>>>> 64f2ca84b5e929ead48ee7078b279fc393021a2e
 	KeyboardInspector ki;
+	SetupKeyboardInspector(ki);
+	ki.Start();
+	
+	WindowsInspector wi;
+	wi.StartWindowsInspector();
+	
+	FakeWindowService fws;
+	fws.Start();
+	An<WebCameraCapture> cam_cap;
 
+	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>();
+
+	std::shared_ptr<IFrameSaver> shared_saver = std::make_shared<FileSystemFrameSaver>(FileSystemFrameSaver());
+	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetPathToSave("");
+
+	std::shared_ptr<PhotoMaker> shared_maker = std::make_shared<PhotoMaker>(PhotoMaker());
+	shared_maker->SetFrameSaver(shared_saver);
+
+	const std::shared_ptr<FaceCountObserver> observer = std::make_shared<FaceCountObserver>(shared_maker);
+	face_detector->Attach(observer);
+
+	cam_cap->AddFrameHandler(shared_maker);
+	cam_cap->AddFrameHandler(face_detector);
+
+	face_detector->SetFrequency(std::chrono::seconds(1));
+
+	cam_cap->Start();
+
+	loginfo(*logger) << "Start Browser";
+	Browser w;
+	w.showMaximized();
+	int result = a.exec();
+
+	cam_cap->Stop();
+	fws.Stop();
+	wi.StopWindowsInspector();
+	ki.Stop();
+
+	loginfo(*logger) << "Program finished with code " << result;
+	Cleanup(file);
+	return result;
+}
+
+void SetupKeyboardInspector(KeyboardInspector& ki)
+{
 	// TAB
 	ki.IgnoreKeySequence(KEY_LALT + KEY_TAB);
 	ki.IgnoreKeySequence(KEY_RALT + KEY_TAB);
@@ -170,19 +240,6 @@ int main(int argc, char* argv[])
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_P);
 	ki.IgnoreKeySequence(KEY_LCONTROL + KEY_S);
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_S);
-
-	ki.Start();
-
-	Browser w;
-	w.showMaximized();
-	int result = a.exec();
-
-	loginfo(*logger) << "Program finished with code " << result;
-	logger->Flush();
-	file.close();
-
-	ki.Stop();
-	return result;
 }
 
 bool IsAlreadyRunning()
@@ -192,8 +249,38 @@ bool IsAlreadyRunning()
 	switch (GetLastError())
 	{
 	case ERROR_ALREADY_EXISTS:
-		return false;	// Quit. Mutex is released automatically;
+		return true;	// Quit. Mutex is released automatically;
 	default:			// Mutex successfully created
-		return true;
+		return false;
 	}
+}
+
+void WaitTillAnyCameraConnected()
+{
+	while (An<WebCamController>()->GetCamerasCount() == 0)
+	{
+		int choose = MessageBox(
+			NULL,
+			L"The program requires a webcam. Connect to continue",
+			L"Error",
+			MB_ICONSTOP | MB_RETRYCANCEL | MB_DEFBUTTON4
+		);
+
+		switch (choose)
+		{
+		case IDCANCEL:
+			exit(-1);
+		default:
+			// Retry pressed
+			break;
+		}
+	}
+}
+
+void Cleanup(std::ofstream& file_to_close)
+{
+	An<Logger>()->Flush();
+	An<WebCamController>()->UnregisterForDeviceNotification();
+
+	file_to_close.close();
 }

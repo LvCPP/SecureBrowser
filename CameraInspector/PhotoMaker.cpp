@@ -67,3 +67,8 @@ void PhotoMaker::Save(const Frame& frame) const
 		throw std::exception("Saver is not initialized");
 	}
 }
+
+std::shared_ptr<IFrameSaver> PhotoMaker::GetSaver()
+{
+	return saver_;
+}

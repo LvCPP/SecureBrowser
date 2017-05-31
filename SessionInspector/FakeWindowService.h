@@ -32,7 +32,7 @@ struct ObserverInfo
 class FakeWindowService
 {
 public:
-	bool Start();
+	void Start();
 	bool Stop();
 	void Attach(const std::shared_ptr<IFakeWindowServiceObserver>& observer);
 	void Detach(const std::shared_ptr<IFakeWindowServiceObserver>& observer);

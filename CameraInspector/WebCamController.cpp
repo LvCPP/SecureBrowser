@@ -1,22 +1,18 @@
 #include "WebCamController.h"
 #include "CameraException.h"
+#include <An.hpp>
+#include <Logger.h>
 #include <algorithm>
 
 using namespace CameraInspector;
+using namespace Utils;
+using namespace BrowserLogger;
 
 WebCamController::WebCamController()
 	: is_activated_(false)
 {
 	setupESCAPI();
-	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this, std::placeholders::_1));
 	Refresh();
-}
-
-WebCamController::~WebCamController()
-{
-	unregisterForDeviceNotification();
-	if (is_activated_)
-		activated_camera_->DeInitialize();
 }
 
 std::vector<std::string> WebCamController::ListNamesOfCameras() const
@@ -44,6 +40,7 @@ void WebCamController::ActivateCamera(WebCam& camera)
 	// If user wants to activate camera, that isn't connected
 	if (activated_camera_ == cameras_.end())
 	{
+		logwarning(*An<Logger>()) << "Camera wasn't found";
 		throw CameraException("Camera wasn't found");
 	}
 
@@ -103,6 +100,16 @@ void WebCamController::Refresh(bool is_arriving)
 		callback_();
 }
 
+void WebCamController::RegisterForDeviceNotification()
+{
+	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this, std::placeholders::_1));
+}
+
+void WebCamController::UnregisterForDeviceNotification()
+{
+	unregisterForDeviceNotification();
+}
+
 void WebCamController::SetRefreshCallback(std::function<void()> callback)
 {
 	callback_ = callback;
@@ -129,4 +136,16 @@ WebCam WebCamController::GetActiveCamera() const
 	{
 		throw CameraException("Camera is not available right now");
 	}
+}
+
+namespace Utils
+{
+
+template <> 
+void AnFill<WebCamController>(An<WebCamController>& an)
+{
+	static WebCamController wcc;
+	an = &wcc;
+}
+
 }

@@ -8,7 +8,7 @@ Browser::Browser(QWidget *parent)
 	, ui_(new Ui::Browser())
 {
 	ui_->setupUi(this);
-	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint);
+	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 	setWindowState(Qt::WindowFullScreen);
 	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);

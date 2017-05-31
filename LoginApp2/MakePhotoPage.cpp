@@ -46,6 +46,15 @@ int MakePhotoPage::nextId() const
 	if (camera_select_combobox_->currentText() == "")
 		return LoginApp2::MAKE_PHOTO_PAGE;
 	else if(photo_made_)
+<<<<<<< HEAD
+=======
+	{
+		is_enabled_ = false;
+
+		if (worker_.joinable())
+			worker_.join();
+
+>>>>>>> 64f2ca84b5e929ead48ee7078b279fc393021a2e
 		return LoginApp2::LAST_PAGE;
 }
 

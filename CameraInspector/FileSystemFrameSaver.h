@@ -10,15 +10,15 @@ namespace CameraInspector
 class FileSystemFrameSaver : public IFrameSaver
 {
 public:
-	FileSystemFrameSaver();
-	virtual ~FileSystemFrameSaver() = default;
+	CI_API FileSystemFrameSaver();
+	CI_API virtual ~FileSystemFrameSaver() = default;
 
-	void Save(const Frame& frame) override;
-	void Save(const Frame& frame, const std::string& name);
-	void Save(const Frame& frame, const std::string& name, const std::string& path);
+	CI_API void Save(const Frame& frame) override;
+	CI_API void Save(const Frame& frame, const std::string& name);
+	CI_API void Save(const Frame& frame, const std::string& name, const std::string& path);
 	
-	void SetPathToSave(const std::string& path) noexcept;
-	void SetNameToSave(const std::string& name) noexcept;
+	CI_API void SetPathToSave(const std::string& path) noexcept;
+	CI_API void SetNameToSave(const std::string& name) noexcept;
 
 private:
 	static void SaveToDisk(const Frame& frame, const std::string& name, const std::string& path);

@@ -15,7 +15,7 @@ int main()
 	wcc->ActivateCamera(cameras_.at(0));
 
 	ShowDevices();
-
+	wcc->RegisterForDeviceNotification();
 	wcc->SetRefreshCallback(ShowDevices);
 
 	cv::namedWindow("test cameras UI");
@@ -57,6 +57,7 @@ int main()
 	
 	cv::destroyWindow("test cameras UI");
 
+	wcc->UnregisterForDeviceNotification();
 
 	system("pause");
 	return 0;

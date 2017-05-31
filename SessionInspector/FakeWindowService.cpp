@@ -1,5 +1,7 @@
 #include "FakeWindowService.h"
 #include "IFakeWindowServiceObserver.h"
+#include <An.hpp>
+#include <Logger.h>
 #include <windows.h>
 #include <Wtsapi32.h>
 #include <iostream>
@@ -8,21 +10,18 @@
 #include <thread>
 
 using namespace SI;
+using namespace BrowserLogger;
+using namespace Utils;
 
-
-bool FakeWindowService::Start()
+void FakeWindowService::Start()
 {
 	worker_ = std::thread(&FakeWindowService::StartWindowRoutine, this, fake_window_handle_);
-	return true;
 }
 
 bool FakeWindowService::Stop()
 {
 	bool result = CloseWindow(fake_window_handle_);
-	std::cout << result << std::endl;
 	result= PostMessage(fake_window_handle_, WM_QUIT, 0, 0);
-	std::cout << result << std::endl;
-	std::cout << fake_window_handle_;
 	worker_.join();
 	return result;
 }
@@ -64,15 +63,14 @@ void FakeWindowService::Notify()
 
 bool FakeWindowService::StartWindowRoutine(HWND fake_window)
 {
-	fake_window_handle_ = ::CreateWindowA("STATIC", "fake", WS_MINIMIZE, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
-	std::cout << fake_window_handle_;
-	::SetWindowTextA(fake_window_handle_, "Fake Window!");
+	fake_window_handle_ = CreateWindowA("STATIC", "fake", WS_MINIMIZE, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
+	SetWindowTextA(fake_window_handle_, "Fake Window!");
 	if (fake_window_handle_ == NULL)
 	{
 		return false;
 	}
 
-	::WTSRegisterSessionNotification(fake_window_handle_, NOTIFY_FOR_ALL_SESSIONS);
+	WTSRegisterSessionNotification(fake_window_handle_, NOTIFY_FOR_ALL_SESSIONS);
 
 	MSG msg;
 	BOOL result;
@@ -92,6 +90,7 @@ bool FakeWindowService::StartWindowRoutine(HWND fake_window)
 #ifdef _DEBUG
 				std::cout << "Event happened\n";
 #endif //_DEBUG
+				logwarning(*An<Logger>()) << "Session changed";
 				Notify();
 			}
 

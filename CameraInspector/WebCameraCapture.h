@@ -14,19 +14,19 @@ namespace CameraInspector
 class WebCameraCapture
 {
 public:
-	WebCameraCapture();
-
-	WebCameraCapture(const WebCameraCapture&) = delete;
-	WebCameraCapture(WebCameraCapture&&) = delete;
-	WebCameraCapture& operator= (const WebCameraCapture&) = delete;
-	WebCameraCapture& operator= (WebCameraCapture&&) = delete;
-
-	void Start();
-	void Stop();
-
-	StableFrame GetCurrentStableFrame() const;
-
-	void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
+	CI_API WebCameraCapture();
+	
+	CI_API WebCameraCapture(const WebCameraCapture&) = delete;
+	CI_API WebCameraCapture(WebCameraCapture&&) = delete;
+	CI_API WebCameraCapture& operator= (const WebCameraCapture&) = delete;
+	CI_API WebCameraCapture& operator= (WebCameraCapture&&) = delete;
+	
+	CI_API void Start();
+	CI_API void Stop();
+	
+	CI_API StableFrame GetCurrentStableFrame() const;
+	
+	CI_API void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 	
 private:
 	static Frame ReadFromCamera();
@@ -43,11 +43,6 @@ private:
 namespace Utils
 {
 
-template <>
-inline void AnFill<CameraInspector::WebCameraCapture>(An<CameraInspector::WebCameraCapture>& an)
-{
-	static CameraInspector::WebCameraCapture wcc;
-	an = &wcc;
-}
+template<> CI_API void AnFill<CameraInspector::WebCameraCapture>(An<CameraInspector::WebCameraCapture>& an);
 
-} // namespace Utils
+} // namespace CameraInspector

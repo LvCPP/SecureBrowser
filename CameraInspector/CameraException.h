@@ -1,4 +1,5 @@
 #pragma once
+#include "CameraInspectorUtils.h"
 #include <exception>
 
 namespace CameraInspector
@@ -7,11 +8,11 @@ namespace CameraInspector
 class CameraException : public std::exception
 {
 public:
-	CameraException(const char* msg): message_(msg)
+	CI_API CameraException(const char* msg): message_(msg)
 	{
 	}
 
-	virtual const char* what() const override
+	CI_API virtual const char* what() const override
 	{
 		return message_;
 	}

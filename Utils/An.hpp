@@ -31,9 +31,6 @@ private:
 };
 
 template <typename T>
-inline void AnFill(An<T>& an)
-{
-	static_assert(true, "Can't find implementation for class");
-}
+void AnFill(An<T>& an);
 
 } // namespace Utils
