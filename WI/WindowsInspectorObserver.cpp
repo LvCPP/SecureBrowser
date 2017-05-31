@@ -37,7 +37,7 @@ void WindowsInspectorObserver::Detach(const std::shared_ptr<IWindowsInspectorObs
 	}), observers_.end());
 }
 
-void WindowsInspectorObserver::Notify(char wnd_title, DWORD processID, wchar_t processname)
+void WindowsInspectorObserver::Notify(char wnd_title_, DWORD processID, wchar_t processname)
 {
 	// Remove any dead observers.  These are ones which have expired().
 	observers_.erase(std::remove_if(observers_.begin(), observers_.end(),
@@ -48,11 +48,11 @@ void WindowsInspectorObserver::Notify(char wnd_title, DWORD processID, wchar_t p
 
 	// Notify any valid observers of events.
 	std::for_each(observers_.cbegin(), observers_.cend(),
-		[wnd_title, processID, processname](const ObserverInfo& o)
+		[wnd_title_, processID, processname](const ObserverInfo& o)
 	{
 		auto observer = o.ptr.lock();
 		if (observer) {
-			observer->OnWindowChanged(wnd_title, processID,  processname);
+			observer->OnWindowChanged(wnd_title_, processID,  processname);
 		}
 	});
 }

@@ -16,9 +16,9 @@ public:
 	void Attach(const std::shared_ptr<IWindowsInspectorObserver>& observer);
 	void Detach(const std::shared_ptr<IWindowsInspectorObserver>& observer);
 private:
-	void Notify(char wnd_title, DWORD processID, wchar_t processname);
+	void Notify(char wnd_title_, DWORD processid_, wchar_t processname_);
 
-	char wnd_title;
+	char wnd_title_;
 	DWORD processID;
 	wchar_t processname;
 

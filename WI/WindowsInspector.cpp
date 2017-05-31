@@ -19,30 +19,30 @@ WindowsInspector::~WindowsInspector()
 BOOL CALLBACK WindowsInspector::EnumWindowsProc(HWND hwnd)
 {
 	char wnd_title_[255];
-	DWORD processid;
-	wchar_t processname[255];
+	DWORD processid_;
+	wchar_t processname_[255];
 	if (IsWindowEnabled(hwnd))
 	{
 		GetWindowTextA(hwnd, wnd_title_, sizeof(wnd_title_));
-		GetWindowThreadProcessId(hwnd, &processid);
-		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-		if (hSnapshot)
+		GetWindowThreadProcessId(hwnd, &processid_);
+		HANDLE handle_ = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		if (handle_)
 		{
 			PROCESSENTRY32 pe32;
 			pe32.dwSize = sizeof(PROCESSENTRY32);
-			if (Process32First(hSnapshot, &pe32)) {
+			if (Process32First(handle_, &pe32)) {
 				do
 				{
-					if (processid == pe32.th32ProcessID)
+					if (processid_ == pe32.th32ProcessID)
 					{
 					std::cout << "Tittle: " << wnd_title_ << std::endl;
-					std::cout << "Process Id: " << processid << std::endl;
+					std::cout << "Process Id: " << processid_ << std::endl;
 					std::wcout << "Process name: " <<pe32.szExeFile << std::endl << std::endl;
 					}
 				} 
-				while (Process32Next(hSnapshot, &pe32));
+				while (Process32Next(handle_, &pe32));
 			}
-			CloseHandle(hSnapshot);
+			CloseHandle(handle_);
 		}
 	}
 	return true;
