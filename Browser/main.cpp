@@ -66,9 +66,6 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	loginfo(*logger) << "User loged in. Start Browser";
-
-
 	// Inspectors setting up
 	KeyboardInspector ki;
 	SetupKeyboardInspector(ki);
@@ -99,6 +96,7 @@ int main(int argc, char* argv[])
 
 	cam_cap->Start();
 
+	loginfo(*logger) << "Start Browser";
 	Browser w;
 	w.showMaximized();
 	int result = a.exec();

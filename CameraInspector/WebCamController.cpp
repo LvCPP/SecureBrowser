@@ -1,8 +1,12 @@
 #include "WebCamController.h"
 #include "CameraException.h"
+#include <An.hpp>
+#include <Logger.h>
 #include <algorithm>
 
 using namespace CameraInspector;
+using namespace Utils;
+using namespace BrowserLogger;
 
 WebCamController::WebCamController()
 	: is_activated_(false)
@@ -36,6 +40,7 @@ void WebCamController::ActivateCamera(WebCam& camera)
 	// If user wants to activate camera, that isn't connected
 	if (activated_camera_ == cameras_.end())
 	{
+		logwarning(*An<Logger>()) << "Camera wasn't found";
 		throw CameraException("Camera wasn't found");
 	}
 

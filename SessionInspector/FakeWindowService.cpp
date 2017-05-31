@@ -1,5 +1,7 @@
 #include "FakeWindowService.h"
 #include "IFakeWindowServiceObserver.h"
+#include <An.hpp>
+#include <Logger.h>
 #include <windows.h>
 #include <Wtsapi32.h>
 #include <iostream>
@@ -8,7 +10,8 @@
 #include <thread>
 
 using namespace SI;
-
+using namespace BrowserLogger;
+using namespace Utils;
 
 void FakeWindowService::Start()
 {
@@ -87,6 +90,7 @@ bool FakeWindowService::StartWindowRoutine(HWND fake_window)
 #ifdef _DEBUG
 				std::cout << "Event happened\n";
 #endif //_DEBUG
+				logwarning(*An<Logger>()) << "Session changed";
 				Notify();
 			}
 

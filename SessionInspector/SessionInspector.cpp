@@ -1,11 +1,15 @@
 #pragma  comment(lib,"Wtsapi32.lib")
 #include "SessionInspector.h"
+#include <An.hpp>
+#include <Logger.h>
 #include <windows.h>
 #include <Wtsapi32.h>
 
 constexpr LPCSTR TERMINAL_SERVER_KEY = "SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\";
 constexpr LPCSTR GLASS_SESSION_ID = "GlassSessionId";
 
+using namespace BrowserLogger;
+using namespace Utils;
 using namespace SI;
 
 bool SessionInstector::IsCurrentSessionRemoteable()
@@ -14,6 +18,7 @@ bool SessionInstector::IsCurrentSessionRemoteable()
 	if (GetSystemMetrics(SM_REMOTESESSION))
 	{
 		is_remotable = true;
+		logwarning(*An<Logger>()) << "In remote session";
 	}
 	else
 	{
@@ -55,6 +60,7 @@ bool SessionInstector::IsInsideVBox()
 	if (CreateFile("\\\\.\\VBoxMiniRdrDN", GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL) != INVALID_HANDLE_VALUE)
 	{
+		logwarning(*An<Logger>()) << "Inside virtual box";
 		return true;
 	}
 
