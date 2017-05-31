@@ -4,6 +4,7 @@
 #include "FakeWindowService.h"
 #include "SessionInspector.h"
 #include "WebCameraCapture.h"
+#include "WindowsInspector.h"
 #include "PhotoMaker.h"
 #include "FileSystemFrameSaver.h"
 #include "FrameStorer.h"
@@ -19,6 +20,7 @@
 
 using namespace SecureBrowser;
 using namespace BrowserLogger;
+using namespace SBWindowsInspector;
 using namespace CameraInspector;
 using namespace SI;
 using namespace SBKeyboardInspector;
@@ -71,7 +73,10 @@ int main(int argc, char* argv[])
 	KeyboardInspector ki;
 	SetupKeyboardInspector(ki);
 	ki.Start();
-
+	
+	WindowsInspector wi;
+	wi.StartWindowsInspector();
+	
 	FakeWindowService fws;
 	fws.Start();
 	An<WebCameraCapture> cam_cap;
@@ -100,6 +105,7 @@ int main(int argc, char* argv[])
 
 	cam_cap->Stop();
 	fws.Stop();
+	wi.StopWindowsInspector();
 	ki.Stop();
 
 	loginfo(*logger) << "Program finished with code " << result;

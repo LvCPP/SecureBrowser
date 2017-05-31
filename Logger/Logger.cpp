@@ -43,6 +43,7 @@ void Logger::SetMinimumLogLevel(LogLevel minimum_log_level)
 
 void Logger::SetOutput(const std::ostream& write_to)
 {
+	std::unique_lock<std::mutex> lock(lock_writing_);
 	stream_.set_rdbuf(write_to.rdbuf());
 }
 

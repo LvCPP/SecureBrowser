@@ -68,7 +68,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>UNICODE;WIN32;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;QT_WEBENGINEWIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)SessionInspector\;$(SolutionDir)Utils\;$(SolutionDir)LoginApp2\;$(SolutionDir)HttpClient\;$(SolutionDir)CameraInspector\;$(SolutionDir)Login\;$(SolutionDir)Logger\;$(SolutionDir)KeyboardInspector\;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtANGLE;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)WI\;$(SolutionDir)SessionInspector\;$(SolutionDir)Utils\;$(SolutionDir)LoginApp2\;$(SolutionDir)HttpClient\;$(SolutionDir)CameraInspector\;$(SolutionDir)Login\;$(SolutionDir)Logger\;$(SolutionDir)KeyboardInspector\;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtANGLE;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -80,7 +80,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Build\Debug\;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Wtsapi32.lib;CameraInspector.lib;SessionInspector.lib;KeyboardInspector.lib;LoginApp2.lib;Login.lib;Logger.lib;qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5WebEngineWidgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WI.lib;Wtsapi32.lib;CameraInspector.lib;SessionInspector.lib;KeyboardInspector.lib;LoginApp2.lib;Login.lib;Logger.lib;qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5WebEngineWidgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -128,7 +128,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing browser.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I$(SolutionDir)SessionInspector" "-I$(SolutionDir)Utils" "-I$(SolutionDir)LoginApp2" "-I$(SolutionDir)HttpClient" "-I$(SolutionDir)CameraInspector" "-I$(SolutionDir)Login" "-I$(SolutionDir)Logger" "-I$(SolutionDir)KeyboardInspector" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I$(QTDIR)\include\QtANGLE" "-I$(SolutionDit)Logger" "-I$(NOINHERIT)\."</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I$(SolutionDir)WI" "-I$(SolutionDir)SessionInspector" "-I$(SolutionDir)Utils" "-I$(SolutionDir)LoginApp2" "-I$(SolutionDir)HttpClient" "-I$(SolutionDir)CameraInspector" "-I$(SolutionDir)Login" "-I$(SolutionDir)Logger" "-I$(SolutionDir)KeyboardInspector" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtWebEngineWidgets" "-I$(QTDIR)\include\QtANGLE" "-I$(NOINHERIT)\."</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing browser.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
