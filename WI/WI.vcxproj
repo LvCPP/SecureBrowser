@@ -83,9 +83,12 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="WindowsInspector.cpp" />
+    <ClCompile Include="WindowsInspectorObserver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IWindowsInspectorObserver.h" />
     <ClInclude Include="WindowsInspector.h" />
+    <ClInclude Include="WindowsInspectorObserver.h" />
     <ClInclude Include="WindowsInspectorUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -20,8 +20,6 @@ public:
 	WINDOWSINSPECTOR_API void StopWindowsInspector();
 	void StopAndWait();
 	static BOOL CALLBACK EnumWindowsProc(HWND hwnd);
-	static void showProcessInformation();
-
 
 protected:
 	void MessageLoop();

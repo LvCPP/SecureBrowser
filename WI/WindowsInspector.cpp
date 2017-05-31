@@ -4,10 +4,8 @@
 using namespace SBWindowsInspector;
 
 HWINEVENTHOOK window_hook;
-//HHOOK window_hook = NULL;
 HINSTANCE hInst_;
 MSG message;
-DWORD pid;
 
 WindowsInspector::WindowsInspector()
 {
@@ -20,45 +18,34 @@ WindowsInspector::~WindowsInspector()
 
 BOOL CALLBACK WindowsInspector::EnumWindowsProc(HWND hwnd)
 {
-	char wnd_title[255] = "";
+	char wnd_title[255];
 	DWORD processID;
 	wchar_t processname[255];
-	//char processname[255] = "";
 	if (IsWindowEnabled(hwnd))
 	{
 		GetWindowTextA(hwnd, wnd_title, sizeof(wnd_title));
 		GetWindowThreadProcessId(hwnd, &processID);
-		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION
-			| PROCESS_VM_READ, FALSE, processID);
-		auto d = GetLastError();
-		/*GetModuleBaseName*/GetModuleFileNameEx(hProcess, NULL, processname, sizeof(processname));
-		GetProcessImageFileName(hProcess, processname, sizeof(processname));
-		//GetCurrentProcess(hProcess, NULL, processname, sizeof(processname))
-		//OutputDebugStringA(wnd_title.c_str());
-		std::cout << wnd_title << std::endl;
-		std::cout << processID << std::endl;
-		std::wcout << processname << std::endl;
-		OutputDebugString(processname);
-		CloseHandle(hProcess);
-
+		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		if (hSnapshot)
+		{
+			PROCESSENTRY32 pe32;
+			pe32.dwSize = sizeof(PROCESSENTRY32);
+			if (Process32First(hSnapshot, &pe32)) {
+				do
+				{
+					if (processID == pe32.th32ProcessID)
+					{
+					std::cout << "Tittle: " << wnd_title << std::endl;
+					std::cout << "Process Id: " << processID << std::endl;
+					std::wcout << "Process name: " <<pe32.szExeFile << std::endl;
+					}
+				} 
+				while (Process32Next(hSnapshot, &pe32));
+			}
+			CloseHandle(hSnapshot);
+		}
 	}
 	return true;
-}
-
-void WindowsInspector::showProcessInformation() {
-	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	if (hSnapshot) {
-		PROCESSENTRY32 pe32;
-		pe32.dwSize = sizeof(PROCESSENTRY32);
-		if (Process32First(hSnapshot, &pe32)) {
-			do {
-				if (pid == pe32.th32ProcessID)
-					std::wcout << pe32.szExeFile << std::endl;
-			} while (Process32Next(hSnapshot, &pe32));
-		}
-		std::cout << "Here" << std::endl;
-		CloseHandle(hSnapshot);
-	}
 }
 
 
@@ -77,12 +64,10 @@ void CALLBACK WinEventProc(
 	case EVENT_OBJECT_CREATE:
 		OutputDebugStringA("Create: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
-		WindowsInspector::showProcessInformation();
 		break;
 	case EVENT_SYSTEM_MOVESIZEEND:
 		OutputDebugStringA("Moved: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
-		WindowsInspector::showProcessInformation();
 		break;
 	case EVENT_SYSTEM_MINIMIZESTART:
 		OutputDebugStringA("Minimized: \n");
@@ -116,7 +101,6 @@ void WindowsInspector::MessageLoop()
 	}
 	
 }
-
 
 void WindowsInspector::StartWindowsInspector()
 {
