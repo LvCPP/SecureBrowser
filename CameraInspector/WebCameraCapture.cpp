@@ -71,7 +71,7 @@ void WebCameraCapture::ProcessHandlers()
 		{
 			(*it)->ProcessFrame(ReadFromCamera());
 		}
-		// I think we should unload the system by calling Sleep in this loop
+		Sleep(0);
 	}
 }
 

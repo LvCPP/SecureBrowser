@@ -137,9 +137,9 @@ namespace Utils
 {
 
 template <> 
-void AnFill<CameraInspector::WebCamController>(An<CameraInspector::WebCamController>& an)
+void AnFill<WebCamController>(An<WebCamController>& an)
 {
-	static CameraInspector::WebCamController wcc;
+	static WebCamController wcc;
 	an = &wcc;
 }
 

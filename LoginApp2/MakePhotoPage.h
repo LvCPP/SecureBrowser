@@ -51,7 +51,7 @@ private:
 	QPushButton* accept_button_;
 	QPushButton* decline_button_;
 		
-	std::thread worker_;
+	mutable std::thread worker_;
 	mutable bool is_enabled_;
 	bool is_update_;
 	bool photo_made_;

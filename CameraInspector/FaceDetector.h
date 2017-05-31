@@ -1,7 +1,7 @@
 #pragma once
 #include "IFrameHandler.h"
 #include "IFaceDetectorObserver.h"
-#include "Frame.h"
+#include "StableFrame.h"
 #include <vector>
 #include <memory>
 #include <chrono>
@@ -24,7 +24,8 @@ public:
 	CI_API void SetFrequency(std::chrono::seconds frequency);
 	
 private:
-	void Notify(int face_count);
+	void Notify(int face_count, StableFrame frame_to_save);
+
 	int faces_quantity_;
 	std::chrono::seconds frequency_;
 	std::chrono::steady_clock::time_point last_time_proceeded_;

@@ -1,5 +1,5 @@
 #include "FaceDetector.h"
-#include "Frame.h"
+#include "StableFrame.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -12,7 +12,7 @@ using namespace std;
 
 namespace
 {
-constexpr char* CASCADE_FILE_PATH = "../../CameraInspector/Recources/haarcascade_frontalface_alt.xml";
+constexpr char* CASCADE_FILE_PATH = R"(Resources\haarcascade_frontalface_alt.xml)";
 constexpr double SCALE_FACTOR = 1.1;
 constexpr int MIN_NEIGHBORS = 2;
 constexpr int FLAGS = cv::CASCADE_SCALE_IMAGE;
@@ -30,9 +30,9 @@ public:
 	{
 	}
 	cv::CascadeClassifier& GetFaceCascade() { return face_cascade_; }
+
 private:
 	cv::CascadeClassifier face_cascade_;
-	//std::shared_ptr<CameraInspector::PhotoMaker> make_photo_;
 };
 
 struct ObserverInfo
@@ -77,7 +77,7 @@ void FaceDetector::Detach(const std::shared_ptr<IFaceDetectorObserver>& observer
 	}), observers_.end());
 }
 
-void FaceDetector::Notify(int face_count)
+void FaceDetector::Notify(int face_count, StableFrame frame_to_save)
 {
 	// Remove any dead observers.  These are ones which have expired().
 	observers_.erase(std::remove_if(observers_.begin(), observers_.end(),
@@ -88,11 +88,11 @@ void FaceDetector::Notify(int face_count)
 
 	// Notify any valid observers of events.
 	std::for_each(observers_.cbegin(), observers_.cend(),
-		[face_count](const ObserverInfo& o)
+		[&face_count, &frame_to_save](const ObserverInfo& o)
 	{
 		auto observer = o.ptr.lock();
 		if (observer) {
-			observer->OnFaceQuantityChanged(face_count);
+			observer->OnFaceQuantityChanged(face_count, frame_to_save);
 		}
 	});
 }
@@ -105,10 +105,13 @@ void FaceDetector::SetFrequency(std::chrono::seconds frequency)
 void FaceDetector::ProcessFrame(const Frame& frame)
 {
 	auto currentTime = chrono::high_resolution_clock::now();
+	
 	bool isTimeToProceed = chrono::duration_cast<chrono::seconds>
 		(currentTime - last_time_proceeded_).count() > frequency_.count();
+
 	if (!isTimeToProceed)
 		return;
+
 	last_time_proceeded_ = currentTime;
 	cv::Mat cv_frame = frame.GetImpl();
 	cv::Mat frame_gray;
@@ -120,10 +123,6 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 
 	pimpl_->GetFaceCascade().detectMultiScale(frame_gray, faces, SCALE_FACTOR, MIN_NEIGHBORS, FLAGS, cv::Size(30, 30));
 
-	const size_t new_faces_quantity = faces.size();
-	if(new_faces_quantity != faces_quantity_)
-		Notify(static_cast<int>(new_faces_quantity));
-
 #ifdef _DEBUG
 	for (size_t ic = 0; ic < faces.size(); ic++) // Iterate through all current elements (detected faces)
 	{
@@ -131,7 +130,11 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 		cv::Point pt2((faces[ic].x + faces[ic].width), (faces[ic].y + faces[ic].height));
 		rectangle(cv_frame, pt1, pt2, COLOR_GREEN, THICKNESS, LINE_TYPE, SHIFT);
 	}
-	imshow("Debug window", cv_frame);
-	cv::waitKey(10);
+//	imshow("Debug window", cv_frame);
+//	cv::waitKey(10);
 #endif // DEBUG
+
+	const size_t new_faces_quantity = faces.size();
+	if (new_faces_quantity != faces_quantity_)
+		Notify(static_cast<int>(new_faces_quantity), frame);
 }

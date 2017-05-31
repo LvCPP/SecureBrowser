@@ -48,6 +48,11 @@ int MakePhotoPage::nextId() const
 	}
 	else if(photo_made_)
 	{
+		is_enabled_ = false;
+
+		if (worker_.joinable())
+			worker_.join();
+
 		return LoginApp2::LAST_PAGE;
 	}
 }

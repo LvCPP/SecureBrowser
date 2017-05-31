@@ -55,10 +55,6 @@ namespace Utils
 {
 
 template <>
-inline void AnFill<BrowserLogger::Logger>(An<BrowserLogger::Logger>& an)
-{
-	static BrowserLogger::Logger instance;
-	an = &instance;
-}
+LOGGER_API void AnFill<BrowserLogger::Logger>(An<BrowserLogger::Logger>& an);
 
 } // namespace Utils

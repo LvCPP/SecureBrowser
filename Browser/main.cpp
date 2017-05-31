@@ -1,15 +1,26 @@
 #include "browser.h"
 #include <Logger.h>
 #include <KeyboardInspector.h>
+#include "FakeWindowService.h"
+#include "SessionInspector.h"
+#include "WebCameraCapture.h"
+#include "PhotoMaker.h"
+#include "FileSystemFrameSaver.h"
+#include "FrameStorer.h"
+#include "FaceDetector.h"
+#include "CameraException.h"
+#include "FaceCountObserver.h"
 #include <LoginApp2.h>
 #include <WebCamController.h>
 #include <QtWidgets/QApplication>
 #include <windows.h>
 #include <fstream>
+#include <chrono>
 
-using namespace CameraInspector;
 using namespace SecureBrowser;
 using namespace BrowserLogger;
+using namespace CameraInspector;
+using namespace SI;
 using namespace SBKeyboardInspector;
 using namespace Login;
 using namespace Utils;
@@ -41,6 +52,7 @@ int main(int argc, char* argv[])
 	loginfo(*logger) << "Program initialized";
 	
 	QApplication a(argc, argv);
+
 	An<WebCamController>()->RegisterForDeviceNotification();
 	LoginApp2 app;
 	
@@ -54,19 +66,44 @@ int main(int argc, char* argv[])
 
 	loginfo(*logger) << "User loged in. Start Browser";
 
+
+	// Inspectors setting up
 	KeyboardInspector ki;
 	SetupKeyboardInspector(ki);
-
 	ki.Start();
+
+	FakeWindowService fws;
+	fws.Start();
+	An<WebCameraCapture> cam_cap;
+
+	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>();
+
+	std::shared_ptr<IFrameSaver> shared_saver = std::make_shared<FileSystemFrameSaver>(FileSystemFrameSaver());
+	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetPathToSave("");
+
+	std::shared_ptr<PhotoMaker> shared_maker = std::make_shared<PhotoMaker>(PhotoMaker());
+	shared_maker->SetFrameSaver(shared_saver);
+
+	const std::shared_ptr<FaceCountObserver> observer = std::make_shared<FaceCountObserver>(shared_maker);
+	face_detector->Attach(observer);
+
+	cam_cap->AddFrameHandler(shared_maker);
+	cam_cap->AddFrameHandler(face_detector);
+
+	face_detector->SetFrequency(std::chrono::seconds(1));
+
+	cam_cap->Start();
 
 	Browser w;
 	w.showMaximized();
 	int result = a.exec();
 
-	loginfo(*logger) << "Program finished with code " << result;
-
-	Cleanup(file);
+	cam_cap->Stop();
+	fws.Stop();
 	ki.Stop();
+
+	loginfo(*logger) << "Program finished with code " << result;
+	Cleanup(file);
 	return result;
 }
 

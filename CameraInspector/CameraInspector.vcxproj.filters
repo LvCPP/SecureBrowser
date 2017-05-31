@@ -70,7 +70,7 @@
       <Filter>ESCAPI</Filter>
     </ClCompile>
     <ClCompile Include="FaceCountObserver.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\CameraInspector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

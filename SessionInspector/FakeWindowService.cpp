@@ -10,10 +10,9 @@
 using namespace SI;
 
 
-bool FakeWindowService::Start()
+void FakeWindowService::Start()
 {
 	worker_ = std::thread(&FakeWindowService::StartWindowRoutine, this, fake_window_handle_);
-	return true;
 }
 
 bool FakeWindowService::Stop()
@@ -61,14 +60,14 @@ void FakeWindowService::Notify()
 
 bool FakeWindowService::StartWindowRoutine(HWND fake_window)
 {
-	fake_window_handle_ = ::CreateWindowA("STATIC", "fake", WS_MINIMIZE, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
-	::SetWindowTextA(fake_window_handle_, "Fake Window!");
+	fake_window_handle_ = CreateWindowA("STATIC", "fake", WS_MINIMIZE, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
+	SetWindowTextA(fake_window_handle_, "Fake Window!");
 	if (fake_window_handle_ == NULL)
 	{
 		return false;
 	}
 
-	::WTSRegisterSessionNotification(fake_window_handle_, NOTIFY_FOR_ALL_SESSIONS);
+	WTSRegisterSessionNotification(fake_window_handle_, NOTIFY_FOR_ALL_SESSIONS);
 
 	MSG msg;
 	BOOL result;

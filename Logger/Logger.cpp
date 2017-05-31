@@ -23,12 +23,9 @@ Logger::~Logger()
 	is_running_ = false;
 	Flush();
 
-	//Notify all threads to end waiting for messages
-	wait_message_.notify_all();
-	if (write_thread_.joinable())
-	{
-		write_thread_.join();
-	}
+	//Thread will be killed by terminate()
+	//Cannot join, because dtor calls in this dtor automatically
+	write_thread_.detach();
 }
 
 void Logger::Flush()
@@ -67,7 +64,7 @@ void Logger::WriteThread()
 		std::unique_lock<std::mutex> lock(lock_waiting_message_);
 		wait_message_.wait(lock);
 
-		if (!message_queue_.IsEmpty())
+		while (!message_queue_.IsEmpty())
 		{
 			TryWrite();
 		}
@@ -107,3 +104,15 @@ void Logger::TryWrite()
 		//ignore this exception, it's happened because other thread got message faster
 	}
 }
+
+namespace Utils
+{
+
+template <> 
+void AnFill<Logger>(An<Logger>& an)
+{
+	static Logger instance;
+	an = &instance;
+}
+
+} // namespace Utils
