@@ -19,8 +19,9 @@ public:
 	WINDOWSINSPECTOR_API void StartWindowsInspector();
 	WINDOWSINSPECTOR_API void StopWindowsInspector();
 	void StopAndWait();
-	static LRESULT CALLBACK CBTProc(INT code, WPARAM wparam, LPARAM lparam);
 	static BOOL CALLBACK EnumWindowsProc(HWND hwnd);
+	static void showProcessInformation();
+
 
 protected:
 	void MessageLoop();
