@@ -2,8 +2,9 @@
 
 using namespace SBWindowsInspector;
 
-HHOOK window_hook;
-HINSTANCE hInst_ = NULL;
+HWINEVENTHOOK window_hook;
+//HHOOK window_hook = NULL;
+HINSTANCE hInst_;
 MSG message;
 
 WindowsInspector::WindowsInspector()
@@ -15,19 +16,20 @@ WindowsInspector::~WindowsInspector()
 	StopAndWait();
 }
 
-BOOL CALLBACK WindowsInspector::EnumWindowsProc()
+BOOL CALLBACK WindowsInspector::EnumWindowsProc(HWND hwnd)
 {
-	HWND hwnd = GetForegroundWindow();
 	char wnd_title[255] = "";
 	DWORD* processID = new DWORD;
-	TCHAR processname[255];
-	if (IsWindowVisible(hwnd))
+	/*LPSTR processname;*/
+	char processname[255] = "";
+	if (IsWindowEnabled(hwnd))
 	{
 		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION 
 			| PROCESS_VM_READ , FALSE, *processID);
-		GetWindowText(hwnd, (LPWSTR)wnd_title, sizeof(wnd_title));
+		GetWindowTextA(hwnd, wnd_title, sizeof(wnd_title));
 		GetWindowThreadProcessId(hwnd, processID);
-		GetModuleBaseName(hProcess, NULL, processname, sizeof(processname));
+		GetModuleBaseNameA(hProcess, NULL, processname, sizeof(processname));
+		//OutputDebugStringA(wnd_title.c_str());
 		std::cout << wnd_title << std::endl;
 		std::cout << *processID << std::endl;
 		std::cout << processname << std::endl;
@@ -35,52 +37,63 @@ BOOL CALLBACK WindowsInspector::EnumWindowsProc()
 	return true;
 }
 
-LRESULT CALLBACK WindowsInspector::CBTProc(INT code, WPARAM wparam, LPARAM lparam)
+void CALLBACK WinEventProc(
+	HWINEVENTHOOK hWinEventHook,
+	DWORD         event,
+	HWND          hwnd,
+	LONG          idObject,
+	LONG          idChild,
+	DWORD         dwEventThread,
+	DWORD         dwmsEventTime
+)
 {
-	if (code < 0)
-		return CallNextHookEx(NULL, code, wparam, lparam);
-	switch (code)
+	switch (event)
 	{
-	case  HCBT_ACTIVATE:
-		WindowsInspector::EnumWindowsProc();
-		OutputDebugStringA("Window activated\n");
+	case EVENT_OBJECT_CREATE:
+		OutputDebugStringA("Create: \n");
+		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
-	case HCBT_CREATEWND:
-		OutputDebugStringA("Window created\n");
-		WindowsInspector::EnumWindowsProc();
+	case EVENT_SYSTEM_MOVESIZEEND:
+		OutputDebugStringA("Moved: \n");
+		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
-	case HCBT_DESTROYWND:
-		OutputDebugStringA("Window destroyed\n");
-		WindowsInspector::EnumWindowsProc();
+	case EVENT_SYSTEM_MINIMIZEEND:
+		OutputDebugStringA("Minimized: \n");
+		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
-	case HCBT_MINMAX:
-		OutputDebugStringA("Window minimize or maximized\n");
-		WindowsInspector::EnumWindowsProc();
+	case EVENT_SYSTEM_SWITCHEND:
+		OutputDebugStringA("Switched: \n");
+		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
-	case HCBT_MOVESIZE:
-		OutputDebugStringA("Window moved\n");
+	case EVENT_OBJECT_DESTROY:
+		OutputDebugStringA("Destroyed: \n");
+		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
-	case HCBT_SETFOCUS:
-		OutputDebugStringA("Focus on window:\n");
+	case EVENT_OBJECT_FOCUS:
+		OutputDebugStringA("Focus on window: \n");
+		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
 	default:
 		break;
 	}
-	return CallNextHookEx(NULL, code, wparam, lparam);
+	
 }
 
 void WindowsInspector::MessageLoop()
 {
-	window_hook = SetWindowsHookEx(WH_CBT, WindowsInspector::CBTProc, GetModuleHandleA(0), 0);
+	window_hook = SetWinEventHook(EVENT_MIN, EVENT_MAX, hInst_, WinEventProc, 0, 0, WINEVENT_INCONTEXT);
 	while (GetMessage(&message, NULL, 0, 0))
 	{
 		TranslateMessage(&message);
 		DispatchMessage(&message);
 	}
+	
 }
+
 
 void WindowsInspector::StartWindowsInspector()
 {
+
 	worker_ = std::thread(&WindowsInspector::MessageLoop, this);
 	OutputDebugStringA("WINDOWS INSPECTOR STARTED WORKING\n");
 }
@@ -89,7 +102,7 @@ void WindowsInspector::StopWindowsInspector()
 {
 	PostThreadMessage(GetThreadId(worker_.native_handle()), WM_QUIT, 0, 0);
 	OutputDebugStringA("WINDOWS INSPECTOR STOPPED WORKING\n");
-	UnhookWindowsHookEx(window_hook);
+	UnhookWinEvent(window_hook);
 }
 
 void WindowsInspector::StopAndWait()

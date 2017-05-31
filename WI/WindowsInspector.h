@@ -20,7 +20,7 @@ public:
 	WINDOWSINSPECTOR_API void StopWindowsInspector();
 	void StopAndWait();
 	static LRESULT CALLBACK CBTProc(INT code, WPARAM wparam, LPARAM lparam);
-	static BOOL CALLBACK EnumWindowsProc();
+	static BOOL CALLBACK EnumWindowsProc(HWND hwnd);
 
 protected:
 	void MessageLoop();
