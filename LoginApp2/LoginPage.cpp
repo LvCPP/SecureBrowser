@@ -1,5 +1,6 @@
 ﻿#include "LoginPage.h"
-
+#include <An.hpp>
+#include <Logger.h>
 #include <QString>
 #include <QLabel>
 #include <QFont>
@@ -10,7 +11,8 @@
 #include <string>
 
 using namespace Login;
-
+using namespace Utils;
+using namespace BrowserLogger;
 
 static const QFont arial_12("Arial", 12);
 
@@ -136,11 +138,13 @@ bool LoginPage::CheckLogin()
 	{
 		login_checked_ = true;
 		QMessageBox::information(this, "Login", "User found");
+		
+		loginfo(*An<Logger>()) << "User successfully logged in";
 		return true;
 	}
 	else
 	{
-		QMessageBox::warning(this, "Login", "Not correct. "
+		QMessageBox::warning(this, "Login", "Credentials invalid. "
 			"Please provide correct username and password");
 		return false;
 	}

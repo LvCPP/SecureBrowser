@@ -40,13 +40,9 @@ int main(int argc, char* argv[])
 	{
 		MessageBox(
 			NULL,
-<<<<<<< HEAD
-			(LPCWSTR)L"Program is already running!",
-			(LPCWSTR)L"Error",
-=======
+
 			L"Program is already running!",
 			L"Error",
->>>>>>> 64f2ca84b5e929ead48ee7078b279fc393021a2e
 			MB_ICONERROR
 		);
 		return -1;
@@ -70,14 +66,8 @@ int main(int argc, char* argv[])
 		Cleanup(file);
 		return 0;
 	}
-
-<<<<<<< HEAD
-
-	loginfo(*logger) << "User loged in. Start Browser";
-
-=======
-	// Inspectors setting up
->>>>>>> 64f2ca84b5e929ead48ee7078b279fc393021a2e
+	
+	// Setting up inspectors
 	KeyboardInspector ki;
 	SetupKeyboardInspector(ki);
 	ki.Start();

@@ -46,16 +46,14 @@ int MakePhotoPage::nextId() const
 	if (camera_select_combobox_->currentText() == "")
 		return LoginApp2::MAKE_PHOTO_PAGE;
 	else if(photo_made_)
-<<<<<<< HEAD
-=======
 	{
 		is_enabled_ = false;
 
 		if (worker_.joinable())
 			worker_.join();
 
->>>>>>> 64f2ca84b5e929ead48ee7078b279fc393021a2e
 		return LoginApp2::LAST_PAGE;
+	}
 }
 
 void MakePhotoPage::initializePage()
@@ -188,7 +186,7 @@ void MakePhotoPage::DeclineButtonClicked()
 void Login::MakePhotoPage::AcceptButtonClicked()
 {
 	accept_button_->setDisabled(true);
-	decline_button_->setDisabled(true);
+
 	FileSystemFrameSaver saver;
 	saver.SetNameToSave("ID_photo");
 	saver.Save(id_frame_);

@@ -11,14 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-<<<<<<< HEAD:SessionInspectorTest/SessionInspectorTest.vcxproj
-    <ProjectGuid>{F21C6391-29B6-4776-8D86-1353040C5448}</ProjectGuid>
-    <RootNamespace>SessionInspectorTest</RootNamespace>
-=======
     <ProjectGuid>{B8AACB73-C442-429D-917E-4A320DFF78B0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WI</RootNamespace>
->>>>>>> 64f2ca84b5e929ead48ee7078b279fc393021a2e:WI/WI.vcxproj
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
