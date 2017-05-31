@@ -16,13 +16,14 @@ using namespace Utils;
 
 void SetupKeyboardInspector(KeyboardInspector& ki);
 bool IsAlreadyRunning();
+void WaitTillAnyCameraConnected();
 void Cleanup(std::ofstream& file_to_close);
 
 int main(int argc, char* argv[])
 {
-	An<WebCamController>()->RegisterForDeviceNotification();
+	WaitTillAnyCameraConnected();
 
-	if (!IsAlreadyRunning())
+	if (IsAlreadyRunning())
 	{
 		MessageBox(
 			NULL,
@@ -196,9 +197,31 @@ bool IsAlreadyRunning()
 	switch (GetLastError())
 	{
 	case ERROR_ALREADY_EXISTS:
-		return false;	// Quit. Mutex is released automatically;
+		return true;	// Quit. Mutex is released automatically;
 	default:			// Mutex successfully created
-		return true;
+		return false;
+	}
+}
+
+void WaitTillAnyCameraConnected()
+{
+	while (An<WebCamController>()->GetCamerasCount() == 0)
+	{
+		int choose = MessageBox(
+			NULL,
+			L"The program requires a webcam. Connect to continue",
+			L"Error",
+			MB_ICONSTOP | MB_RETRYCANCEL | MB_DEFBUTTON4
+		);
+
+		switch (choose)
+		{
+		case IDCANCEL:
+			exit(-1);
+		default:
+			// Retry pressed
+			break;
+		}
 	}
 }
 
