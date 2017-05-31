@@ -43,11 +43,6 @@ private:
 namespace Utils
 {
 
-template <>
-CI_API inline void AnFill<CameraInspector::WebCameraCapture>(An<CameraInspector::WebCameraCapture>& an)
-{
-	static CameraInspector::WebCameraCapture wcc;
-	an = &wcc;
-}
+template<> CI_API void AnFill<CameraInspector::WebCameraCapture>(An<CameraInspector::WebCameraCapture>& an);
 
-} // namespace Utils
+} // namespace CameraInspector

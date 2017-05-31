@@ -8,15 +8,7 @@ WebCamController::WebCamController()
 	: is_activated_(false)
 {
 	setupESCAPI();
-	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this, std::placeholders::_1));
 	Refresh();
-}
-
-WebCamController::~WebCamController()
-{
-	unregisterForDeviceNotification();
-	if (is_activated_)
-		activated_camera_->DeInitialize();
 }
 
 std::vector<std::string> WebCamController::ListNamesOfCameras() const
@@ -103,6 +95,16 @@ void WebCamController::Refresh(bool is_arriving)
 		callback_();
 }
 
+void WebCamController::RegisterForDeviceNotification()
+{
+	registerForDeviceNotification(std::bind(&WebCamController::Refresh, this, std::placeholders::_1));
+}
+
+void WebCamController::UnregisterForDeviceNotification()
+{
+	unregisterForDeviceNotification();
+}
+
 void WebCamController::SetRefreshCallback(std::function<void()> callback)
 {
 	callback_ = callback;
@@ -129,4 +131,16 @@ WebCam WebCamController::GetActiveCamera() const
 	{
 		throw CameraException("Camera is not available right now");
 	}
+}
+
+namespace Utils
+{
+
+template <> 
+void AnFill<CameraInspector::WebCamController>(An<CameraInspector::WebCamController>& an)
+{
+	static CameraInspector::WebCamController wcc;
+	an = &wcc;
+}
+
 }

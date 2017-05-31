@@ -14,24 +14,22 @@ using namespace SBKeyboardInspector;
 using namespace Login;
 using namespace Utils;
 
+void SetupKeyboardInspector(KeyboardInspector& ki);
 bool IsAlreadyRunning();
+void Cleanup(std::ofstream& file_to_close);
 
 int main(int argc, char* argv[])
 {
-	// test call Singletone from different modules (next time it will be called from LoginApp2)
-	An<WebCamController>()->GetCameras();	
+	An<WebCamController>()->RegisterForDeviceNotification();
 
 	if (!IsAlreadyRunning())
 	{
 		MessageBox(
 			NULL,
-			//(LPCWSTR)
 			L"Program is already running!",
-			//(LPCWSTR)
 			L"Error",
 			MB_ICONERROR
 		);
-
 		return -1;
 	}
 
@@ -49,15 +47,30 @@ int main(int argc, char* argv[])
 	if (!app.exec())
 	{
 		logerror(*logger) << "User aborted logging in. Finish program.";
-		logger->Flush();
-		file.close();
+		Cleanup(file);
 		return 0;
 	}
 
 	loginfo(*logger) << "User loged in. Start Browser";
 
 	KeyboardInspector ki;
+	SetupKeyboardInspector(ki);
 
+	ki.Start();
+
+	Browser w;
+	w.showMaximized();
+	int result = a.exec();
+
+	loginfo(*logger) << "Program finished with code " << result;
+
+	Cleanup(file);
+	ki.Stop();
+	return result;
+}
+
+void SetupKeyboardInspector(KeyboardInspector& ki)
+{
 	// TAB
 	ki.IgnoreKeySequence(KEY_LALT + KEY_TAB);
 	ki.IgnoreKeySequence(KEY_RALT + KEY_TAB);
@@ -174,19 +187,6 @@ int main(int argc, char* argv[])
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_P);
 	ki.IgnoreKeySequence(KEY_LCONTROL + KEY_S);
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_S);
-
-	ki.Start();
-
-	Browser w;
-	w.showMaximized();
-	int result = a.exec();
-
-	loginfo(*logger) << "Program finished with code " << result;
-	logger->Flush();
-	file.close();
-
-	ki.Stop();
-	return result;
 }
 
 bool IsAlreadyRunning()
@@ -200,4 +200,12 @@ bool IsAlreadyRunning()
 	default:			// Mutex successfully created
 		return true;
 	}
+}
+
+void Cleanup(std::ofstream& file_to_close)
+{
+	An<Logger>()->Flush();
+	An<WebCamController>()->UnregisterForDeviceNotification();
+
+	file_to_close.close();
 }

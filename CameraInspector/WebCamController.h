@@ -15,11 +15,13 @@ class WebCamController
 {
 public:
 	CI_API WebCamController();
-	CI_API ~WebCamController();
 
 	CI_API std::vector<std::string> ListNamesOfCameras() const;
 	CI_API void ActivateCamera(WebCam&);
 	CI_API void Refresh(bool is_arriving = false);
+
+	CI_API void RegisterForDeviceNotification();
+	CI_API void UnregisterForDeviceNotification();
 
 	CI_API void SetRefreshCallback(std::function<void()> callback);
 	CI_API std::vector<WebCam>& GetCameras() noexcept;
@@ -39,11 +41,6 @@ private:
 namespace Utils
 {
 
-template <>
-inline void AnFill<CameraInspector::WebCamController>(An<CameraInspector::WebCamController>& an)
-{
-	static CameraInspector::WebCamController wcc;
-	an = &wcc;
-}
+template <> CI_API void AnFill<CameraInspector::WebCamController>(An<CameraInspector::WebCamController>& an);
 
 } // namespace Utils
