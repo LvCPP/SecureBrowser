@@ -16,24 +16,6 @@
 #include <QAbstractButton>
 #include <QString>
 
-//#include <QWizardPage>
-//#include <QLabel>
-//#include <QPushButton>
-//#include <QLineEdit>
-//#include <QComboBox>
-//#include <QCheckBox>
-//#include <QMessageBox>
-//
-//
-//#include <QDebug>
-//
-
-//
-//#include <iostream>
-//#include <fstream>
-//
-//#include <string>
-
 namespace Login
 {
 
@@ -54,6 +36,7 @@ public:
 	};
 
 	void SetPageSequence();
+
 	void SetFirstRunSetting();
 	bool FirstRun();
 	void RemoveFirstRunSetting();

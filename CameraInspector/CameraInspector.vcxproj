@@ -15,7 +15,7 @@
     <ProjectGuid>{A15C1CDB-9898-4D4A-AC5D-801911C5C87B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CameraInspector</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

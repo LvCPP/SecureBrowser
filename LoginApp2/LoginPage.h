@@ -5,6 +5,14 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <functional>
+#include <memory>
+
+#include <iostream>
+#include <iostream>
+#include <sstream>
+
+#include "HttpClientUtils.h"
+#include "HttpClient.h"
 
 namespace Login
 {
@@ -16,6 +24,9 @@ public:
 	LoginPage(QWidget *parent = 0);
 	~LoginPage();
 
+	/*void LoginCheck();*/
+	/*void MoodleAuthenticated();*/
+		
 	int nextId() const override;
 	
 private:
@@ -29,15 +40,14 @@ private:
 	void CreateAgreeLabel();
 	void CreateLoginButton();
 
-	void MoodleAuthenticated();
-	
-	bool login_checked_;
 	QCheckBox* agree_checkbox_;
 	QPushButton* login_button_;
 	QLineEdit* username_lineedit_;
 	QLineEdit* password_lineedit_;
+	bool login_checked_;
 
 private slots:
 	bool CheckLogin();
 };
+
 }

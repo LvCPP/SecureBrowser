@@ -22,10 +22,8 @@ int main(int argc, char* argv[])
 	{
 		MessageBox(
 			NULL,
-			//(LPCWSTR)
-			L"Program is already running!",
-			//(LPCWSTR)
-			L"Error",
+			(LPCWSTR)L"Program is already running!",
+			(LPCWSTR)L"Error",
 			MB_ICONERROR
 		);
 
@@ -50,6 +48,7 @@ int main(int argc, char* argv[])
 		file.close();
 		return 0;
 	}
+
 
 	loginfo(*logger) << "User loged in. Start Browser";
 

@@ -103,9 +103,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="LoginApp2.rc" />
   </ItemGroup>
 </Project>

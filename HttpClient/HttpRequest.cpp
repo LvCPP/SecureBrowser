@@ -35,6 +35,8 @@ std::map<std::string, std::string> HttpRequest::GetHeaders()
 {
 	std::map<std::string, std::string> request_headers;
 
+	auto h = request_->headers();
+
 	for (auto it = request_->headers().begin(); it != request_->headers().end(); ++it)
 	{
 		request_headers.emplace(to_utf8string(it->first), to_utf8string(it->second));
