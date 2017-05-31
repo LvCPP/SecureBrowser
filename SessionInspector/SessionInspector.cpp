@@ -49,3 +49,17 @@ bool SessionInstector::IsCurrentSessionRemoteable()
 	}
 	return is_remotable;
 }
+
+bool SessionInstector::IsInsideVBox()
+{
+	if (CreateFile("\\\\.\\VBoxMiniRdrDN", GENERIC_READ, FILE_SHARE_READ,
+		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL) != INVALID_HANDLE_VALUE)
+	{
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}

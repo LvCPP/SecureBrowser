@@ -7,9 +7,10 @@ using namespace SI;
 void main()
 {
 	FakeWindowService fws;
-	std::cout << SessionInstector::IsCurrentSessionRemoteable();
+	std::cout << SessionInstector::IsInsideVPC()<<std::endl;
+	std::cout << SessionInstector::IsCurrentSessionRemoteable()<<std::endl;
 	fws.Start();
-	std::this_thread::sleep_for(std::chrono::seconds(3));
+	std::this_thread::sleep_for(std::chrono::seconds(15));
 	fws.Stop();
 	system("pause");
 }
