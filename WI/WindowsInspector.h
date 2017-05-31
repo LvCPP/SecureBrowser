@@ -1,6 +1,5 @@
 #pragma once
 #include "WindowsInspectorUtils.h"
-#include <atomic>
 #include <thread>
 #include <windows.h>
 #include <iostream>

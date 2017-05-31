@@ -3,9 +3,9 @@
 
 using namespace SBWindowsInspector;
 
-HWINEVENTHOOK window_hook;
-HINSTANCE hInst_;
-MSG message;
+HWINEVENTHOOK window_hook_;
+HINSTANCE hinst_;
+MSG message_;
 
 WindowsInspector::WindowsInspector()
 {
@@ -18,13 +18,13 @@ WindowsInspector::~WindowsInspector()
 
 BOOL CALLBACK WindowsInspector::EnumWindowsProc(HWND hwnd)
 {
-	char wnd_title[255];
-	DWORD processID;
+	char wnd_title_[255];
+	DWORD processid;
 	wchar_t processname[255];
 	if (IsWindowEnabled(hwnd))
 	{
-		GetWindowTextA(hwnd, wnd_title, sizeof(wnd_title));
-		GetWindowThreadProcessId(hwnd, &processID);
+		GetWindowTextA(hwnd, wnd_title_, sizeof(wnd_title_));
+		GetWindowThreadProcessId(hwnd, &processid);
 		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		if (hSnapshot)
 		{
@@ -33,11 +33,11 @@ BOOL CALLBACK WindowsInspector::EnumWindowsProc(HWND hwnd)
 			if (Process32First(hSnapshot, &pe32)) {
 				do
 				{
-					if (processID == pe32.th32ProcessID)
+					if (processid == pe32.th32ProcessID)
 					{
-					std::cout << "Tittle: " << wnd_title << std::endl;
-					std::cout << "Process Id: " << processID << std::endl;
-					std::wcout << "Process name: " <<pe32.szExeFile << std::endl;
+					std::cout << "Tittle: " << wnd_title_ << std::endl;
+					std::cout << "Process Id: " << processid << std::endl;
+					std::wcout << "Process name: " <<pe32.szExeFile << std::endl << std::endl;
 					}
 				} 
 				while (Process32Next(hSnapshot, &pe32));
@@ -93,11 +93,11 @@ void CALLBACK WinEventProc(
 
 void WindowsInspector::MessageLoop()
 {
-	window_hook = SetWinEventHook(EVENT_MIN, EVENT_MAX, hInst_, WinEventProc, 0, 0, WINEVENT_INCONTEXT);
-	while (GetMessage(&message, NULL, 0, 0))
+	window_hook_ = SetWinEventHook(EVENT_MIN, EVENT_MAX, hinst_, WinEventProc, 0, 0, WINEVENT_INCONTEXT);
+	while (GetMessage(&message_, NULL, 0, 0))
 	{
-		TranslateMessage(&message);
-		DispatchMessage(&message);
+		TranslateMessage(&message_);
+		DispatchMessage(&message_);
 	}
 	
 }
@@ -113,7 +113,7 @@ void WindowsInspector::StopWindowsInspector()
 {
 	PostThreadMessage(GetThreadId(worker_.native_handle()), WM_QUIT, 0, 0);
 	OutputDebugStringA("WINDOWS INSPECTOR STOPPED WORKING\n");
-	UnhookWinEvent(window_hook);
+	UnhookWinEvent(window_hook_);
 }
 
 void WindowsInspector::StopAndWait()
