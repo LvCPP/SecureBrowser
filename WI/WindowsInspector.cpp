@@ -18,7 +18,6 @@ BOOL WindowsInspector::EnumWindowsProc(HWND hwnd)
 {
 	char wnd_title[255];
 	DWORD processid_;
-	wchar_t processname[255];
 	if (IsWindowEnabled(hwnd))
 	{
 		GetWindowTextA(hwnd, wnd_title, sizeof(wnd_title));

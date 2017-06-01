@@ -43,9 +43,7 @@ MakePhotoPage::~MakePhotoPage()
 
 int MakePhotoPage::nextId() const
 {
-	if (camera_select_combobox_->currentText() == "")
-		return LoginApp2::MAKE_PHOTO_PAGE;
-	else if(photo_made_)
+	if (photo_made_)
 	{
 		is_enabled_ = false;
 
@@ -53,6 +51,10 @@ int MakePhotoPage::nextId() const
 			worker_.join();
 
 		return LoginApp2::LAST_PAGE;
+	}
+	else
+	{
+		return LoginApp2::MAKE_PHOTO_PAGE;
 	}
 }
 

@@ -20,8 +20,8 @@ void FakeWindowService::Start()
 
 bool FakeWindowService::Stop()
 {
-	bool result = CloseWindow(fake_window_handle_);
-	result= PostMessage(fake_window_handle_, WM_QUIT, 0, 0);
+	CloseWindow(fake_window_handle_);
+	bool result = PostMessage(fake_window_handle_, WM_QUIT, 0, 0) ? true : false;
 	worker_.join();
 	return result;
 }
