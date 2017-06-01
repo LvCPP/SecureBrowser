@@ -28,7 +28,8 @@ BOOL WindowsInspector::EnumWindowsProc(HWND hwnd)
 		{
 			PROCESSENTRY32 pe32;
 			pe32.dwSize = sizeof(PROCESSENTRY32);
-			if (Process32First(handle_, &pe32)) {
+			if (Process32First(handle_, &pe32)) 
+			{
 				do
 				{
 					if (processid_ == pe32.th32ProcessID)
