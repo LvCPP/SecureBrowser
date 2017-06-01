@@ -14,14 +14,14 @@ WindowsInspector::~WindowsInspector()
 	StopAndWait();
 }
 
-BOOL CALLBACK WindowsInspector::EnumWindowsProc(HWND hwnd)
+BOOL WindowsInspector::EnumWindowsProc(HWND hwnd)
 {
-	char wnd_title_[255];
+	char wnd_title[255];
 	DWORD processid_;
-	wchar_t processname_[255];
+	wchar_t processname[255];
 	if (IsWindowEnabled(hwnd))
 	{
-		GetWindowTextA(hwnd, wnd_title_, sizeof(wnd_title_));
+		GetWindowTextA(hwnd, wnd_title, sizeof(wnd_title));
 		GetWindowThreadProcessId(hwnd, &processid_);
 		HANDLE handle_ = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		if (handle_)
@@ -37,7 +37,7 @@ BOOL CALLBACK WindowsInspector::EnumWindowsProc(HWND hwnd)
 						//logdebug(*An<Logger>()) << "Process Id: " << processid_;
 						//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
 						
-						std::wcout << "Title: " << wnd_title_ << std::endl;
+						std::wcout << "Title: " << wnd_title << std::endl;
 						std::wcout << "Process Id: " << processid_ << std::endl;
 						std::wcout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
 					}
@@ -63,23 +63,23 @@ void CALLBACK WinEventProc(
 	switch (event)
 	{
 	case EVENT_OBJECT_CREATE:
-		OutputDebugStringA("Create: \n");
+		OutputDebugStringA("Window Created: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
 	case EVENT_SYSTEM_MOVESIZEEND:
-		OutputDebugStringA("Moved: \n");
+		OutputDebugStringA("Window Moved: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
 	case EVENT_SYSTEM_MINIMIZESTART:
-		OutputDebugStringA("Minimized: \n");
+		OutputDebugStringA("Window Minimized: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
 	case EVENT_SYSTEM_SWITCHEND:
-		OutputDebugStringA("Switched: \n");
+		OutputDebugStringA("Window Switched: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
 	case EVENT_OBJECT_DESTROY:
-		OutputDebugStringA("Destroyed: \n");
+		OutputDebugStringA("Window Destroyed: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
 		break;
 	case EVENT_OBJECT_FOCUS:

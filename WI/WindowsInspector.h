@@ -4,8 +4,6 @@
 #include <thread>
 #include <windows.h>
 #include <iostream>
-#include <tchar.h>
-#include <psapi.h>
 #include <fstream>
 
 namespace SBWindowsInspector
@@ -19,7 +17,7 @@ public:
 	WINDOWSINSPECTOR_API void StartWindowsInspector();
 	WINDOWSINSPECTOR_API void StopWindowsInspector();
 	void StopAndWait();
-	static BOOL CALLBACK EnumWindowsProc(HWND hwnd);
+	static BOOL EnumWindowsProc(HWND hwnd);
 
 protected:
 	void MessageLoop();
