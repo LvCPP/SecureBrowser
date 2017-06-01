@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{A4E3C2AB
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraInspector", "CameraInspector\CameraInspector.vcxproj", "{A15C1CDB-9898-4D4A-AC5D-801911C5C87B}"
 	ProjectSection(ProjectDependencies) = postProject
-		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C} = {3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}
+		{F359068F-5042-4390-A788-91E17009B13A} = {F359068F-5042-4390-A788-91E17009B13A}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8456BCEE-EB61-4ABF-88BB-F8FFACF97DFC}"
@@ -35,7 +35,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraInspector_test", "Tools\CameraInspector_test\CameraInspector_test.vcxproj", "{966CF60D-A8AD-41A1-9790-EAFCB5F6100B}"
 	ProjectSection(ProjectDependencies) = postProject
-		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C} = {3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}
 		{A15C1CDB-9898-4D4A-AC5D-801911C5C87B} = {A15C1CDB-9898-4D4A-AC5D-801911C5C87B}
 	EndProjectSection
 EndProject
@@ -44,6 +43,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Login", "Login\Login.vcxproj", "{ACD08B75-1253-4C23-961A-92A253BE36BD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpClient", "HttpClient\HttpClient.vcxproj", "{0CC6265F-6D69-47F4-B4F5-104E442EF01B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F359068F-5042-4390-A788-91E17009B13A} = {F359068F-5042-4390-A788-91E17009B13A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpClien_test", "Tools\HttpClien_test\HttpClien_test.vcxproj", "{7A435297-FEAC-4443-A5A4-60F7F3E4F406}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -56,6 +58,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyboardInspectorTester", "
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyboardInspector", "KeyboardInspector\KeyboardInspector.vcxproj", "{88B06B02-6934-43AB-9C97-A366835F081C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F359068F-5042-4390-A788-91E17009B13A} = {F359068F-5042-4390-A788-91E17009B13A}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{73BCFE26-F7C8-4FCB-8D10-7F561A661F18}"
 EndProject
@@ -63,17 +68,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "Utils\Utils.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebCamAPI_test", "Tools\WebCamAPI_test\WebCamAPI_test.vcxproj", "{2002859E-C332-470D-AF05-9C4D39D926FF}"
 	ProjectSection(ProjectDependencies) = postProject
-		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C} = {3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}
 		{A15C1CDB-9898-4D4A-AC5D-801911C5C87B} = {A15C1CDB-9898-4D4A-AC5D-801911C5C87B}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SessionInspector", "SessionInspector\SessionInspector.vcxproj", "{59BFBD5A-82EA-48A1-B09A-E5BEA0311F48}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F359068F-5042-4390-A788-91E17009B13A} = {F359068F-5042-4390-A788-91E17009B13A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginApp2", "LoginApp2\LoginApp2.vcxproj", "{58EE2AD0-D62D-4B89-BB0A-DBC10D6B96FA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0CC6265F-6D69-47F4-B4F5-104E442EF01B} = {0CC6265F-6D69-47F4-B4F5-104E442EF01B}
 		{F359068F-5042-4390-A788-91E17009B13A} = {F359068F-5042-4390-A788-91E17009B13A}
-		{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C} = {3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}
 		{A15C1CDB-9898-4D4A-AC5D-801911C5C87B} = {A15C1CDB-9898-4D4A-AC5D-801911C5C87B}
 	EndProjectSection
 EndProject
@@ -87,6 +93,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Login_test", "Tools\Login_t
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SessionInspectorTest", "Tools\SessionInspectorTest\SessionInspectorTest.vcxproj", "{F21C6391-29B6-4776-8D86-1353040C5448}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59BFBD5A-82EA-48A1-B09A-E5BEA0311F48} = {59BFBD5A-82EA-48A1-B09A-E5BEA0311F48}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WI", "WI\WI.vcxproj", "{B8AACB73-C442-429D-917E-4A320DFF78B0}"
 	ProjectSection(ProjectDependencies) = postProject

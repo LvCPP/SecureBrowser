@@ -25,7 +25,6 @@ class LoginApp2 : public QWizard
 
 public:
 	LOGIN2APP LoginApp2(QWidget *parent = Q_NULLPTR);
-	LOGIN2APP ~LoginApp2();
 
 	enum
 	{

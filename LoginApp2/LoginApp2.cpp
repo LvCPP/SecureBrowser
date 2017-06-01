@@ -23,10 +23,6 @@ LoginApp2::LoginApp2(QWidget *parent)
 	SetPageSequence();
 }
 
-LoginApp2::~LoginApp2()
-{
-}
-
 void LoginApp2::CreateMyWindow()
 {
 	setWindowTitle(wnd_title);
