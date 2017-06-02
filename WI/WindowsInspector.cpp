@@ -33,13 +33,18 @@ BOOL WindowsInspector::EnumWindowsProc(HWND hwnd)
 				{
 					if (processid_ == pe32.th32ProcessID)
 					{
-						//logdebug(*An<Logger>()) << "Title: " << wnd_title_;
-						//logdebug(*An<Logger>()) << "Process Id: " << processid_;
-						//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
-						
-						std::wcout << "Title: " << wnd_title << std::endl;
-						std::wcout << "Process Id: " << processid_ << std::endl;
-						std::wcout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
+						if (wnd_title[0] != '\0')
+						{
+							//logdebug(*An<Logger>()) << "Title: " << wnd_title_;
+							//logdebug(*An<Logger>()) << "Process Id: " << processid_;
+							//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
+
+							ShowWindow(hwnd, SW_MINIMIZE);
+
+							std::wcout << "Title: " << wnd_title << std::endl;
+							std::wcout << "Process Id: " << processid_ << std::endl;
+							std::wcout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
+						}
 					}
 				} 
 				while (Process32Next(handle_, &pe32));
@@ -60,31 +65,40 @@ void CALLBACK WinEventProc(
 	, DWORD         dwEventThread
 	, DWORD         dwmsEventTime)
 {
+	if (hwnd != GetAncestor(hwnd, GA_ROOTOWNER))
+		return;
 	switch (event)
 	{
 	case EVENT_OBJECT_CREATE:
 		OutputDebugStringA("Window Created: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
+		//ShowWindow(hwnd, SW_MINIMIZE);
 		break;
-	case EVENT_SYSTEM_MOVESIZEEND:
-		OutputDebugStringA("Window Moved: \n");
-		WindowsInspector::EnumWindowsProc(hwnd);
-		break;
-	case EVENT_SYSTEM_MINIMIZESTART:
-		OutputDebugStringA("Window Minimized: \n");
-		WindowsInspector::EnumWindowsProc(hwnd);
-		break;
-	case EVENT_SYSTEM_SWITCHEND:
-		OutputDebugStringA("Window Switched: \n");
-		WindowsInspector::EnumWindowsProc(hwnd);
-		break;
-	case EVENT_OBJECT_DESTROY:
-		OutputDebugStringA("Window Destroyed: \n");
-		WindowsInspector::EnumWindowsProc(hwnd);
-		break;
-	case EVENT_OBJECT_FOCUS:
+
+	//case EVENT_SYSTEM_MOVESIZEEND:
+	//	OutputDebugStringA("Window Moved: \n");
+	//	WindowsInspector::EnumWindowsProc(hwnd);
+	//	ShowWindow(hwnd, SW_MINIMIZE);
+	//	break;
+	//case EVENT_SYSTEM_MINIMIZESTART:
+	//	OutputDebugStringA("Window Minimized: \n");
+	//	WindowsInspector::EnumWindowsProc(hwnd);
+	//	ShowWindow(hwnd, SW_MINIMIZE);
+	//	break;
+	//case EVENT_SYSTEM_SWITCHEND:
+	//	OutputDebugStringA("Window Switched: \n");
+	//	WindowsInspector::EnumWindowsProc(hwnd);
+	//	ShowWindow(hwnd, SW_MINIMIZE);
+	//	break;
+	//case EVENT_OBJECT_DESTROY:
+	//	OutputDebugStringA("Window Destroyed: \n");
+	//	WindowsInspector::EnumWindowsProc(hwnd);
+	//	ShowWindow(hwnd, SW_MINIMIZE);
+	//	break;
+	case EVENT_SYSTEM_MINIMIZEEND:
 		OutputDebugStringA("Focus on window: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
+		//ShowWindow(hwnd, SW_MINIMIZE);
 		break;
 	default:
 		break;
@@ -94,7 +108,7 @@ void CALLBACK WinEventProc(
 
 void WindowsInspector::MessageLoop()
 {
-	window_hook_ = SetWinEventHook(EVENT_MIN, EVENT_MAX, hinst_, WinEventProc, 0, 0, WINEVENT_INCONTEXT);
+	window_hook_ = SetWinEventHook(EVENT_MIN, EVENT_MAX, hinst_, WinEventProc, 0, 0, WINEVENT_INCONTEXT | WINEVENT_SKIPOWNPROCESS);
 	while (GetMessage(&message_, NULL, 0, 0))
 	{
 		TranslateMessage(&message_);
