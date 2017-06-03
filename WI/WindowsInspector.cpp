@@ -35,9 +35,9 @@ BOOL WindowsInspector::EnumWindowsProc(HWND hwnd)
 					{
 						if (wnd_title[0] != '\0')
 						{
-							//logdebug(*An<Logger>()) << "Title: " << wnd_title_;
-							//logdebug(*An<Logger>()) << "Process Id: " << processid_;
-							//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
+							logdebug(*An<Logger>()) << "Title: " << wnd_title;
+							logdebug(*An<Logger>()) << "Process Id: " << processid_;
+							logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
 
 							ShowWindow(hwnd, SW_MINIMIZE);
 
@@ -70,35 +70,8 @@ void CALLBACK WinEventProc(
 	switch (event)
 	{
 	case EVENT_OBJECT_CREATE:
-		OutputDebugStringA("Window Created: \n");
-		WindowsInspector::EnumWindowsProc(hwnd);
-		//ShowWindow(hwnd, SW_MINIMIZE);
-		break;
-
-	//case EVENT_SYSTEM_MOVESIZEEND:
-	//	OutputDebugStringA("Window Moved: \n");
-	//	WindowsInspector::EnumWindowsProc(hwnd);
-	//	ShowWindow(hwnd, SW_MINIMIZE);
-	//	break;
-	//case EVENT_SYSTEM_MINIMIZESTART:
-	//	OutputDebugStringA("Window Minimized: \n");
-	//	WindowsInspector::EnumWindowsProc(hwnd);
-	//	ShowWindow(hwnd, SW_MINIMIZE);
-	//	break;
-	//case EVENT_SYSTEM_SWITCHEND:
-	//	OutputDebugStringA("Window Switched: \n");
-	//	WindowsInspector::EnumWindowsProc(hwnd);
-	//	ShowWindow(hwnd, SW_MINIMIZE);
-	//	break;
-	//case EVENT_OBJECT_DESTROY:
-	//	OutputDebugStringA("Window Destroyed: \n");
-	//	WindowsInspector::EnumWindowsProc(hwnd);
-	//	ShowWindow(hwnd, SW_MINIMIZE);
-	//	break;
 	case EVENT_SYSTEM_MINIMIZEEND:
-		OutputDebugStringA("Focus on window: \n");
 		WindowsInspector::EnumWindowsProc(hwnd);
-		//ShowWindow(hwnd, SW_MINIMIZE);
 		break;
 	default:
 		break;
@@ -108,6 +81,10 @@ void CALLBACK WinEventProc(
 
 void WindowsInspector::MessageLoop()
 {
+	//minimize all windows one from start
+	HWND hwnd = FindWindow(L"Shell_TrayWnd", NULL);
+	LRESULT res = SendMessage(hwnd, WM_COMMAND, (WPARAM)419, 0);
+
 	window_hook_ = SetWinEventHook(EVENT_MIN, EVENT_MAX, hinst_, WinEventProc, 0, 0, WINEVENT_INCONTEXT | WINEVENT_SKIPOWNPROCESS);
 	while (GetMessage(&message_, NULL, 0, 0))
 	{
@@ -119,7 +96,6 @@ void WindowsInspector::MessageLoop()
 
 void WindowsInspector::StartWindowsInspector()
 {
-
 	worker_ = std::thread(&WindowsInspector::MessageLoop, this);
 	OutputDebugStringA("WINDOWS INSPECTOR STARTED WORKING\n");
 }
