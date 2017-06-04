@@ -1,130 +1,115 @@
 #include <Windows.h>
-#include <stdio.h>
+#include <cstdio>
 
-const ACCESS_MASK AccessRights = DESKTOP_JOURNALRECORD | DESKTOP_JOURNALPLAYBACK | DESKTOP_CREATEWINDOW | DESKTOP_ENUMERATE | DESKTOP_WRITEOBJECTS | DESKTOP_SWITCHDESKTOP | DESKTOP_CREATEMENU | DESKTOP_HOOKCONTROL | DESKTOP_READOBJECTS;
+constexpr ACCESS_MASK ACCESS_RIGHTS = GENERIC_ALL;
 
-bool changeSingleFeature(HKEY regKey, LPCWSTR subKey, DWORD value, LPCWSTR valueName)
+bool ChangeSingleFeature(HKEY reg_key, LPCWSTR sub_key, DWORD value, LPCWSTR value_name)
 {
-	bool resultOk = false;
+	bool is_success = false;
+
 	HKEY hkey;
-	DWORD dwDisposition;
-	if (RegCreateKeyEx(regKey, subKey, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE | KEY_WOW64_32KEY, NULL, &hkey, &dwDisposition) == ERROR_SUCCESS) {
-		if (RegSetValueEx(hkey, valueName, 0, REG_DWORD, (PBYTE)&value, sizeof(DWORD)) == ERROR_SUCCESS) {
-			resultOk = true;
+	if (RegCreateKeyEx(reg_key, sub_key, 0, nullptr, REG_OPTION_VOLATILE, KEY_WRITE | KEY_WOW64_32KEY,
+		nullptr, &hkey, nullptr) == ERROR_SUCCESS)
+	{
+		if (RegSetValueEx(hkey, value_name, 0, REG_DWORD, (PBYTE)&value, sizeof(DWORD)) == ERROR_SUCCESS)
+		{
+			is_success = true;
 		}
 		RegCloseKey(hkey);
 	}
-	DWORD l = GetLastError();
-	return resultOk;
+
+	return is_success;
 }
 
-bool changeAllFeatures(DWORD value)
+bool ChangeAllFeatures(DWORD value)
 {
-	bool resultOk = true;
+	bool is_success = true;
 
-	/// Task Manager
-	HKEY regKey = HKEY_CURRENT_USER;
-	//RegDisableReflectionKey(regKey);
-	LPCWSTR subKey = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
-	LPCWSTR valueName = L"DisableTaskMgr";
-	if (changeSingleFeature(regKey, subKey, value, valueName) == false)
-		resultOk = false;
+	// Task Manager
+	HKEY reg_key = HKEY_CURRENT_USER;
+	LPCWSTR sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
+	LPCWSTR value_name = L"DisableTaskMgr";
+	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+		is_success = false;
 
-	/// Change Password
-	valueName = L"DisableChangePassword";
-	if (changeSingleFeature(regKey, subKey, value, valueName) == false)
-		resultOk = false;
+	// Change Password
+	value_name = L"DisableChangePassword";
+	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+		is_success = false;
 
-	/// Lock
-	valueName = L"DisableLockWorkstation";
-	if (changeSingleFeature(regKey, subKey, value, valueName) == false)
-		resultOk = false;
+	// Lock
+	value_name = L"DisableLockWorkstation";
+	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+		is_success = false;
 
-	/// Log Off
-	subKey = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer";
-	valueName = L"NoLogOff";
-	if (changeSingleFeature(regKey, subKey, value, valueName) == false)
-		resultOk = false;
+	// Log Off
+	sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer";
+	value_name = L"NoLogOff";
+	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+		is_success = false;
 
-	/// Shut Down
-	valueName = L"NoClose";
-	if (changeSingleFeature(regKey, subKey, value, valueName) == false)
-		resultOk = false;
+	// Shut Down
+	value_name = L"NoClose";
+	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+		is_success = false;
 
-	/// User Switching
-	regKey = HKEY_LOCAL_MACHINE;
-	//RegDisableReflectionKey(regKey);
-	subKey = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
-	valueName = L"HideFastUserSwitching";
-	if (changeSingleFeature(regKey, subKey, value, valueName) == false)
-		resultOk = false;
+	// User Switching
+	reg_key = HKEY_LOCAL_MACHINE;
+	sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
+	value_name = L"HideFastUserSwitching";
+	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+		is_success = false;
 
-	return resultOk;
+	return is_success;
 }
 
 //Create a new desktop or open an existing one
-HDESK CreateHiddenDesktop(CHAR *desktop_name)
+HDESK CreateHiddenDesktop(CHAR* desktop_name)
 {
 	CHAR explorer_path[MAX_PATH];
-	HDESK hidden_desktop = NULL, original_desktop;
-	STARTUPINFOA startup_info = { 0 };
-	PROCESS_INFORMATION process_info = { 0 };
 	
 	ExpandEnvironmentStringsA("%windir%\\explorer.exe", explorer_path, MAX_PATH - 1);
 
-	hidden_desktop = OpenDesktopA(desktop_name, NULL, TRUE, AccessRights);
-	printf("open desktop\n");
+	HDESK hidden_desktop = OpenDesktopA(desktop_name, NULL, TRUE, ACCESS_RIGHTS);
 	if (!hidden_desktop)
 	{
-		printf("create new desktop\n");
-		hidden_desktop = CreateDesktopA(desktop_name, NULL, NULL, 0, AccessRights, NULL);
-		if (hidden_desktop)
-		{
-			original_desktop = GetThreadDesktop(GetCurrentThreadId());
-
-			if (SetThreadDesktop(hidden_desktop))
-			{
-				startup_info.cb = sizeof(startup_info);
-				startup_info.lpDesktop = desktop_name;
-
-				SetThreadDesktop(original_desktop);
-			}
-		}
+		hidden_desktop = CreateDesktopA(desktop_name, nullptr, nullptr, 0, ACCESS_RIGHTS, nullptr);
 	}
 	return hidden_desktop;
 }
-HDESK hidden_desktop;
+
 void StartBrowser()
 {
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
 	ZeroMemory(&si, sizeof(si));
+	ZeroMemory(&pi, sizeof(pi));
+
 	si.cb = sizeof(si);
 	si.lpDesktop = L"SecureBrowser";
-	ZeroMemory(&pi, sizeof(pi));
-	if (!
-		CreateProcess
-		(
-			TEXT("Browser.exe"),
-			NULL, NULL, NULL, TRUE,
-			NULL,
-			NULL, NULL,
-			&si,
-			&pi
-		)
-		)
+
+	if (!CreateProcess(TEXT("Browser.exe"), nullptr, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 	{
-		printf("\n\nbad: %d\n\n", GetLastError());
+		printf("\nCannot start browser. Error code: %d\n", GetLastError());
+	}
+}
+
+void ClearClipboard()
+{
+	if (OpenClipboard(nullptr))
+	{
+		EmptyClipboard();
+		CloseClipboard();
 	}
 }
 
 void main()
 {
-	HDESK original_desktop;
-	printf("Disable features: %d\n", changeAllFeatures(1));
-	hidden_desktop = CreateHiddenDesktop("SecureBrowser");
-	original_desktop = GetThreadDesktop(GetCurrentThreadId());
+	printf("Disable features: %s\n", ChangeAllFeatures(1) ? "true" : "false");
+	
+	HDESK hidden_desktop = CreateHiddenDesktop("SecureBrowser");
+	HDESK original_desktop = GetThreadDesktop(GetCurrentThreadId());
 
 	printf("Entering hidden desktop\n");
 
@@ -132,18 +117,24 @@ void main()
 
 	//Need to switch thread into context of new desktop to register hotkeys
 	SetThreadDesktop(hidden_desktop);
+	ClearClipboard();
 	SwitchDesktop(hidden_desktop);
 
-	if (RegisterHotKey(NULL, 1, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, 0x45))
+	if (RegisterHotKey(nullptr, 1, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, 0x45))
 	{
-		MSG msg = { 0 };
-		while (GetMessage(&msg, NULL, 0, 0) != 0)
+		MSG msg;
+		while (GetMessage(&msg, nullptr, 0, 0) != 0)
 		{
 			if (msg.message == WM_HOTKEY)
 			{
 				printf("Exiting hidden desktop\n");
-				CloseDesktop(hidden_desktop);
-				changeAllFeatures(0);
+				if(CloseDesktop(hidden_desktop))
+				{
+					printf("Cannot close desktop. Error code: %d", GetLastError());
+				}
+
+				printf("Enable features: %s\n", ChangeAllFeatures(0) ? "true" : "false");
+				ClearClipboard();
 				SwitchDesktop(original_desktop);
 				break;
 			}
