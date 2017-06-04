@@ -131,7 +131,7 @@ void main()
 
 	printf("Entering hidden desktop\n");
 
-	//StartBrowser();
+	StartBrowser();
 
 	//Need to switch thread into context of new desktop to register hotkeys
 	SetThreadDesktop(hidden_desktop);
