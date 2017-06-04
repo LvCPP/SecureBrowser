@@ -87,9 +87,6 @@ HDESK CreateHiddenDesktop(CHAR *desktop_name)
 				startup_info.cb = sizeof(startup_info);
 				startup_info.lpDesktop = desktop_name;
 
-				//We need to create an explorer.exe in the context of the new desktop for start menu, etc
-				//CreateProcessA(explorer_path, NULL, NULL, NULL, FALSE, 0, NULL, NULL, &startup_info, &process_info);
-
 				SetThreadDesktop(original_desktop);
 			}
 		}
