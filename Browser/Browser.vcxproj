@@ -100,7 +100,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Build\Release\;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>WI.lib;Wtsapi32.lib;CameraInspector.lib;SessionInspector.lib;KeyboardInspector.lib;LoginApp2.lib;Login.lib;Logger.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5WebEngineWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WI.lib;Wtsapi32.lib;CameraInspector.lib;SessionInspector.lib;KeyboardInspector.lib;LoginApp2.lib;Logger.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5WebEngineWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /C /Y "$(SolutionDir)Libraries/Release/*.dll" "$(SolutionDir)Build\Release\"</Command>
@@ -170,9 +170,6 @@
     </ProjectReference>
     <ProjectReference Include="..\Logger\Logger.vcxproj">
       <Project>{f359068f-5042-4390-a788-91e17009b13a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Login\Login.vcxproj">
-      <Project>{acd08b75-1253-4c23-961a-92a253be36bd}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
