@@ -78,7 +78,7 @@ HDESK CreateHiddenDesktop(CHAR* desktop_name)
 	return hidden_desktop;
 }
 
-void StartBrowser()
+HANDLE StartBrowser()
 {
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -92,7 +92,9 @@ void StartBrowser()
 	if (!CreateProcess(TEXT("Browser.exe"), nullptr, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 	{
 		printf("\nCannot start browser. Error code: %d\n", GetLastError());
+		return nullptr;
 	}
+	return pi.hProcess;
 }
 
 void ClearClipboard()
@@ -113,33 +115,27 @@ void main()
 
 	printf("Entering hidden desktop\n");
 
-	StartBrowser();
 
 	//Need to switch thread into context of new desktop to register hotkeys
 	SetThreadDesktop(hidden_desktop);
 	ClearClipboard();
 	SwitchDesktop(hidden_desktop);
 
-	if (RegisterHotKey(nullptr, 1, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, 0x45))
+	HANDLE browser = StartBrowser();
+	if(browser)
 	{
-		MSG msg;
-		while (GetMessage(&msg, nullptr, 0, 0) != 0)
-		{
-			if (msg.message == WM_HOTKEY)
-			{
-				printf("Exiting hidden desktop\n");
-				if(CloseDesktop(hidden_desktop))
-				{
-					printf("Cannot close desktop. Error code: %d", GetLastError());
-				}
-
-				printf("Enable features: %s\n", ChangeAllFeatures(0) ? "true" : "false");
-				ClearClipboard();
-				SwitchDesktop(original_desktop);
-				break;
-			}
-		}
+		WaitForSingleObject(browser, INFINITE);
 	}
+
+	printf("Exiting hidden desktop\n");
+	if (CloseDesktop(hidden_desktop))
+	{
+		printf("Cannot close desktop. Error code: %d", GetLastError());
+	}
+
+	printf("Enable features: %s\n", ChangeAllFeatures(0) ? "true" : "false");
+	ClearClipboard();
+	SwitchDesktop(original_desktop);
 
 	CloseHandle(hidden_desktop);
 	system("pause");
