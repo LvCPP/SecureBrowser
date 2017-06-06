@@ -84,6 +84,14 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
+    <ProjectReference Include="..\..\Startup\Startup.vcxproj">
+      <Name>Startup</Name>
+      <Project>{27550fa1-283d-465b-b83f-54adaece36ff}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\..\Utils\Utils.vcxproj">
       <Name>Utils _Utils\Utils_</Name>
       <Project>{3c6b4eb3-7fbf-4d54-8098-d8cb1e02573c}</Project>

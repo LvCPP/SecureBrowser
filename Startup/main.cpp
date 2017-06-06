@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <cstdio>
+#include <string>
 
 constexpr ACCESS_MASK ACCESS_RIGHTS = GENERIC_ALL;
 
@@ -106,8 +107,26 @@ void ClearClipboard()
 	}
 }
 
-void main()
+void ShowLinkAlertDialog()
 {
+	MessageBox(NULL, L"You can start Secure Browser only via invite link!", L"Error", MB_ICONERROR);
+}
+
+void main(int argc, char** argv)
+{
+	printf("Running from: %s\n", argv[0]);
+
+	if (argc != 2)
+	{
+		ShowLinkAlertDialog();
+		return;
+	}
+
+	// TODO: create structure UserInfo with parser info about:
+	// 1. login / password
+	// 2. quizes links and passwords
+	// 3. path where SB located
+
 	printf("Disable features: %s\n", ChangeAllFeatures(1) ? "true" : "false");
 	
 	HDESK sb_desktop = CreateHiddenDesktop("SecureBrowser");

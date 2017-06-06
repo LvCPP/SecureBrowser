@@ -47,7 +47,7 @@
             <RegistryKey Key="open" ForceCreateOnInstall="yes">
               <RegistryKey Key="command" ForceCreateOnInstall="yes">
                 <RegistryValue Type="string" 
-                               Value='"[INSTALLFOLDER]Browser.exe" "%1"'/>
+                               Value='"[INSTALLFOLDER]Startup.exe" "%1"'/>
               </RegistryKey>
             </RegistryKey>
           </RegistryKey>
@@ -74,15 +74,15 @@
     <ComponentGroup Id="Components" Directory="INSTALLFOLDER">
       
       <!-- Executable -->
-      <Component Id="Browser.exe" Guid="e155beaa-ba87-4484-832d-f87373ab93db">
-        <File Id="Browser.exe" 
-              Name="Browser.exe" 
-              Source="$(var.Browser.TargetDir)Browser.exe" />
+      <Component Id="Startup.exe" Guid="e155beaa-ba87-4484-832d-f87373ab93db">
+        <File Id="Startup.exe" 
+              Name="Startup.exe" 
+              Source="$(var.Startup.TargetDir)Startup.exe" />
         <Shortcut Id="MenuShortcut"
                  Name="Secure Browser"
                  Description="Start the Secure Browser"
                  Directory="StartMenuFolder"
-                 Target="[#Browser.exe]">
+                 Target="[#Startup.exe]">
           <Icon Id="Shortcut" SourceFile="logo.ico" />
         </Shortcut>
         <RemoveFolder Id="RemoveMenuFolder" On="uninstall" />
