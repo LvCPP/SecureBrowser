@@ -82,10 +82,6 @@
       <AdditionalDependencies>WI.lib;Wtsapi32.lib;CameraInspector.lib;SessionInspector.lib;KeyboardInspector.lib;LoginApp2.lib;Login.lib;Logger.lib;qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5WebEngineWidgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -102,9 +98,6 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalDependencies>WI.lib;Wtsapi32.lib;CameraInspector.lib;SessionInspector.lib;KeyboardInspector.lib;LoginApp2.lib;Logger.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5WebEngineWidgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /C /Y "$(SolutionDir)Libraries/Release/*.dll" "$(SolutionDir)Build\Release\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="browser.cpp" />
