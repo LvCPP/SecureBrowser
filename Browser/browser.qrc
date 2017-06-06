@@ -4,5 +4,6 @@
         <file>Resources/download.jpg</file>
         <file>Resources/Forward.png</file>
         <file>Resources/stop.jpg</file>
+        <file>Resources/closed.ico</file>
     </qresource>
 </RCC>
