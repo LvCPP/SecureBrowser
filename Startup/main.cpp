@@ -110,16 +110,16 @@ void main()
 {
 	printf("Disable features: %s\n", ChangeAllFeatures(1) ? "true" : "false");
 	
-	HDESK hidden_desktop = CreateHiddenDesktop("SecureBrowser");
+	HDESK sb_desktop = CreateHiddenDesktop("SecureBrowser");
 	HDESK original_desktop = GetThreadDesktop(GetCurrentThreadId());
 
 	printf("Entering hidden desktop\n");
 
 
 	//Need to switch thread into context of new desktop to register hotkeys
-	SetThreadDesktop(hidden_desktop);
+	SetThreadDesktop(sb_desktop);
 	ClearClipboard();
-	SwitchDesktop(hidden_desktop);
+	SwitchDesktop(sb_desktop);
 
 	HANDLE browser = StartBrowser();
 	if(browser)
@@ -128,7 +128,7 @@ void main()
 	}
 
 	printf("Exiting hidden desktop\n");
-	if (CloseDesktop(hidden_desktop))
+	if (CloseDesktop(sb_desktop))
 	{
 		printf("Cannot close desktop. Error code: %d", GetLastError());
 	}
@@ -137,6 +137,6 @@ void main()
 	ClearClipboard();
 	SwitchDesktop(original_desktop);
 
-	CloseHandle(hidden_desktop);
+	CloseHandle(sb_desktop);
 	system("pause");
 }
