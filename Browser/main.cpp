@@ -11,12 +11,12 @@
 #include "FaceDetector.h"
 #include "CameraException.h"
 #include "FaceCountObserver.h"
-#include <LoginApp2.h>
 #include <WebCamController.h>
 #include <QtWidgets/QApplication>
 #include <windows.h>
 #include <fstream>
 #include <chrono>
+#include <LoginDialog.h>
 
 using namespace SecureBrowser;
 using namespace BrowserLogger;
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 	QApplication a(argc, argv);
 
 	An<WebCamController>()->RegisterForDeviceNotification();
-	LoginApp2 app;
+	LoginDialog app;
 	
 	loginfo(*logger) << "Start login";
 	if (!app.exec())

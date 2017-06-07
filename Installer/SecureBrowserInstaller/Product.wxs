@@ -115,10 +115,10 @@
               Name="Logger.dll" 
               Source="$(var.Logger.TargetDir)Logger.dll" />
       </Component>
-      <Component Id="LoginApp2.dll" Guid="1ff14ff4-62a2-4733-8c19-da5fc21312de">
-        <File Id="LoginApp2.dll" 
-              Name="LoginApp2.dll" 
-              Source="$(var.LoginApp2.TargetDir)LoginApp2.dll" />
+      <Component Id="LoginDialog.dll" Guid="2d529f4c-ed6c-4fa7-a70d-1105031f9a8d">
+        <File Id="LoginDialog.dll" 
+              Name="LoginDialog.dll" 
+              Source="$(var.LoginDialog.TargetDir)LoginDialog.dll" />
       </Component>
       <Component Id="WI.dll" Guid="acc89dc5-7478-4d58-9a6f-a7168d994a73">
         <File Id="WI.dll" 
