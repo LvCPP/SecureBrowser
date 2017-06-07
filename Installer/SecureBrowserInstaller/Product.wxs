@@ -11,6 +11,7 @@
     <!-- Setting UI -->
     <UIRef Id="WixUI_InstallDir" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Thank you for installing Secure Browser." />
     
     <!-- License document -->
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
@@ -73,7 +74,7 @@
     <!-- Other components -->
     <ComponentGroup Id="Components" Directory="INSTALLFOLDER">
       
-      <!-- Executable -->
+      <!-- Executables -->
       <Component Id="Startup.exe" Guid="e155beaa-ba87-4484-832d-f87373ab93db">
         <File Id="Startup.exe" 
               Name="Startup.exe" 
@@ -92,6 +93,12 @@
                        Type="integer"
                        Value="1"
                        KeyPath="yes" />
+      </Component>
+      
+      <Component Id="Browser.exe" Guid="6b3b6b65-cb2c-4494-8fd5-8d9825daf6a9">
+        <File Id="Browser.exe"
+              Name="Browser.exe"
+              Source="$(var.Browser.TargetDir)Browser.exe" />
       </Component>
 
       <!-- Modules -->

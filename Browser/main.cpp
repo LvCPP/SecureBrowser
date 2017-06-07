@@ -17,6 +17,8 @@
 #include <windows.h>
 #include <fstream>
 #include <chrono>
+#include <sstream>
+#include <iterator>
 
 using namespace SecureBrowser;
 using namespace BrowserLogger;
@@ -30,32 +32,56 @@ using namespace Utils;
 void SetupKeyboardInspector(KeyboardInspector& ki);
 bool IsAlreadyRunning();
 void WaitTillAnyCameraConnected();
+std::vector<std::string> Split(const std::string& string, char delim);
 void Cleanup(std::ofstream& file_to_close);
 
 int main(int argc, char* argv[])
 {
-	WaitTillAnyCameraConnected();
+	if (argc != 2)
+	{
+		MessageBox(
+			NULL, 
+			L"You can start Secure Browser only via invite link!!", 
+			L"Error", 
+			MB_ICONERROR);
+		return -1;
+	}
 
 	if (IsAlreadyRunning())
 	{
 		MessageBox(
 			NULL,
-
 			L"Program is already running!",
 			L"Error",
-			MB_ICONERROR
-		);
+			MB_ICONERROR);
 		return -1;
 	}
 
-	An<Logger> logger;
-
-	std::ofstream file("log.txt", std::ios::out);
-	logger->SetOutput(file);
-	loginfo(*logger) << "Program initialized";
-	QApplication a(argc, argv);
+	std::vector<std::string> input = Split(std::string(argv[1]), '$');
+	if (input.at(0) != "sb://")
+	{
+		MessageBox(
+			NULL,
+			L"You can start Secure Browser only via invite link!",
+			L"Error",
+			MB_ICONERROR);
+		return -1;
+	}
 
 	An<WebCamController>()->RegisterForDeviceNotification();
+	WaitTillAnyCameraConnected();
+
+	std::string startup_path(argv[0]);
+	std::size_t pos = startup_path.find("Startup.exe");
+	std::string path = startup_path.substr(0, pos);
+
+	An<Logger> logger;
+
+	std::ofstream file(path + "log.txt", std::ios::out);
+	logger->SetOutput(file);
+	loginfo(*logger) << "Program initialized";
+	
+	QApplication a(argc, argv);
 	LoginApp2 app;
 	
 	loginfo(*logger) << "Start login";
@@ -258,12 +284,28 @@ void WaitTillAnyCameraConnected()
 		switch (choose)
 		{
 		case IDCANCEL:
+			An<WebCamController>()->UnregisterForDeviceNotification();
 			exit(-1);
 		default:
 			// Retry pressed
 			break;
 		}
 	}
+}
+
+std::vector<std::string> Split(const std::string& string, char delim)
+{
+	std::vector<std::string> elems;
+	std::back_insert_iterator<std::vector<std::string>> inserter = std::back_inserter(elems);
+	std::stringstream ss(string);
+	std::string item;
+
+	while (std::getline(ss, item, delim))
+	{
+		*(inserter++) = item;
+	}
+
+	return elems;
 }
 
 void Cleanup(std::ofstream& file_to_close)
