@@ -130,7 +130,7 @@
       <Component Id="escapi.dll" Guid="4457c075-98d4-4058-b9f8-342050421e6c">
         <File Id="escapi.dll"
               Name="escapi.dll"
-              Source="$(var.SolutionDir)Build\Release\escapi.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\escapi\escapi.dll" />
       </Component>
       <Component Id="cpprest140_2_9.dll" Guid="74b545be-d53f-4e50-8e6f-177c58dfb352">
         <File Id="cpprest140_2_9.dll"
@@ -164,62 +164,62 @@
       <Component Id="Qt5Core.dll" Guid="214d8a2c-1537-4fed-a8ee-39d2f14c55c3">
         <File Id="Qt5Core.dll" 
               Name="Qt5Core.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5Core.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Core.dll" />
       </Component>
       <Component Id="Qt5Gui.dll" Guid="e4c09753-d75d-4389-97c5-7fadebc4096e">
         <File Id="Qt5Gui.dll" 
               Name="Qt5Gui.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5Gui.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Gui.dll" />
       </Component>
       <Component Id="Qt5Network.dll" Guid="8a3f6efa-aa46-418b-8859-8420ebfa4f73">
         <File Id="Qt5Network.dll" 
               Name="Qt5Network.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5Network.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Network.dll" />
       </Component>
       <Component Id="Qt5Positioning.dll" Guid="37ee5cb3-fb36-415e-b77c-0dce03d5c706">
         <File Id="Qt5Positioning.dll" 
               Name="Qt5Positioning.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5Positioning.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Positioning.dll" />
       </Component>
       <Component Id="Qt5PrintSupport.dll" Guid="69f8a288-93df-4557-a5c6-059330cf642a">
         <File Id="Qt5PrintSupport.dll" 
               Name="Qt5PrintSupport.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5PrintSupport.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5PrintSupport.dll" />
       </Component>
       <Component Id="Qt5Qml.dll" Guid="3aaa9421-445e-471c-9b92-9a87ffac2647">
         <File Id="Qt5Qml.dll" 
               Name="Qt5Qml.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5Qml.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Qml.dll" />
       </Component>
       <Component Id="Qt5Quick.dll" Guid="69e93a7f-02cc-4eab-b977-a2b877473f23">
         <File Id="Qt5Quick.dll" 
               Name="Qt5Quick.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5Quick.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Quick.dll" />
       </Component>
       <Component Id="Qt5QuickWidgets.dll" Guid="bf2c207e-5642-4f4e-9943-8494210e3c74">
         <File Id="Qt5QuickWidgets.dll" 
               Name="Qt5QuickWidgets.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5QuickWidgets.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5QuickWidgets.dll" />
       </Component>
       <Component Id="Qt5WebChannel.dll" Guid="ec3ead41-9a41-4334-b71e-6dd30194bf2e">
         <File Id="Qt5WebChannel.dll" 
               Name="Qt5WebChannel.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5WebChannel.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5WebChannel.dll" />
       </Component>
       <Component Id="Qt5WebEngineCore.dll" Guid="b3565e42-3afd-4293-aa98-e09b1984b05a">
         <File Id="Qt5WebEngineCore.dll" 
               Name="Qt5WebEngineCore.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5WebEngineCore.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5WebEngineCore.dll" />
       </Component>
       <Component Id="Qt5WebEngineWidgets.dll" Guid="e0d90781-e7b3-470c-a58d-64237897d122">
         <File Id="Qt5WebEngineWidgets.dll" 
               Name="Qt5WebEngineWidgets.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5WebEngineWidgets.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5WebEngineWidgets.dll" />
       </Component>
       <Component Id="Qt5Widgets.dll" Guid="977b01be-44fd-4adc-9d36-d1064f2d3c7a">
         <File Id="Qt5Widgets.dll" 
               Name="Qt5Widgets.dll" 
-              Source="$(var.SolutionDir)Build\Release\Qt5Widgets.dll" />
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Widgets.dll" />
       </Component>
     </ComponentGroup>
   </Fragment>

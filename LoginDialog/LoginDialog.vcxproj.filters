@@ -60,7 +60,7 @@
     <CustomBuild Include="LoginDialog.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="E:\New\SecureBrowser\Login\LoginDialog.ui">
+    <CustomBuild Include="LoginDialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
