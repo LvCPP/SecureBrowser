@@ -91,7 +91,6 @@ HANDLE StartBrowser()
 
 	if (!CreateProcess(TEXT("Browser.exe"), nullptr, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 	{
-		printf("\nCannot start browser. Error code: %d\n", GetLastError());
 		return nullptr;
 	}
 	return pi.hProcess;
@@ -106,15 +105,12 @@ void ClearClipboard()
 	}
 }
 
-void main()
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
 {
-	printf("Disable features: %s\n", ChangeAllFeatures(1) ? "true" : "false");
+	ChangeAllFeatures(1);
 	
 	HDESK sb_desktop = CreateHiddenDesktop("SecureBrowser");
 	HDESK original_desktop = GetThreadDesktop(GetCurrentThreadId());
-
-	printf("Entering hidden desktop\n");
-
 
 	//Need to switch thread into context of new desktop to register hotkeys
 	SetThreadDesktop(sb_desktop);
@@ -127,16 +123,12 @@ void main()
 		WaitForSingleObject(browser, INFINITE);
 	}
 
-	printf("Exiting hidden desktop\n");
-	if (CloseDesktop(sb_desktop))
-	{
-		printf("Cannot close desktop. Error code: %d", GetLastError());
-	}
+	CloseDesktop(sb_desktop);
 
-	printf("Enable features: %s\n", ChangeAllFeatures(0) ? "true" : "false");
+	ChangeAllFeatures(0);
 	ClearClipboard();
 	SwitchDesktop(original_desktop);
 
 	CloseHandle(sb_desktop);
-	system("pause");
+	return 0;
 }
