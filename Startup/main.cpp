@@ -1,6 +1,5 @@
 #include <Windows.h>
 #include <cstdio>
-#include <string>
 #include <regex>
 
 constexpr ACCESS_MASK ACCESS_RIGHTS = GENERIC_ALL;
@@ -108,26 +107,23 @@ void ClearClipboard()
 	}
 }
 
+void ExitAlertDialog(LPCTSTR message)
+{
+	MessageBox(nullptr, message, L"Error", MB_ICONERROR);
+}
+
 void main(int argc, char** argv)
 {
 	if (argc != 2)
 	{
-		MessageBox(
-			NULL, 
-			L"You can start Secure Browser only via invite link!", 
-			L"Error", 
-			MB_ICONERROR);
+		ExitAlertDialog(L"You can start Secure Browser only via invite link!");
 		return;
 	}
 
 	std::string path_of_executable = argv[0];
 	if (path_of_executable.find(" ") != std::string::npos)
 	{
-		MessageBox(
-			NULL,
-			L"Make sure your path doesn't include whitespaces",
-			L"Error",
-			MB_ICONERROR);
+		ExitAlertDialog(L"Make sure your path doesn't include whitespaces");
 		return;
 	}
 
@@ -164,5 +160,4 @@ void main(int argc, char** argv)
 	SwitchDesktop(original_desktop);
 
 	CloseHandle(sb_desktop);
-	system("pause");
  }

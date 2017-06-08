@@ -2,14 +2,11 @@
 #include <Logger.h>
 #include <KeyboardInspector.h>
 #include "FakeWindowService.h"
-#include "SessionInspector.h"
 #include "WebCameraCapture.h"
 #include "WindowsInspector.h"
 #include "PhotoMaker.h"
 #include "FileSystemFrameSaver.h"
-#include "FrameStorer.h"
 #include "FaceDetector.h"
-#include "CameraException.h"
 #include "FaceCountObserver.h"
 #include <LoginApp2.h>
 #include <WebCamController.h>
@@ -29,6 +26,7 @@ using namespace SBKeyboardInspector;
 using namespace Login;
 using namespace Utils;
 
+void ExitAlertDialog(LPCTSTR message);
 void SetupKeyboardInspector(KeyboardInspector& ki);
 bool IsAlreadyRunning();
 void WaitTillAnyCameraConnected();
@@ -39,32 +37,20 @@ int main(int argc, char* argv[])
 {
 	if (argc != 2)
 	{
-		MessageBox(
-			NULL, 
-			L"You can start Secure Browser only via invite link!!", 
-			L"Error", 
-			MB_ICONERROR);
+		ExitAlertDialog(L"You can start Secure Browser only via invite link!");
 		return -1;
 	}
 
 	if (IsAlreadyRunning())
 	{
-		MessageBox(
-			NULL,
-			L"Program is already running!",
-			L"Error",
-			MB_ICONERROR);
+		ExitAlertDialog(L"Program is already running!");
 		return -1;
 	}
 
 	std::vector<std::string> input = Split(std::string(argv[1]), '$');
 	if (input.at(0) != "sb://")
 	{
-		MessageBox(
-			NULL,
-			L"You can start Secure Browser only via invite link!",
-			L"Error",
-			MB_ICONERROR);
+		ExitAlertDialog(L"You can start Secure Browser only via invite link!");
 		return -1;
 	}
 
@@ -135,6 +121,11 @@ int main(int argc, char* argv[])
 	loginfo(*logger) << "Program finished with code " << result;
 	Cleanup(file);
 	return result;
+}
+
+void ExitAlertDialog(LPCTSTR message)
+{
+	MessageBox(nullptr, message, L"Error", MB_ICONERROR);
 }
 
 void SetupKeyboardInspector(KeyboardInspector& ki)
@@ -259,7 +250,7 @@ void SetupKeyboardInspector(KeyboardInspector& ki)
 
 bool IsAlreadyRunning()
 {
-	CreateMutexA(0, FALSE, "Local\\SecureBrowser");
+	CreateMutexA(nullptr, FALSE, "Local\\SecureBrowser");
 
 	switch (GetLastError())
 	{
@@ -275,7 +266,7 @@ void WaitTillAnyCameraConnected()
 	while (An<WebCamController>()->GetCamerasCount() == 0)
 	{
 		int choose = MessageBox(
-			NULL,
+			nullptr,
 			L"The program requires a webcam. Connect to continue",
 			L"Error",
 			MB_ICONSTOP | MB_RETRYCANCEL | MB_DEFBUTTON4
