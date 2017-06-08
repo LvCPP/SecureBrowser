@@ -1,22 +1,23 @@
 #include "browser.h"
+#include <LoginDialog.h>
 #include <Logger.h>
 #include <KeyboardInspector.h>
-#include "FakeWindowService.h"
-#include "SessionInspector.h"
-#include "WebCameraCapture.h"
-#include "WindowsInspector.h"
-#include "PhotoMaker.h"
-#include "FileSystemFrameSaver.h"
-#include "FrameStorer.h"
-#include "FaceDetector.h"
-#include "CameraException.h"
-#include "FaceCountObserver.h"
+#include <FakeWindowService.h>
+#include <WindowsInspector.h>
+#include <WebCameraCapture.h>
 #include <WebCamController.h>
+#include <PhotoMaker.h>
+#include <FaceDetector.h>
+#include <FaceCountObserver.h>
+#include <FileSystemFrameSaver.h>
+
 #include <QtWidgets/QApplication>
+
 #include <windows.h>
 #include <fstream>
 #include <chrono>
-#include <LoginDialog.h>
+#include <sstream>
+#include <iterator>
 
 using namespace SecureBrowser;
 using namespace BrowserLogger;
@@ -27,36 +28,49 @@ using namespace SBKeyboardInspector;
 using namespace Login;
 using namespace Utils;
 
+void ExitAlertDialog(LPCTSTR message);
 void SetupKeyboardInspector(KeyboardInspector& ki);
 bool IsAlreadyRunning();
 void WaitTillAnyCameraConnected();
+std::vector<std::string> Split(const std::string& string, char delim);
 void Cleanup(std::ofstream& file_to_close);
 
 int main(int argc, char* argv[])
 {
-	WaitTillAnyCameraConnected();
-
-	if (IsAlreadyRunning())
+	if (argc != 2)
 	{
-		MessageBox(
-			NULL,
-
-			L"Program is already running!",
-			L"Error",
-			MB_ICONERROR
-		);
+		ExitAlertDialog(L"You can start Secure Browser only via invite link!");
 		return -1;
 	}
 
+	if (IsAlreadyRunning())
+	{
+		ExitAlertDialog(L"Program is already running!");
+		return -1;
+	}
+
+	std::vector<std::string> input = Split(std::string(argv[1]), '$');
+	if (input.at(0) != "sb://")
+	{
+		ExitAlertDialog(L"You can start Secure Browser only via invite link!");
+		return -1;
+	}
+
+	An<WebCamController>()->RegisterForDeviceNotification();
+	WaitTillAnyCameraConnected();
+
+	std::string startup_path(argv[0]);
+	std::size_t pos = startup_path.find("Startup.exe");
+	std::string path = startup_path.substr(0, pos);
+
 	An<Logger> logger;
 
-	std::ofstream file("log.txt", std::ios::out);
+	std::ofstream file(path + "log.txt", std::ios::out);
 	logger->SetOutput(file);
 	loginfo(*logger) << "Program initialized";
 	
 	QApplication a(argc, argv);
 
-	An<WebCamController>()->RegisterForDeviceNotification();
 	LoginDialog app;
 	
 	loginfo(*logger) << "Start login";
@@ -110,6 +124,11 @@ int main(int argc, char* argv[])
 	loginfo(*logger) << "Program finished with code " << result;
 	Cleanup(file);
 	return result;
+}
+
+void ExitAlertDialog(LPCTSTR message)
+{
+	MessageBox(nullptr, message, L"Error", MB_ICONERROR);
 }
 
 void SetupKeyboardInspector(KeyboardInspector& ki)
@@ -234,7 +253,7 @@ void SetupKeyboardInspector(KeyboardInspector& ki)
 
 bool IsAlreadyRunning()
 {
-	CreateMutexA(0, FALSE, "Local\\SecureBrowser");
+	CreateMutexA(nullptr, FALSE, "Local\\SecureBrowser");
 
 	switch (GetLastError())
 	{
@@ -250,7 +269,7 @@ void WaitTillAnyCameraConnected()
 	while (An<WebCamController>()->GetCamerasCount() == 0)
 	{
 		int choose = MessageBox(
-			NULL,
+			nullptr,
 			L"The program requires a webcam. Connect to continue",
 			L"Error",
 			MB_ICONSTOP | MB_RETRYCANCEL | MB_DEFBUTTON4
@@ -259,12 +278,28 @@ void WaitTillAnyCameraConnected()
 		switch (choose)
 		{
 		case IDCANCEL:
+			An<WebCamController>()->UnregisterForDeviceNotification();
 			exit(-1);
 		default:
 			// Retry pressed
 			break;
 		}
 	}
+}
+
+std::vector<std::string> Split(const std::string& string, char delim)
+{
+	std::vector<std::string> elems;
+	std::back_insert_iterator<std::vector<std::string>> inserter = std::back_inserter(elems);
+	std::stringstream ss(string);
+	std::string item;
+
+	while (std::getline(ss, item, delim))
+	{
+		*(inserter++) = item;
+	}
+
+	return elems;
 }
 
 void Cleanup(std::ofstream& file_to_close)

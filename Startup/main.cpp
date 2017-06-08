@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <cstdio>
+#include <regex>
 
 constexpr ACCESS_MASK ACCESS_RIGHTS = GENERIC_ALL;
 
@@ -78,18 +79,18 @@ HDESK CreateHiddenDesktop(CHAR* desktop_name)
 	return hidden_desktop;
 }
 
-HANDLE StartBrowser()
+HANDLE StartBrowser(std::string path_to_browser = "Browser.exe", LPSTR browser_argv = nullptr)
 {
-	STARTUPINFO si;
+	STARTUPINFOA si;
 	PROCESS_INFORMATION pi;
 
 	ZeroMemory(&si, sizeof(si));
 	ZeroMemory(&pi, sizeof(pi));
 
 	si.cb = sizeof(si);
-	si.lpDesktop = L"SecureBrowser";
+	si.lpDesktop = "SecureBrowser";
 
-	if (!CreateProcess(TEXT("Browser.exe"), nullptr, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
+	if (!CreateProcessA(const_cast<char*>(path_to_browser.c_str()), browser_argv, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 	{
 		printf("\nCannot start browser. Error code: %d\n", GetLastError());
 		return nullptr;
@@ -106,8 +107,26 @@ void ClearClipboard()
 	}
 }
 
-void main()
+void ExitAlertDialog(LPCTSTR message)
 {
+	MessageBox(nullptr, message, L"Error", MB_ICONERROR);
+}
+
+void main(int argc, char** argv)
+{
+	if (argc != 2)
+	{
+		ExitAlertDialog(L"You can start Secure Browser only via invite link!");
+		return;
+	}
+
+	std::string path_of_executable = argv[0];
+	if (path_of_executable.find(" ") != std::string::npos)
+	{
+		ExitAlertDialog(L"Make sure your path doesn't include whitespaces");
+		return;
+	}
+
 	printf("Disable features: %s\n", ChangeAllFeatures(1) ? "true" : "false");
 	
 	HDESK sb_desktop = CreateHiddenDesktop("SecureBrowser");
@@ -115,13 +134,16 @@ void main()
 
 	printf("Entering hidden desktop\n");
 
-
 	//Need to switch thread into context of new desktop to register hotkeys
 	SetThreadDesktop(sb_desktop);
 	ClearClipboard();
 	SwitchDesktop(sb_desktop);
 
-	HANDLE browser = StartBrowser();
+	std::string input = path_of_executable + " " + argv[1];
+	std::string path_to_browser = std::regex_replace(path_of_executable, std::regex("Startup"), "Browser");
+
+	HANDLE browser = StartBrowser(path_to_browser, const_cast<char*>(input.c_str()));
+
 	if(browser)
 	{
 		WaitForSingleObject(browser, INFINITE);
@@ -139,4 +161,4 @@ void main()
 
 	CloseHandle(sb_desktop);
 	system("pause");
-}
+ }
