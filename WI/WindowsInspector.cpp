@@ -37,18 +37,18 @@ WindowsData WindowsInspector::WindowInfo(HWND hwnd)
 					{
 						if (processid_ == pe32.th32ProcessID)
 						{
-								//logdebug(*An<Logger>()) << "Title: " << wnd_title_;
-								//logdebug(*An<Logger>()) << "Process Id: " << processid_;
-								//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
+							//logdebug(*An<Logger>()) << "Title: " << wnd_title_;
+							//logdebug(*An<Logger>()) << "Process Id: " << processid_;
+							//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
 
-								ShowWindow(hwnd, SW_MINIMIZE);
+							ShowWindow(hwnd, SW_MINIMIZE);
 
-								std::cout << "Title: " << wnd_title << std::endl;
-								std::cout << "Process Id: " << processid_ << std::endl;
-								std::cout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
-								data.SetTitle(wnd_title);
-								data.SetProcessId(processid_);
-								data.SetProcessName(pe32.szExeFile);
+							std::cout << "Title: " << wnd_title << std::endl;
+							std::cout << "Process Id: " << processid_ << std::endl;
+							std::cout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
+							data.SetTitle(wnd_title);
+							data.SetProcessId(processid_);
+							data.SetProcessName(pe32.szExeFile);
 						}
 					}
 					while (Process32Next(handle_, &pe32));
