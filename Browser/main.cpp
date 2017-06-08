@@ -68,13 +68,13 @@ int main(int argc, char* argv[])
 
 	An<Logger> logger;
 
-	std::ofstream file(path + "log.txt", std::ios::out);
+	std::ofstream file(path + "Logs\\" + "log.txt", std::ios::out);
 	logger->SetOutput(file);
 	loginfo(*logger) << "Program initialized";
 	
 	QApplication a(argc, argv);
 
-	LoginDialog login_app(login, password);
+	LoginDialog login_app(login, password, path);
 	
 	loginfo(*logger) << "Start login";
 	if (!login_app.exec())
@@ -96,10 +96,10 @@ int main(int argc, char* argv[])
 	fws.Start();
 	An<WebCameraCapture> cam_cap;
 
-	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>();
+	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>(path + "Resources\\");
 
 	std::shared_ptr<IFrameSaver> shared_saver = std::make_shared<FileSystemFrameSaver>(FileSystemFrameSaver());
-	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetPathToSave("");
+	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetPathToSave(path + "Photos\\");
 
 	std::shared_ptr<PhotoMaker> shared_maker = std::make_shared<PhotoMaker>(PhotoMaker());
 	shared_maker->SetFrameSaver(shared_saver);

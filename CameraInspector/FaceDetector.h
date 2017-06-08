@@ -6,6 +6,7 @@
 #include <memory>
 #include <chrono>
 #include <ctime>
+#include <string>
 
 class FaceDetectorImpl;// forward-declare private "implementation" class
 struct ObserverInfo;
@@ -16,7 +17,7 @@ namespace CameraInspector
 class FaceDetector : public IFrameHandler
 {
 public:
-	CI_API FaceDetector();
+	CI_API FaceDetector(std::string path_to_resources);
 	CI_API ~FaceDetector() = default;
 	CI_API void Attach(const std::shared_ptr<IFaceDetectorObserver>& observer);
 	CI_API void Detach(const std::shared_ptr<IFaceDetectorObserver>& observer);

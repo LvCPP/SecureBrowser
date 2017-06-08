@@ -12,7 +12,7 @@ using namespace std;
 
 namespace
 {
-constexpr char* CASCADE_FILE_PATH = R"(Resources\haarcascade_frontalface_alt.xml)";
+constexpr char* CASCADE_FILE = R"(haarcascade_frontalface_alt.xml)";
 constexpr double SCALE_FACTOR = 1.1;
 constexpr int MIN_NEIGHBORS = 2;
 constexpr int FLAGS = cv::CASCADE_SCALE_IMAGE;
@@ -25,8 +25,8 @@ constexpr int SHIFT = 0;
 class FaceDetectorImpl
 {
 public:
-	FaceDetectorImpl()
-		:face_cascade_(CASCADE_FILE_PATH)
+	FaceDetectorImpl(std::string path_to_resources)
+		:face_cascade_(path_to_resources + CASCADE_FILE)
 	{
 	}
 	cv::CascadeClassifier& GetFaceCascade() { return face_cascade_; }
@@ -53,13 +53,12 @@ struct ObserverInfo
 	std::weak_ptr<IFaceDetectorObserver> ptr;
 };
 
-FaceDetector::FaceDetector()
+FaceDetector::FaceDetector(std::string path_to_resources)
 	: faces_quantity_(1)
-	, pimpl_ (std::make_unique<FaceDetectorImpl>())
+	, pimpl_ (std::make_unique<FaceDetectorImpl>(path_to_resources))
 	, last_time_proceeded_(std::chrono::high_resolution_clock::now())
 	, frequency_(5s)
 {
-
 };
 
 void FaceDetector::Attach(const std::shared_ptr<IFaceDetectorObserver>& observer)

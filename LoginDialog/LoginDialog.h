@@ -22,7 +22,7 @@ class LoginDialog : public QWizard
 	Q_OBJECT
 
 public:
-	LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, QWidget* parent = Q_NULLPTR);
+	LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, std::string path, QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API ~LoginDialog();
 
 private:
@@ -57,6 +57,7 @@ private:
 	QStringList camera_list_;
 	std::string login_;
 	std::string password_;
+	std::string path_;
 	
 signals:
 	void UpdateImage(QPixmap image);

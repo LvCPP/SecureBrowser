@@ -39,7 +39,7 @@ static const QString reg_path = "HKEY_CURRENT_USER\\Software\\SoftServe\\SecureB
 static const QString reg_group_name = "Run";
 static const QString reg_value_name = "FirstRun";
 
-LoginDialog::LoginDialog(std::string login, std::string password, QWidget* parent)
+LoginDialog::LoginDialog(std::string login, std::string password, std::string path, QWidget* parent)
 	: QWizard(parent)
 	, is_frame_enabled_(true)
 	, is_login_checked_(false)
@@ -47,6 +47,7 @@ LoginDialog::LoginDialog(std::string login, std::string password, QWidget* paren
 	, is_photo_made_(false)
 	, login_(login)
 	, password_(password)
+	, path_(path)
 {
 	ui_ = new Ui::Wizard;
 	ui_->setupUi(this);
@@ -282,6 +283,7 @@ void LoginDialog::AcceptPhotoButtonClicked()
 	ui_->accept_photo_button->setEnabled(false);
 	FileSystemFrameSaver saver;
 	saver.SetNameToSave("ID_photo");
+	saver.SetPathToSave(path_ + "Photos\\");
 	saver.Save(id_frame_);
 	is_photo_made_ = true;
 	QMessageBox::warning(this, tr("Photo has been accepted "),
