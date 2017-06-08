@@ -105,7 +105,7 @@ void ClearClipboard()
 	}
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
+int main(int argc, char* argv[])
 {
 	ChangeAllFeatures(1);
 	
