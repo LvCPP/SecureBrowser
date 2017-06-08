@@ -68,9 +68,6 @@
     <ClInclude Include="LoginDialogUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_LoginDialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Tools\CameraInspector_test\packages.config" />
