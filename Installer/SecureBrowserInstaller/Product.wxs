@@ -22,6 +22,7 @@
     <Feature Id="ProductFeature" Title="SecureBrowser" Level="1">
       <ComponentGroupRef Id="Components" />
       <ComponentGroupRef Id="ComponentResources" />
+      <ComponentGroupRef Id="ComponentDirectories" />
       <ComponentRef Id="RegistryEntries" />
     </Feature>
   </Product>
@@ -31,6 +32,8 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="INSTALLFOLDER" Name="SecureBrowser">
         <Directory Id="ResourceFolder" Name="Resources" />
+        <Directory Id="PhotosFolder" Name="Photos" />
+        <Directory Id="LogsFolder" Name="Logs" />
       </Directory>
       <Directory Id="MenuFolder">
         <Directory Id="StartMenuFolder" Name="Secure Browser" />
@@ -60,6 +63,20 @@
 
   <!-- Product components -->
   <Fragment>
+    
+    <!-- Creating empty directories -->
+    <ComponentGroup Id="ComponentDirectories">
+      <Component Id="ComponentPhotosFolder"
+                 Guid="16f60cbe-f1ab-4797-9ca7-c2d46e84c2e0"
+                 Directory="PhotosFolder">
+        <CreateFolder />
+      </Component>
+      <Component Id="ComponentLogsFolder"
+                 Guid="53b8736e-17c6-41f0-ade0-518cd3c4ab5d"
+                 Directory="LogsFolder">
+        <CreateFolder />
+      </Component>
+    </ComponentGroup>
     
     <!-- Resources -->
     <ComponentGroup Id="ComponentResources" Directory="ResourceFolder">
