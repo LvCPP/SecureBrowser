@@ -13,10 +13,10 @@ public:
 	WindowsData(HWND hwnd);
 	~WindowsData() = default;
 
-	void SetHwnd(HWND hwnd); /*{ hwnd_ = hwnd; }*/
-	void SetTitle(char* title); /*{ strcpy(title_, title); }*/
-	void SetProcessName(char* process_name); /*{ strcpy(process_name_, process_name); }*/
-	void SetProcessId(DWORD processid); /*{ processid_ = processid; }*/
+	void SetHwnd(HWND hwnd);
+	void SetTitle(char* title);
+	void SetProcessName(char* process_name);
+	void SetProcessId(DWORD processid);
 	UINT GetEventCode() const;
 	char* GetTitle();
 	char* GetProcessName();
