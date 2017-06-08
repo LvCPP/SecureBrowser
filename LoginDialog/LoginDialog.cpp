@@ -39,6 +39,33 @@ static const QString reg_path = "HKEY_CURRENT_USER\\Software\\SoftServe\\SecureB
 static const QString reg_group_name = "Run";
 static const QString reg_value_name = "FirstRun";
 
+LoginDialog::LoginDialog(QWidget* parent)
+	: QWizard(parent)
+	, is_frame_enabled_(true)
+	, is_login_checked_(false)
+	, is_frame_updated_(true)
+	, is_photo_made_(false)
+{
+	ui_ = new Ui::Wizard;
+	ui_->setupUi(this);
+
+	this->setWindowFlags(Qt::Window
+		| Qt::WindowTitleHint
+		| Qt::CustomizeWindowHint
+		| Qt::MSWindowsFixedSizeDialogHint
+		| Qt::WindowCloseButtonHint);
+
+	QList<QWizard::WizardButton> layout;
+	layout << QWizard::Stretch << QWizard::NextButton << QWizard::FinishButton;
+	this->setButtonLayout(layout);
+
+	connect(ui_->take_photo_button, SIGNAL(clicked()), this, SLOT(TakePhoto()));
+	connect(this, SIGNAL(UpdateImage(QPixmap)), ui_->image_label, SLOT(setPixmap(QPixmap)));
+	connect(ui_->camera_select_combobox, SIGNAL(activated(int)), this, SLOT(ChooseCamera(int)));
+	connect(ui_->decline_photo_button, SIGNAL(clicked()), this, SLOT(DeclinePhotoButtonClicked()));
+	connect(ui_->accept_photo_button, SIGNAL(clicked()), this, SLOT(AcceptPhotoButtonClicked()));
+}
+
 LoginDialog::LoginDialog(std::string login, std::string password, QWidget* parent)
 	: QWizard(parent)
 	, is_frame_enabled_(true)
@@ -255,7 +282,7 @@ void LoginDialog::TakePhoto()
 	ui_->accept_photo_button->setEnabled(true);
 	ui_->take_photo_button->setDisabled(true);
 	QMessageBox::warning(this, tr("Photo has been taken"),
-		tr("<p align='center'>You have to accept the photo<br>"
+		tr("<p align='center'>You have to save the photo<br>"
 			"or make another one using Decline photo button</p>"),
 		QMessageBox::Ok);
 }
@@ -271,10 +298,6 @@ void LoginDialog::DeclinePhotoButtonClicked()
 	ui_->accept_photo_button->setDisabled(true);
 	ui_->decline_photo_button->setDisabled(true);
 	is_frame_updated_ = true;
-	QMessageBox::warning(this, tr("Decline photo"),
-		tr("<p align='center'>You can take another photo using Take photo button<br>"
-			"or proceed if your photo has already been accepted</p>"),
-		QMessageBox::Ok);
 }
 
 void LoginDialog::AcceptPhotoButtonClicked()
@@ -284,10 +307,6 @@ void LoginDialog::AcceptPhotoButtonClicked()
 	saver.SetNameToSave("ID_photo");
 	saver.Save(id_frame_);
 	is_photo_made_ = true;
-	QMessageBox::warning(this, tr("Photo has been accepted "),
-		tr("<p align='center'>You can proceed now clicking on Next button<br>"
-			"or make another photo using Decline photo button</p>"),
-		QMessageBox::Ok);
 }
 
 void LoginDialog::closeEvent(QCloseEvent* close_button)

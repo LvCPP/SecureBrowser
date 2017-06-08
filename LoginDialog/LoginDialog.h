@@ -22,6 +22,7 @@ class LoginDialog : public QWizard
 	Q_OBJECT
 
 public:
+	LOGIN_DIALOG_API LoginDialog(QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API ~LoginDialog();
 

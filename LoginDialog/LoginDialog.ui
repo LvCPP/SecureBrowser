@@ -704,7 +704,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Take a photo</string>
+           <string>Take photo</string>
           </property>
          </widget>
         </item>
@@ -877,7 +877,7 @@
  </widget>
  <resources>
   <include location="LoginDialog.qrc"/>
-  <include location="Login.qrc"/>
+  <include location="LoginDialog.qrc"/>
  </resources>
  <connections/>
 </ui>
