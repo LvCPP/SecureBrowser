@@ -82,7 +82,12 @@ void Browser::ButtonForwardHistory()
 void Browser::CloseButton()
 {
 	QMessageBox::StandardButtons reply;
-	reply = QMessageBox::question(this, "Warning", "Are you sure you want to quit?", QMessageBox::Yes | QMessageBox::No);
+	reply = QMessageBox::question(this
+		, "Warning"
+		, "Are you sure you want to quit?"
+		, QMessageBox::Yes | QMessageBox::No
+		, QMessageBox::No);
+	
 	if (reply == QMessageBox::Yes)
 		Browser::close();
 }

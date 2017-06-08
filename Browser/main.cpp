@@ -63,6 +63,9 @@ int main(int argc, char* argv[])
 	std::size_t pos = startup_path.find("Startup.exe");
 	std::string path = startup_path.substr(0, pos);
 
+	std::string login = input.at(1);
+	std::string password = input.at(2);
+
 	An<Logger> logger;
 
 	std::ofstream file(path + "log.txt", std::ios::out);
@@ -71,10 +74,10 @@ int main(int argc, char* argv[])
 	
 	QApplication a(argc, argv);
 
-	LoginDialog app;
+	LoginDialog login_app(login, password);
 	
 	loginfo(*logger) << "Start login";
-	if (!app.exec())
+	if (!login_app.exec())
 	{
 		logerror(*logger) << "User aborted logging in. Finish program.";
 		Cleanup(file);

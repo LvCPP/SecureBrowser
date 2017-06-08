@@ -22,11 +22,21 @@ class LoginDialog : public QWizard
 	Q_OBJECT
 
 public:
-	LOGIN_DIALOG_API LoginDialog(QWidget* parent = Q_NULLPTR);
+	LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API ~LoginDialog();
 
 private:
-	Ui::Wizard* ui_;
+	void CameraThread();
+	void RefreshComboBox();
+	void InitCamera();
+
+	int nextId() const override;
+	void initializePage(int id) override;
+	void closeEvent(QCloseEvent* close_button) override;
+
+	void SetFirstRunSetting();
+	bool IsFirstRun();
+	void RemoveFirstRunSetting();
 
 	enum
 	{
@@ -36,6 +46,8 @@ private:
 		, LAST_PAGE
 	};
 
+	Ui::Wizard* ui_;
+
 	bool is_login_checked_;
 	Frame id_frame_;
 	mutable std::thread worker_;
@@ -43,18 +55,8 @@ private:
 	bool is_frame_updated_;
 	bool is_photo_made_;
 	QStringList camera_list_;
-
-	void CameraThread();
-	void RefreshComboBox();
-	void InitCamera();
-
-	int nextId() const override;
-	void initializePage(int id) override;
-	void closeEvent(QCloseEvent* close_button) override;
-	
-	void SetFirstRunSetting();
-	bool IsFirstRun();
-	void RemoveFirstRunSetting();
+	std::string login_;
+	std::string password_;
 	
 signals:
 	void UpdateImage(QPixmap image);

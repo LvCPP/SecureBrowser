@@ -39,12 +39,14 @@ static const QString reg_path = "HKEY_CURRENT_USER\\Software\\SoftServe\\SecureB
 static const QString reg_group_name = "Run";
 static const QString reg_value_name = "FirstRun";
 
-LoginDialog::LoginDialog(QWidget* parent)
+LoginDialog::LoginDialog(std::string login, std::string password, QWidget* parent)
 	: QWizard(parent)
 	, is_frame_enabled_(true)
 	, is_login_checked_(false)
 	, is_frame_updated_(true)
 	, is_photo_made_(false)
+	, login_(login)
+	, password_(password)
 {
 	ui_ = new Ui::Wizard;
 	ui_->setupUi(this);
@@ -162,8 +164,8 @@ void LoginDialog::CheckLogin()
 						"Please provide correct username and password!</p>"),
 					QMessageBox::Ok) == QMessageBox::Ok)
 				{
-					ui_->username_lineedit->setText("");
-					ui_->password_lineedit->setText("");
+					ui_->username_lineedit->setText(QString::fromStdString(login_));
+					ui_->password_lineedit->setText(QString::fromStdString(password_));
 					ui_->agree_checkbox->setCheckState(Qt::Unchecked);
 				}
 			}
@@ -231,8 +233,8 @@ void LoginDialog::initializePage(int id)
 		return;
 	case LOGIN_PAGE:
 		ui_->login_button->setEnabled(false);
-		ui_->username_lineedit->setText("");
-		ui_->password_lineedit->setText("");
+		ui_->username_lineedit->setText(QString::fromStdString(login_));
+		ui_->password_lineedit->setText(QString::fromStdString(password_));
 		ui_->agree_checkbox->setCheckState(Qt::Unchecked);
 		connect(ui_->login_button, SIGNAL(clicked()), this, SLOT(CheckLogin()));
 		connect(ui_->agree_checkbox, SIGNAL(toggled(bool)), ui_->login_button, SLOT(setEnabled(bool)));
@@ -240,7 +242,6 @@ void LoginDialog::initializePage(int id)
 	case MAKE_PHOTO_PAGE:
 		RefreshComboBox();
 		InitCamera();
-		
 		return;
 	case LAST_PAGE:
 	default: return;
