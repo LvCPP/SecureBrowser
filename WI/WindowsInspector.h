@@ -1,5 +1,6 @@
 #pragma once
 #include "WindowsInspectorUtils.h"
+#include "WindowsInspectorData.h"
 #include <Logger.h>
 #include <thread>
 #include <windows.h>
@@ -9,6 +10,12 @@
 namespace SBWindowsInspector
 {
 
+enum class WindowsEvents
+{
+	WindowCreated,
+	WindowRestored
+};
+
 class WindowsInspector
 {
 public:
@@ -17,7 +24,7 @@ public:
 	WINDOWSINSPECTOR_API void StartWindowsInspector();
 	WINDOWSINSPECTOR_API void StopWindowsInspector();
 	void StopAndWait();
-	static BOOL EnumWindowsProc(HWND hwnd);
+	static WindowsData WindowInfo(HWND hwnd);
 
 protected:
 	void MessageLoop();

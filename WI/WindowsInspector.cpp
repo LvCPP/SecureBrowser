@@ -1,4 +1,5 @@
 #include "WindowsInspector.h"
+#include "IWindowsInspectorObserver.h"
 #include "TlHelp32.h"
 
 using namespace SBWindowsInspector;
@@ -14,45 +15,49 @@ WindowsInspector::~WindowsInspector()
 	StopAndWait();
 }
 
-BOOL WindowsInspector::EnumWindowsProc(HWND hwnd)
+WindowsData WindowsInspector::WindowInfo(HWND hwnd)
 {
 	char wnd_title[255];
 	DWORD processid_;
+	WindowsData data(hwnd);
 	if (IsWindowEnabled(hwnd))
 	{
 		GetWindowTextA(hwnd, wnd_title, sizeof(wnd_title));
 		GetWindowThreadProcessId(hwnd, &processid_);
-		HANDLE handle_ = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-		if (handle_)
+		if (wnd_title[0] != '\0')
 		{
-			PROCESSENTRY32 pe32;
-			pe32.dwSize = sizeof(PROCESSENTRY32);
-			if (Process32First(handle_, &pe32)) 
+			HANDLE handle_ = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+			if (handle_)
 			{
-				do
+				PROCESSENTRY32 pe32;
+				pe32.dwSize = sizeof(PROCESSENTRY32);
+				if (Process32First(handle_, &pe32))
 				{
-					if (processid_ == pe32.th32ProcessID)
+					do
 					{
-						if (wnd_title[0] != '\0')
+						if (processid_ == pe32.th32ProcessID)
 						{
-							//logdebug(*An<Logger>()) << "Title: " << wnd_title_;
-							//logdebug(*An<Logger>()) << "Process Id: " << processid_;
-							//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
+								//logdebug(*An<Logger>()) << "Title: " << wnd_title_;
+								//logdebug(*An<Logger>()) << "Process Id: " << processid_;
+								//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
 
-							ShowWindow(hwnd, SW_MINIMIZE);
+								ShowWindow(hwnd, SW_MINIMIZE);
 
-							std::wcout << "Title: " << wnd_title << std::endl;
-							std::wcout << "Process Id: " << processid_ << std::endl;
-							std::wcout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
+								std::cout << "Title: " << wnd_title << std::endl;
+								std::cout << "Process Id: " << processid_ << std::endl;
+								std::cout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
+								data.SetTitle(wnd_title);
+								data.SetProcessId(processid_);
+								data.SetProcessName(pe32.szExeFile);
 						}
 					}
+					while (Process32Next(handle_, &pe32));
 				} 
-				while (Process32Next(handle_, &pe32));
 			}
 			CloseHandle(handle_);
 		}
 	}
-	return true;
+	return data;
 }
 
 
@@ -71,33 +76,33 @@ void CALLBACK WinEventProc(
 	{
 	case EVENT_OBJECT_CREATE:
 		OutputDebugStringA("Window Created: \n");
-		WindowsInspector::EnumWindowsProc(hwnd);
 		//ShowWindow(hwnd, SW_MINIMIZE);
+		Notify(WindowsEvents::WindowCreated, WindowsData(hwnd)/*WindowsInspector::WindowInfo(hwnd)*/);
 		break;
 
 	//case EVENT_SYSTEM_MOVESIZEEND:
 	//	OutputDebugStringA("Window Moved: \n");
-	//	WindowsInspector::EnumWindowsProc(hwnd);
+	//	WindowsInspector::WindowInfo(hwnd);
 	//	ShowWindow(hwnd, SW_MINIMIZE);
 	//	break;
 	//case EVENT_SYSTEM_MINIMIZESTART:
 	//	OutputDebugStringA("Window Minimized: \n");
-	//	WindowsInspector::EnumWindowsProc(hwnd);
+	//	WindowsInspector::WindowInfo(hwnd);
 	//	ShowWindow(hwnd, SW_MINIMIZE);
 	//	break;
 	//case EVENT_SYSTEM_SWITCHEND:
 	//	OutputDebugStringA("Window Switched: \n");
-	//	WindowsInspector::EnumWindowsProc(hwnd);
+	//	WindowsInspector::WindowInfo(hwnd);
 	//	ShowWindow(hwnd, SW_MINIMIZE);
 	//	break;
 	//case EVENT_OBJECT_DESTROY:
 	//	OutputDebugStringA("Window Destroyed: \n");
-	//	WindowsInspector::EnumWindowsProc(hwnd);
+	//	WindowsInspector::WindowInfo(hwnd);
 	//	ShowWindow(hwnd, SW_MINIMIZE);
 	//	break;
 	case EVENT_SYSTEM_MINIMIZEEND:
 		OutputDebugStringA("Focus on window: \n");
-		WindowsInspector::EnumWindowsProc(hwnd);
+		Notify(WindowsEvents::WindowRestored, WindowsData(hwnd));
 		//ShowWindow(hwnd, SW_MINIMIZE);
 		break;
 	default:
