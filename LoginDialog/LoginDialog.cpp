@@ -123,8 +123,7 @@ int LoginDialog::nextId() const
 
 void LoginDialog::CheckLogin()
 {
-	moodle_session_ = "";
-	std::ofstream f("out.txt");
+	std::ofstream f("login_dialog_output.txt");
 	
 	std::string username = ui_->username_lineedit->text().toStdString();
 	std::string password = ui_->password_lineedit->text().toStdString();
@@ -179,7 +178,7 @@ void LoginDialog::CheckLogin()
 					ui_->login_button->setEnabled(false);
 				}
 				std::size_t semicolon_pos = to_utf8string(it->second).find(";");
-				moodle_session_ = to_utf8string(it->second).substr(0, semicolon_pos);
+				this->moodle_session_ = to_utf8string(it->second).substr(0, semicolon_pos);
 			}
 			else
 			{
@@ -191,6 +190,7 @@ void LoginDialog::CheckLogin()
 					ui_->username_lineedit->setText(QString::fromStdString(login_));
 					ui_->password_lineedit->setText(QString::fromStdString(password_));
 					ui_->agree_checkbox->setCheckState(Qt::Unchecked);
+					this->moodle_session_ = "";
 				}
 			}
 		}
@@ -199,7 +199,7 @@ void LoginDialog::CheckLogin()
 			continue;
 		}
 	}
-	f << "moodle session: " << moodle_session_ << "\n";
+	f << "moodle session: " << this->moodle_session_ << "\n";
 	f.close();
 }
 
@@ -372,5 +372,15 @@ void LoginDialog::RemoveFirstRunSetting()
 	setting.beginGroup(reg_group_name);
 	setting.remove(reg_value_name);
 	setting.endGroup();
+}
+
+void LoginDialog::SetMoodleSession(std::string session)
+{
+	this->moodle_session_ = session;
+}
+
+void LoginDialog::GetMoodleSession(std::string& session)
+{
+	session = this->moodle_session_;
 }
 

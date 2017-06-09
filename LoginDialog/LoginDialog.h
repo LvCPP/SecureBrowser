@@ -27,13 +27,16 @@ public:
 	LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API ~LoginDialog();
 
+	LOGIN_DIALOG_API void GetMoodleSession(std::string& session);
+
 	std::string moodle_session_;
 
 private:
 	void CameraThread();
 	void RefreshComboBox();
 	void InitCamera();
-
+	void SetMoodleSession(std::string session);
+	
 	int nextId() const override;
 	void initializePage(int id) override;
 	void closeEvent(QCloseEvent* close_button) override;
@@ -72,7 +75,7 @@ private slots:
 	void AcceptPhotoButtonClicked();
 
 public slots:
-LOGIN_DIALOG_API void CheckLogin();
+	void CheckLogin();
 
 
 };

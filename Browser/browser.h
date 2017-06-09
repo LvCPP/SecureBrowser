@@ -33,9 +33,13 @@ private slots:
 	void ButtonBackHistory();
 	void ButtonForwardHistory();
 	void CloseButton();
-
+	
 private:
+	/*std::string GetMoodleSession();
+	void SetMoodleSession();*/
 	QScopedPointer<Ui::Browser> ui_;
+	/*std::string moodle_session_;*/
+	
 };
 
 }

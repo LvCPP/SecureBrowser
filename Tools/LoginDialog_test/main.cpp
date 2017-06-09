@@ -13,7 +13,7 @@ using namespace Login;
 
 int main(int argc, char *argv[])
 {
-	std::ofstream f("out2.txt");
+	std::ofstream f("login_dialog_test_output.txt");
 
 	An<WebCamController>()->RegisterForDeviceNotification();
 
@@ -21,14 +21,13 @@ int main(int argc, char *argv[])
 	LoginDialog login_dialog;
 	login_dialog.show();
 
+	int result = a.exec();
+
 	std::string cookies;
-	login_dialog.CheckLogin(cookies);
-	
+	login_dialog.GetMoodleSession(cookies);
+
 	f << cookies;
 	f.close();
-
-
-	int result = a.exec();
 
 	An<WebCamController>()->UnregisterForDeviceNotification();
 	return result;

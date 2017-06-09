@@ -8,9 +8,7 @@ Browser::Browser(QWidget *parent)
 	, ui_(new Ui::Browser())
 {
 	ui_->setupUi(this);
-	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint 
-		//| Qt::FramelessWindowHint
-	);
+	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
@@ -29,6 +27,7 @@ Browser::Browser(QWidget *parent)
 	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
 	ui_->web_view->load(QUrl("https://softserve.academy"));
+	
 }
 
 Browser::~Browser()
@@ -93,3 +92,17 @@ void Browser::CloseButton()
 	if (reply == QMessageBox::Yes)
 		Browser::close();
 }
+
+//std::string Browser::GetMoodleSession()
+//{
+//	LoginDialog log_d;
+//	return log_d.GetMoodleSession();
+//}
+//
+//void Browser::SetMoodleSession()
+//{
+//	LoginDialog log_d;
+//	this->moodle_session_ = log_d.GetMoodleSession();
+//}
+
+

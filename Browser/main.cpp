@@ -75,7 +75,9 @@ int main(int argc, char* argv[])
 	QApplication a(argc, argv);
 
 	LoginDialog login_app(login, password);
+
 	
+
 	loginfo(*logger) << "Start login";
 	if (!login_app.exec())
 	{
@@ -83,7 +85,13 @@ int main(int argc, char* argv[])
 		Cleanup(file);
 		return 0;
 	}
-	
+
+	std::ofstream f("browser_main.txt");
+	std::string cookies;
+	login_app.GetMoodleSession(cookies);
+	f << cookies;
+	f.close();
+
 	// Setting up inspectors
 	KeyboardInspector ki;
 	SetupKeyboardInspector(ki);
