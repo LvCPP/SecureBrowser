@@ -85,15 +85,16 @@ int main(int argc, char* argv[])
 	}
 	
 	// Setting up inspectors
-	KeyboardInspector ki;
-	SetupKeyboardInspector(ki);
-	ki.Start();
+//	KeyboardInspector ki;
+//	SetupKeyboardInspector(ki);
+//	ki.Start();
 	
-	WindowsInspector wi;
-	wi.StartWindowsInspector();
+//	WindowsInspector wi;
+//	wi.StartWindowsInspector();
 	
-	FakeWindowService fws;
-	fws.Start();
+//	FakeWindowService fws;				// call once when program starts.
+//	fws.Start();
+
 	An<WebCameraCapture> cam_cap;
 
 	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>(path + "Resources\\");
@@ -115,14 +116,18 @@ int main(int argc, char* argv[])
 	cam_cap->Start();
 
 	loginfo(*logger) << "Start Browser";
-	Browser w;
+
+	std::string link_to_quiz = input.at(3);
+	std::string password_to_quiz = input.at(4);
+
+	Browser w(link_to_quiz, password_to_quiz);
 	w.showMaximized();
 	int result = a.exec();
 
 	cam_cap->Stop();
-	fws.Stop();
-	wi.StopWindowsInspector();
-	ki.Stop();
+//	fws.Stop();
+//	wi.StopWindowsInspector();
+//	ki.Stop();
 
 	loginfo(*logger) << "Program finished with code " << result;
 	Cleanup(file);

@@ -3,12 +3,15 @@
 
 using namespace SecureBrowser;
 
-Browser::Browser(QWidget *parent)
+Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, QWidget *parent)
 	: QWidget(parent)
 	, ui_(new Ui::Browser())
+	, link_to_quiz_(link_to_quiz)
+	, password_to_quiz_(password_to_quiz)
 {
 	ui_->setupUi(this);
 	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+	
 	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
@@ -22,11 +25,12 @@ Browser::Browser(QWidget *parent)
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetMyTitle);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
+
 	ui_->push_btn_back->setEnabled(false);
 	ui_->push_btn_forward->setEnabled(false);
 	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
-	ui_->web_view->load(QUrl("https://softserve.academy"));
+	ui_->web_view->load(QUrl(QString::fromStdString(link_to_quiz_)));
 }
 
 Browser::~Browser()

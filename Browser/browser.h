@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <qwebenginehistory.h>
 #include <qmessagebox.h>
+#include <string>
 
 namespace Ui 
 { 
@@ -19,7 +20,7 @@ class Browser : public QWidget
 	Q_OBJECT
 
 public:
-	Browser(QWidget *parent = 0);
+	Browser(std::string link_to_quiz, std::string password_to_quiz, QWidget *parent = 0);
 	~Browser();
 
 private slots:
@@ -34,6 +35,8 @@ private slots:
 
 private:
 	QScopedPointer<Ui::Browser> ui_;
+	std::string link_to_quiz_;
+	std::string password_to_quiz_;
 };
 
 }
