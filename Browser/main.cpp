@@ -205,7 +205,7 @@ void SetupKeyboardInspector(KeyboardInspector& ki)
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_LALT + KEY_ESC);
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_RALT + KEY_ESC);
 
-	// F1 - F12
+	// F1 - F24
 	ki.IgnoreKeySequence(KEY_F1);
 	ki.IgnoreKeySequence(KEY_F2);
 	ki.IgnoreKeySequence(KEY_F3);

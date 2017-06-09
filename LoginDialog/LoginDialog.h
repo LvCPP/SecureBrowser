@@ -11,6 +11,7 @@
 #include <QCloseEvent>
 
 #include <thread>
+#include <string>
 
 using namespace CameraInspector;
 
@@ -25,6 +26,8 @@ public:
 	LOGIN_DIALOG_API LoginDialog(QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API ~LoginDialog();
+
+	std::string moodle_session_;
 
 private:
 	void CameraThread();
@@ -58,7 +61,7 @@ private:
 	QStringList camera_list_;
 	std::string login_;
 	std::string password_;
-	
+		
 signals:
 	void UpdateImage(QPixmap image);
 	
@@ -67,8 +70,11 @@ private slots:
 	void ChooseCamera(int id);
 	void DeclinePhotoButtonClicked();
 	void AcceptPhotoButtonClicked();
-	void CheckLogin();
-	
+
+public slots:
+LOGIN_DIALOG_API void CheckLogin();
+
+
 };
 
 }

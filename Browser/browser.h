@@ -4,6 +4,8 @@
 #include <qwebenginehistory.h>
 #include <qmessagebox.h>
 
+#include <string>
+
 namespace Ui 
 { 
 class Browser;

@@ -59,11 +59,6 @@ LoginDialog::LoginDialog(QWidget* parent)
 	layout << QWizard::Stretch << QWizard::NextButton << QWizard::FinishButton;
 	this->setButtonLayout(layout);
 
-	connect(ui_->take_photo_button, SIGNAL(clicked()), this, SLOT(TakePhoto()));
-	connect(this, SIGNAL(UpdateImage(QPixmap)), ui_->image_label, SLOT(setPixmap(QPixmap)));
-	connect(ui_->camera_select_combobox, SIGNAL(activated(int)), this, SLOT(ChooseCamera(int)));
-	connect(ui_->decline_photo_button, SIGNAL(clicked()), this, SLOT(DeclinePhotoButtonClicked()));
-	connect(ui_->accept_photo_button, SIGNAL(clicked()), this, SLOT(AcceptPhotoButtonClicked()));
 }
 
 LoginDialog::LoginDialog(std::string login, std::string password, QWidget* parent)
@@ -87,12 +82,6 @@ LoginDialog::LoginDialog(std::string login, std::string password, QWidget* paren
 	QList<QWizard::WizardButton> layout;
 	layout << QWizard::Stretch << QWizard::NextButton << QWizard::FinishButton;
 	this->setButtonLayout(layout);
-
-	connect(ui_->take_photo_button, SIGNAL(clicked()), this, SLOT(TakePhoto()));
-	connect(this, SIGNAL(UpdateImage(QPixmap)), ui_->image_label, SLOT(setPixmap(QPixmap)));
-	connect(ui_->camera_select_combobox, SIGNAL(activated(int)), this, SLOT(ChooseCamera(int)));
-	connect(ui_->decline_photo_button, SIGNAL(clicked()), this, SLOT(DeclinePhotoButtonClicked()));
-	connect(ui_->accept_photo_button, SIGNAL(clicked()), this, SLOT(AcceptPhotoButtonClicked()));
 }
 
 LoginDialog::~LoginDialog()
@@ -129,8 +118,14 @@ int LoginDialog::nextId() const
 	}
 }
 
+#include <iostream>
+#include <fstream>
+
 void LoginDialog::CheckLogin()
 {
+	moodle_session_ = "";
+	std::ofstream f("out.txt");
+	
 	std::string username = ui_->username_lineedit->text().toStdString();
 	std::string password = ui_->password_lineedit->text().toStdString();
 	std::string body_text = "username=" + username + "&password=" + password + "&anchor=";
@@ -153,7 +148,7 @@ void LoginDialog::CheckLogin()
 		}
 	});
 
-	utility::string_t base_url = U("https://softserve.academy");
+	utility::string_t base_url = U("https://softserve.academy/");
 	http_client client(base_url, config);
 		
 	http_request req(methods::POST);
@@ -183,6 +178,8 @@ void LoginDialog::CheckLogin()
 					ui_->agree_checkbox->setEnabled(false);
 					ui_->login_button->setEnabled(false);
 				}
+				std::size_t semicolon_pos = to_utf8string(it->second).find(";");
+				moodle_session_ = to_utf8string(it->second).substr(0, semicolon_pos);
 			}
 			else
 			{
@@ -202,6 +199,8 @@ void LoginDialog::CheckLogin()
 			continue;
 		}
 	}
+	f << "moodle session: " << moodle_session_ << "\n";
+	f.close();
 }
 
 void LoginDialog::CameraThread()
@@ -269,6 +268,11 @@ void LoginDialog::initializePage(int id)
 	case MAKE_PHOTO_PAGE:
 		RefreshComboBox();
 		InitCamera();
+		connect(ui_->take_photo_button, SIGNAL(clicked()), this, SLOT(TakePhoto()));
+		connect(this, SIGNAL(UpdateImage(QPixmap)), ui_->image_label, SLOT(setPixmap(QPixmap)));
+		connect(ui_->camera_select_combobox, SIGNAL(activated(int)), this, SLOT(ChooseCamera(int)));
+		connect(ui_->decline_photo_button, SIGNAL(clicked()), this, SLOT(DeclinePhotoButtonClicked()));
+		connect(ui_->accept_photo_button, SIGNAL(clicked()), this, SLOT(AcceptPhotoButtonClicked()));
 		return;
 	case LAST_PAGE:
 	default: return;
@@ -369,3 +373,4 @@ void LoginDialog::RemoveFirstRunSetting()
 	setting.remove(reg_value_name);
 	setting.endGroup();
 }
+
