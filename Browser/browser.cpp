@@ -29,6 +29,60 @@ Browser::Browser(QWidget *parent)
 	ui_->web_view->load(QUrl("https://softserve.academy"));
 	
 }
+#include <cpprest/http_client.h>
+#include <cpprest/filestream.h>
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace utility;
+using namespace utility::conversions;
+using namespace web;
+using namespace web::http;
+using namespace web::http::client;
+
+using utf8string = std::string;  // alias for working with http_client
+
+Browser::Browser(std::string cookies, QWidget *parent)
+	: QWidget(parent)
+	, ui_(new Ui::Browser())
+	, cookies_(cookies)
+{
+	ui_->setupUi(this);
+	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
+	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
+	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
+	connect(ui_->push_btn_reload, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
+	connect(ui_->push_btn_stop, &QPushButton::clicked, ui_->web_view, &QWebEngineView::stop);
+	connect(ui_->push_btn_close, &QPushButton::clicked, this, &Browser::CloseButton);
+	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->load_progress_page, &QProgressBar::setValue);
+	connect(ui_->web_view, &QWebEngineView::loadStarted, this, &Browser::ShowProgressBar);
+	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::HideProgressBar);
+	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
+	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetMyTitle);
+	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
+	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
+	ui_->push_btn_back->setEnabled(false);
+	ui_->push_btn_forward->setEnabled(false);
+	ui_->push_btn_reload->setEnabled(false);
+	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
+	
+	utility::string_t base_url = U("https://softserve.academy/");
+	http_client client(base_url);
+	std::ofstream f("browser_body.txt");
+	http_request req(methods::GET);
+	req.headers().add(L"Cookie", cookies.c_str());
+	req.headers().add(L"Content-Type", L"application/x-www-form-urlencoded");
+	http_response response = client.request(req).get();
+	utf8string body = response.extract_utf8string().get();
+	QString BODY = QString::fromStdString(body);
+	f << "cookies.c_str(): " << cookies.c_str() << "\n";
+	f << "status-code: " << response.status_code() << "\n";
+	f.close();
+	ui_->web_view->setHtml(BODY, QUrl("https://softserve.academy"));	
+}
 
 Browser::~Browser()
 {
@@ -92,17 +146,4 @@ void Browser::CloseButton()
 	if (reply == QMessageBox::Yes)
 		Browser::close();
 }
-
-//std::string Browser::GetMoodleSession()
-//{
-//	LoginDialog log_d;
-//	return log_d.GetMoodleSession();
-//}
-//
-//void Browser::SetMoodleSession()
-//{
-//	LoginDialog log_d;
-//	this->moodle_session_ = log_d.GetMoodleSession();
-//}
-
 

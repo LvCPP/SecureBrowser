@@ -22,6 +22,7 @@ class Browser : public QWidget
 
 public:
 	Browser(QWidget *parent = 0);
+	Browser(std::string cookies, QWidget* parent = Q_NULLPTR);
 	~Browser();
 
 private slots:
@@ -35,10 +36,8 @@ private slots:
 	void CloseButton();
 	
 private:
-	/*std::string GetMoodleSession();
-	void SetMoodleSession();*/
 	QScopedPointer<Ui::Browser> ui_;
-	/*std::string moodle_session_;*/
+	std::string cookies_;
 	
 };
 

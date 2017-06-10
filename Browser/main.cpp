@@ -87,9 +87,9 @@ int main(int argc, char* argv[])
 	}
 
 	std::ofstream f("browser_main.txt");
-	std::string cookies;
-	login_app.GetMoodleSession(cookies);
-	f << cookies;
+	std::string moodle_cookies;
+	login_app.GetMoodleSession(moodle_cookies);
+	f << moodle_cookies;
 	f.close();
 
 	// Setting up inspectors
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 	cam_cap->Start();
 
 	loginfo(*logger) << "Start Browser";
-	Browser w;
+	Browser w(moodle_cookies);
 	w.showMaximized();
 	int result = a.exec();
 

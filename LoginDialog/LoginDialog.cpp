@@ -287,7 +287,7 @@ void LoginDialog::TakePhoto()
 	ui_->take_photo_button->setDisabled(true);
 	QMessageBox::warning(this, tr("Photo has been taken"),
 		tr("<p align='center'>You have to save the photo<br>"
-			"or make another one using Decline photo button</p>"),
+			"or take another one after pushing \"Decline photo\" button</p>"),
 		QMessageBox::Ok);
 }
 
@@ -372,11 +372,6 @@ void LoginDialog::RemoveFirstRunSetting()
 	setting.beginGroup(reg_group_name);
 	setting.remove(reg_value_name);
 	setting.endGroup();
-}
-
-void LoginDialog::SetMoodleSession(std::string session)
-{
-	this->moodle_session_ = session;
 }
 
 void LoginDialog::GetMoodleSession(std::string& session)

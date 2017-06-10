@@ -29,14 +29,11 @@ public:
 
 	LOGIN_DIALOG_API void GetMoodleSession(std::string& session);
 
-	std::string moodle_session_;
-
 private:
 	void CameraThread();
 	void RefreshComboBox();
 	void InitCamera();
-	void SetMoodleSession(std::string session);
-	
+		
 	int nextId() const override;
 	void initializePage(int id) override;
 	void closeEvent(QCloseEvent* close_button) override;
@@ -55,6 +52,7 @@ private:
 
 	Ui::Wizard* ui_;
 
+	std::string moodle_session_;
 	bool is_login_checked_;
 	Frame id_frame_;
 	mutable std::thread worker_;
@@ -76,8 +74,6 @@ private slots:
 
 public slots:
 	void CheckLogin();
-
-
 };
 
 }
