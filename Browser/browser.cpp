@@ -1,6 +1,10 @@
 #include "browser.h"
 #include "ui_browser.h"
 
+#include <iostream>
+#include <fstream>
+#include <string>
+
 using namespace SecureBrowser;
 
 Browser::Browser(QWidget *parent)
@@ -29,20 +33,6 @@ Browser::Browser(QWidget *parent)
 	ui_->web_view->load(QUrl("https://softserve.academy"));
 	
 }
-#include <cpprest/http_client.h>
-#include <cpprest/filestream.h>
-
-#include <iostream>
-#include <fstream>
-#include <string>
-
-using namespace utility;
-using namespace utility::conversions;
-using namespace web;
-using namespace web::http;
-using namespace web::http::client;
-
-using utf8string = std::string;  // alias for working with http_client
 
 Browser::Browser(std::string cookies, QWidget *parent)
 	: QWidget(parent)
@@ -68,21 +58,38 @@ Browser::Browser(std::string cookies, QWidget *parent)
 	ui_->push_btn_forward->setEnabled(false);
 	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
-	
-	utility::string_t base_url = U("https://softserve.academy/");
-	http_client client(base_url);
+
 	std::ofstream f("browser_body.txt");
-	http_request req(methods::GET);
-	req.headers().add(L"Cookie", cookies.c_str());
-	req.headers().add(L"Content-Type", L"application/x-www-form-urlencoded");
-	http_response response = client.request(req).get();
-	utf8string body = response.extract_utf8string().get();
-	QString BODY = QString::fromStdString(body);
-	f << "cookies.c_str(): " << cookies.c_str() << "\n";
-	f << "status-code: " << response.status_code() << "\n";
+	jar_ = new QNetworkCookieJar(this);
+	manager_ = new QNetworkAccessManager(this);
+	std::string cookie_number = cookies_.substr(14, cookies_.length() - 14);
+	QNetworkCookie moodle_cookie(QByteArray("MoodleSession"), cookie_number.c_str());
+	QList<QNetworkCookie> cookie_list = { moodle_cookie };
+
+	//jar_->setAllCookies(cookie_list);
+
+	manager_->setCookieJar(jar_);
+	QWebEngineHttpRequest req(QUrl("https://softserve.academy"), QWebEngineHttpRequest::Get);
+	req.setHeader(QByteArray("Content-Type")
+		, QByteArray("application/x-www-form-urlencoded"));
+	ui_->web_view->load(req);
 	f.close();
-	ui_->web_view->setHtml(BODY, QUrl("https://softserve.academy"));	
 }
+	
+	
+//RemadedNetworkCookieJar::RemadedNetworkCookieJar()
+//{
+//}
+//
+//QList<QNetworkCookie> RemadedNetworkCookieJar::getAllCookies()
+//{
+//	return this->allCookies();
+//}
+//
+//void RemadedNetworkCookieJar::setAllSitesCookies(const QList<QNetworkCookie>& cookieList)
+//{
+//	this->setAllCookies(cookieList);
+//}
 
 Browser::~Browser()
 {
