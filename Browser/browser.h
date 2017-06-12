@@ -48,13 +48,13 @@ private:
 	QNetworkAccessManager* manager_;
 };
 
-//class RemadedNetworkCookieJar : public QNetworkCookieJar
-//{
-//public:
-//	RemadedNetworkCookieJar();
-//	virtual ~RemadedNetworkCookieJar();
-//	QList<QNetworkCookie> getAllCookies();
-//	void setAllSitesCookies(const QList<QNetworkCookie>& cookieList);
-//};
+class RemadedNetworkCookieJar : public QNetworkCookieJar
+{
+public:
+	RemadedNetworkCookieJar();
+	~RemadedNetworkCookieJar();
+	QList<QNetworkCookie> getAllCookies();
+	void setAllSitesCookies(const QList<QNetworkCookie>& cookieList);
+};
 
 }

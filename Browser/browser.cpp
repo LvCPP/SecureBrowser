@@ -7,32 +7,32 @@
 
 using namespace SecureBrowser;
 
-Browser::Browser(QWidget *parent)
-	: QWidget(parent)
-	, ui_(new Ui::Browser())
-{
-	ui_->setupUi(this);
-	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
-	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
-	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
-	connect(ui_->push_btn_reload, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
-	connect(ui_->push_btn_stop, &QPushButton::clicked, ui_->web_view, &QWebEngineView::stop);
-	connect(ui_->push_btn_close, &QPushButton::clicked, this, &Browser::CloseButton);
-	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->load_progress_page, &QProgressBar::setValue);
-	connect(ui_->web_view, &QWebEngineView::loadStarted, this, &Browser::ShowProgressBar);
-	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::HideProgressBar);
-	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
-	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetMyTitle);
-	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
-	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
-	ui_->push_btn_back->setEnabled(false);
-	ui_->push_btn_forward->setEnabled(false);
-	ui_->push_btn_reload->setEnabled(false);
-	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
-	ui_->web_view->load(QUrl("https://softserve.academy"));
-	
-}
+//Browser::Browser(QWidget *parent)
+//	: QWidget(parent)
+//	, ui_(new Ui::Browser())
+//{
+//	ui_->setupUi(this);
+//	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+//	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
+//	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
+//	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
+//	connect(ui_->push_btn_reload, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
+//	connect(ui_->push_btn_stop, &QPushButton::clicked, ui_->web_view, &QWebEngineView::stop);
+//	connect(ui_->push_btn_close, &QPushButton::clicked, this, &Browser::CloseButton);
+//	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->load_progress_page, &QProgressBar::setValue);
+//	connect(ui_->web_view, &QWebEngineView::loadStarted, this, &Browser::ShowProgressBar);
+//	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::HideProgressBar);
+//	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
+//	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetMyTitle);
+//	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
+//	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
+//	ui_->push_btn_back->setEnabled(false);
+//	ui_->push_btn_forward->setEnabled(false);
+//	ui_->push_btn_reload->setEnabled(false);
+//	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
+//	ui_->web_view->load(QUrl("https://softserve.academy"));
+//	
+//}
 
 Browser::Browser(std::string cookies, QWidget *parent)
 	: QWidget(parent)
@@ -68,28 +68,34 @@ Browser::Browser(std::string cookies, QWidget *parent)
 
 	//jar_->setAllCookies(cookie_list);
 
-	manager_->setCookieJar(jar_);
-	QWebEngineHttpRequest req(QUrl("https://softserve.academy"), QWebEngineHttpRequest::Get);
-	req.setHeader(QByteArray("Content-Type")
+	//manager_->setCookieJar(jar_);
+	
+	QWebEngineHttpRequest* req = new QWebEngineHttpRequest(QUrl("https://softserve.academy"), QWebEngineHttpRequest::Get);
+	req->setHeader(QByteArray("Content-Type")
 		, QByteArray("application/x-www-form-urlencoded"));
-	ui_->web_view->load(req);
+	ui_->web_view->load(*req);
 	f.close();
 }
 	
 	
-//RemadedNetworkCookieJar::RemadedNetworkCookieJar()
-//{
-//}
-//
-//QList<QNetworkCookie> RemadedNetworkCookieJar::getAllCookies()
-//{
-//	return this->allCookies();
-//}
-//
-//void RemadedNetworkCookieJar::setAllSitesCookies(const QList<QNetworkCookie>& cookieList)
-//{
-//	this->setAllCookies(cookieList);
-//}
+RemadedNetworkCookieJar::RemadedNetworkCookieJar()
+{
+}
+
+
+RemadedNetworkCookieJar::~RemadedNetworkCookieJar()
+{
+}
+
+QList<QNetworkCookie> RemadedNetworkCookieJar::getAllCookies()
+{
+	return this->allCookies();
+}
+
+void RemadedNetworkCookieJar::setAllSitesCookies(const QList<QNetworkCookie>& cookieList)
+{
+	this->setAllCookies(cookieList);
+}
 
 Browser::~Browser()
 {

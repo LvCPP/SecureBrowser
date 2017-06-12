@@ -289,6 +289,7 @@ void LoginDialog::TakePhoto()
 		tr("<p align='center'>You have to save the photo<br>"
 			"or take another one after pushing \"Decline photo\" button</p>"),
 		QMessageBox::Ok);
+
 }
 
 void LoginDialog::ChooseCamera(int id)
@@ -310,6 +311,7 @@ void LoginDialog::AcceptPhotoButtonClicked()
 	FileSystemFrameSaver saver;
 	saver.SetNameToSave("ID_photo");
 	saver.Save(id_frame_);
+	ui_->decline_photo_button->setEnabled(false);
 	is_photo_made_ = true;
 }
 
