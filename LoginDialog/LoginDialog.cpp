@@ -1,11 +1,12 @@
-#include "ui_LoginDialog.h"
 #include "LoginDialog.h"
+#include <An.hpp>
 #include <Logger.h>
 #include <WebCamController.h>
 #include <FileSystemFrameSaver.h>
 
 #include <cpprest/http_client.h>
 #include <cpprest/filestream.h>
+
 #include <QString>
 #include <QMessageBox>
 #include <QImage>
@@ -14,9 +15,6 @@
 #include <string>
 #include <functional>
 #include <map>
-
-//for testing 
-#include <QtDebug>
 
 // for disabling redirect
 #pragma comment(lib, "winhttp.lib")
@@ -31,22 +29,25 @@ using namespace web::http::client;
 using namespace Login;
 using namespace Utils;
 using namespace CameraInspector;
+using namespace BrowserLogger;
 
-using utf8string = std::string;  // alias for working with http_client
+// alias for working with http_client
+using utf8string = std::string;
 
 // for working with registry
 static const QString reg_path = "HKEY_CURRENT_USER\\Software\\SoftServe\\SecureBrowser";
 static const QString reg_group_name = "Run";
 static const QString reg_value_name = "FirstRun";
 
+// constructor for the test project
 LoginDialog::LoginDialog(QWidget* parent)
 	: QWizard(parent)
 	, is_frame_enabled_(true)
 	, is_login_checked_(false)
 	, is_frame_updated_(true)
 	, is_photo_made_(false)
+	, ui_(new Ui::Wizard)
 {
-	ui_ = new Ui::Wizard;
 	ui_->setupUi(this);
 
 	this->setWindowFlags(Qt::Window
@@ -58,9 +59,9 @@ LoginDialog::LoginDialog(QWidget* parent)
 	QList<QWizard::WizardButton> layout;
 	layout << QWizard::Stretch << QWizard::NextButton << QWizard::FinishButton;
 	this->setButtonLayout(layout);
-
 }
 
+// constructor for the common project
 LoginDialog::LoginDialog(std::string login, std::string password, QWidget* parent)
 	: QWizard(parent)
 	, is_frame_enabled_(true)
@@ -69,8 +70,8 @@ LoginDialog::LoginDialog(std::string login, std::string password, QWidget* paren
 	, is_photo_made_(false)
 	, login_(login)
 	, password_(password)
+	, ui_(new Ui::Wizard)
 {
-	ui_ = new Ui::Wizard;
 	ui_->setupUi(this);
 
 	this->setWindowFlags(Qt::Window
@@ -86,7 +87,34 @@ LoginDialog::LoginDialog(std::string login, std::string password, QWidget* paren
 
 LoginDialog::~LoginDialog()
 {
-	delete ui_;
+}
+
+void LoginDialog::initializePage(int id)
+{
+	switch (id)
+	{
+	case WELCOME_PAGE:
+		return;
+	case LOGIN_PAGE:
+		ui_->login_button->setEnabled(false);
+		ui_->username_lineedit->setText(QString::fromStdString(login_));
+		ui_->password_lineedit->setText(QString::fromStdString(password_));
+		ui_->agree_checkbox->setCheckState(Qt::Unchecked);
+		connect(ui_->login_button, SIGNAL(clicked()), this, SLOT(CheckLogin()));
+		connect(ui_->agree_checkbox, SIGNAL(toggled(bool)), ui_->login_button, SLOT(setEnabled(bool)));
+		return;
+	case MAKE_PHOTO_PAGE:
+		RefreshComboBox();
+		InitCamera();
+		connect(ui_->take_photo_button, SIGNAL(clicked()), this, SLOT(TakePhoto()));
+		connect(this, SIGNAL(UpdateImage(QPixmap)), ui_->image_label, SLOT(setPixmap(QPixmap)));
+		connect(ui_->camera_select_combobox, SIGNAL(activated(int)), this, SLOT(ChooseCamera(int)));
+		connect(ui_->decline_photo_button, SIGNAL(clicked()), this, SLOT(DeclinePhotoButtonClicked()));
+		connect(ui_->accept_photo_button, SIGNAL(clicked()), this, SLOT(AcceptPhotoButtonClicked()));
+		return;
+	case LAST_PAGE:
+	default: return;
+	}
 }
 
 int LoginDialog::nextId() const
@@ -118,33 +146,30 @@ int LoginDialog::nextId() const
 	}
 }
 
-#include <iostream>
-#include <fstream>
+// for sending cookies to the browser
+void LoginDialog::GetMoodleSession(std::string& session) const
+{
+	session = this->moodle_session_;
+}
 
 void LoginDialog::CheckLogin()
 {
-	std::ofstream f("login_dialog_output.txt");
-	
 	std::string username = ui_->username_lineedit->text().toStdString();
 	std::string password = ui_->password_lineedit->text().toStdString();
 	std::string body_text = "username=" + username + "&password=" + password + "&anchor=";
 	utf8string request_body = body_text;
 	utf8string content_type = "application/x-www-form-urlencoded";
 
-	// disabling redirect
+	// for disabling redirect
 	http_client_config config;
 	config.set_nativehandle_options([](native_handle handle)
 	{
 		DWORD data = WINHTTP_DISABLE_REDIRECTS;
 		BOOL res = WinHttpSetOption(handle, WINHTTP_OPTION_DISABLE_FEATURE, &data, sizeof(data));
 		if (!res)
-		{
 			DWORD error = GetLastError();
-		}
 		else
-		{
-			qDebug() << "Redirect disabled\n";
-		}
+			loginfo(*An<Logger>()) << "Redirect disabled.";
 	});
 
 	utility::string_t base_url = U("https://softserve.academy/");
@@ -176,6 +201,7 @@ void LoginDialog::CheckLogin()
 					ui_->password_lineedit->setEnabled(false);
 					ui_->agree_checkbox->setEnabled(false);
 					ui_->login_button->setEnabled(false);
+					loginfo(*An<Logger>()) << "User was logged in.";
 				}
 				std::size_t semicolon_pos = to_utf8string(it->second).find(";");
 				this->moodle_session_ = to_utf8string(it->second).substr(0, semicolon_pos);
@@ -191,6 +217,7 @@ void LoginDialog::CheckLogin()
 					ui_->password_lineedit->setText(QString::fromStdString(password_));
 					ui_->agree_checkbox->setCheckState(Qt::Unchecked);
 					this->moodle_session_ = "";
+					loginfo(*An<Logger>()) << "User was not logged in.";
 				}
 			}
 		}
@@ -199,8 +226,34 @@ void LoginDialog::CheckLogin()
 			continue;
 		}
 	}
-	f << "moodle session: " << this->moodle_session_ << "\n";
-	f.close();
+}
+
+void LoginDialog::RefreshComboBox()
+{
+	An<WebCamController> wcc;
+	std::vector<std::string> cam_names = wcc->ListNamesOfCameras();
+	camera_list_.clear();
+	ui_->camera_select_combobox->clear();
+	for (std::string name : cam_names)
+		camera_list_ << QString::fromStdString(name);
+	ui_->camera_select_combobox->addItems(camera_list_);
+}
+
+void LoginDialog::ChooseCamera(int id)
+{
+	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(id));
+}
+
+void LoginDialog::InitCamera()
+{
+	An<WebCamController> wcc;
+	wcc->ActivateCamera(wcc->GetCameras().at(0));
+
+	wcc->SetRefreshCallback(std::bind(&LoginDialog::RefreshComboBox, this));
+
+	is_frame_enabled_ = true;
+
+	worker_ = std::thread(&LoginDialog::CameraThread, this);
 }
 
 void LoginDialog::CameraThread()
@@ -228,57 +281,6 @@ void LoginDialog::CameraThread()
 	}
 }
 
-void LoginDialog::RefreshComboBox()
-{
-	An<WebCamController> wcc;
-	std::vector<std::string> cam_names = wcc->ListNamesOfCameras();
-	camera_list_.clear();
-	ui_->camera_select_combobox->clear();
-	for (std::string name : cam_names)
-		camera_list_ << QString::fromStdString(name);
-	ui_->camera_select_combobox->addItems(camera_list_);
-}
-
-void LoginDialog::InitCamera()
-{
-	An<WebCamController> wcc;
-	wcc->ActivateCamera(wcc->GetCameras().at(0));
-	
-	wcc->SetRefreshCallback(std::bind(&LoginDialog::RefreshComboBox, this));
-		
-	is_frame_enabled_ = true;
-			
-	worker_ = std::thread(&LoginDialog::CameraThread, this);
-}
-
-void LoginDialog::initializePage(int id)
-{
-	switch (id)
-	{
-	case WELCOME_PAGE:
-		return;
-	case LOGIN_PAGE:
-		ui_->login_button->setEnabled(false);
-		ui_->username_lineedit->setText(QString::fromStdString(login_));
-		ui_->password_lineedit->setText(QString::fromStdString(password_));
-		ui_->agree_checkbox->setCheckState(Qt::Unchecked);
-		connect(ui_->login_button, SIGNAL(clicked()), this, SLOT(CheckLogin()));
-		connect(ui_->agree_checkbox, SIGNAL(toggled(bool)), ui_->login_button, SLOT(setEnabled(bool)));
-		return;
-	case MAKE_PHOTO_PAGE:
-		RefreshComboBox();
-		InitCamera();
-		connect(ui_->take_photo_button, SIGNAL(clicked()), this, SLOT(TakePhoto()));
-		connect(this, SIGNAL(UpdateImage(QPixmap)), ui_->image_label, SLOT(setPixmap(QPixmap)));
-		connect(ui_->camera_select_combobox, SIGNAL(activated(int)), this, SLOT(ChooseCamera(int)));
-		connect(ui_->decline_photo_button, SIGNAL(clicked()), this, SLOT(DeclinePhotoButtonClicked()));
-		connect(ui_->accept_photo_button, SIGNAL(clicked()), this, SLOT(AcceptPhotoButtonClicked()));
-		return;
-	case LAST_PAGE:
-	default: return;
-	}
-}
-
 void LoginDialog::TakePhoto()
 {
 	is_frame_updated_ = false;
@@ -286,23 +288,10 @@ void LoginDialog::TakePhoto()
 	ui_->accept_photo_button->setEnabled(true);
 	ui_->take_photo_button->setDisabled(true);
 	QMessageBox::warning(this, tr("Photo has been taken"),
-		tr("<p align='center'>You have to save the photo<br>"
-			"or take another one after pushing \"Decline photo\" button</p>"),
+		tr("<p align='center'>You may save the photo or take another one<br>"
+			"on pushing the decline photo button</p>"),
 		QMessageBox::Ok);
 
-}
-
-void LoginDialog::ChooseCamera(int id)
-{
-	An<WebCamController>()->ActivateCamera(An<WebCamController>()->GetCameras().at(id));
-}
-
-void LoginDialog::DeclinePhotoButtonClicked()
-{
-	ui_->take_photo_button->setEnabled(true);
-	ui_->accept_photo_button->setDisabled(true);
-	ui_->decline_photo_button->setDisabled(true);
-	is_frame_updated_ = true;
 }
 
 void LoginDialog::AcceptPhotoButtonClicked()
@@ -313,6 +302,16 @@ void LoginDialog::AcceptPhotoButtonClicked()
 	saver.Save(id_frame_);
 	ui_->decline_photo_button->setEnabled(false);
 	is_photo_made_ = true;
+	loginfo(*An<Logger>()) << "User's ID photo saved to disk.";
+}
+
+void LoginDialog::DeclinePhotoButtonClicked()
+{
+	ui_->take_photo_button->setEnabled(true);
+	ui_->accept_photo_button->setDisabled(true);
+	ui_->decline_photo_button->setDisabled(true);
+	is_frame_updated_ = true;
+	loginfo(*An<Logger>()) << "User's ID photo declined.";
 }
 
 void LoginDialog::closeEvent(QCloseEvent* close_button)
@@ -333,8 +332,8 @@ void LoginDialog::closeEvent(QCloseEvent* close_button)
 	}
 }
 
-/* Use this function if you want to write to the registry 
- the keys defining the first run of the application on PC. */
+/* Use this method if you want to write to the registry 
+ the keys defining the first run of the application. */
 void LoginDialog::SetFirstRunSetting()
 {
 	QSettings setting(reg_path);
@@ -350,8 +349,8 @@ void LoginDialog::SetFirstRunSetting()
 	setting.endGroup();
 }
 
-/* Use this function if you want to know whether the application 
-is run on PC for the first time or not. */
+/* Use this method if you want to know whether the application 
+is run for the first time or not. */
 bool LoginDialog::IsFirstRun()
 {
 	QSettings setting(reg_path);
@@ -365,8 +364,8 @@ bool LoginDialog::IsFirstRun()
 	setting.endGroup();
 }
 
-/* Use thus function if you want to remove first run settings
-from the registry. */
+/* Use this method if you want to remove first run settings
+from the registry which were set by LoginDialog::SetFirstRunSetting() method. */
 void LoginDialog::RemoveFirstRunSetting()
 {
 	QSettings setting(reg_path);
@@ -374,10 +373,5 @@ void LoginDialog::RemoveFirstRunSetting()
 	setting.beginGroup(reg_group_name);
 	setting.remove(reg_value_name);
 	setting.endGroup();
-}
-
-void LoginDialog::GetMoodleSession(std::string& session)
-{
-	session = this->moodle_session_;
 }
 

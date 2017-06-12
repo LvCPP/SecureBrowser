@@ -13,8 +13,6 @@ using namespace Login;
 
 int main(int argc, char *argv[])
 {
-	std::ofstream f("login_dialog_test_output.txt");
-
 	An<WebCamController>()->RegisterForDeviceNotification();
 
 	QApplication a(argc, argv);
@@ -25,9 +23,6 @@ int main(int argc, char *argv[])
 
 	std::string cookies;
 	login_dialog.GetMoodleSession(cookies);
-
-	f << cookies;
-	f.close();
 
 	An<WebCamController>()->UnregisterForDeviceNotification();
 	return result;

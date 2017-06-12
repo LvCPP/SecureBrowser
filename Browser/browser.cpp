@@ -1,38 +1,16 @@
 #include "browser.h"
 #include "ui_browser.h"
+#include <Logger.h>
+#include <An.hpp>
 
-#include <iostream>
-#include <fstream>
+#include <QtNetwork/QNetworkCookie>
+#include <QtWebEngineCore/QWebEngineHttpRequest>
+
 #include <string>
 
 using namespace SecureBrowser;
-
-//Browser::Browser(QWidget *parent)
-//	: QWidget(parent)
-//	, ui_(new Ui::Browser())
-//{
-//	ui_->setupUi(this);
-//	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-//	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
-//	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
-//	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
-//	connect(ui_->push_btn_reload, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
-//	connect(ui_->push_btn_stop, &QPushButton::clicked, ui_->web_view, &QWebEngineView::stop);
-//	connect(ui_->push_btn_close, &QPushButton::clicked, this, &Browser::CloseButton);
-//	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->load_progress_page, &QProgressBar::setValue);
-//	connect(ui_->web_view, &QWebEngineView::loadStarted, this, &Browser::ShowProgressBar);
-//	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::HideProgressBar);
-//	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
-//	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetMyTitle);
-//	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
-//	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
-//	ui_->push_btn_back->setEnabled(false);
-//	ui_->push_btn_forward->setEnabled(false);
-//	ui_->push_btn_reload->setEnabled(false);
-//	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
-//	ui_->web_view->load(QUrl("https://softserve.academy"));
-//	
-//}
+using namespace Utils;
+using namespace BrowserLogger;
 
 Browser::Browser(std::string cookies, QWidget *parent)
 	: QWidget(parent)
@@ -59,42 +37,19 @@ Browser::Browser(std::string cookies, QWidget *parent)
 	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
 
-	std::ofstream f("browser_body.txt");
-	jar_ = new QNetworkCookieJar(this);
-	manager_ = new QNetworkAccessManager(this);
+	// for connecting with the Moodle server
+	profile_ = new QWebEngineProfile(this);
+
+	QUrl base_url = QUrl("https://softserve.academy");
+
+	store_ = ui_->web_view->page()->profile()->cookieStore();
 	std::string cookie_number = cookies_.substr(14, cookies_.length() - 14);
-	QNetworkCookie moodle_cookie(QByteArray("MoodleSession"), cookie_number.c_str());
-	QList<QNetworkCookie> cookie_list = { moodle_cookie };
+	QNetworkCookie moodle_cookie("MoodleSession", cookie_number.c_str());
+	store_->setCookie(moodle_cookie, base_url);
 
-	//jar_->setAllCookies(cookie_list);
-
-	//manager_->setCookieJar(jar_);
-	
-	QWebEngineHttpRequest* req = new QWebEngineHttpRequest(QUrl("https://softserve.academy"), QWebEngineHttpRequest::Get);
-	req->setHeader(QByteArray("Content-Type")
-		, QByteArray("application/x-www-form-urlencoded"));
-	ui_->web_view->load(*req);
-	f.close();
-}
-	
-	
-RemadedNetworkCookieJar::RemadedNetworkCookieJar()
-{
-}
-
-
-RemadedNetworkCookieJar::~RemadedNetworkCookieJar()
-{
-}
-
-QList<QNetworkCookie> RemadedNetworkCookieJar::getAllCookies()
-{
-	return this->allCookies();
-}
-
-void RemadedNetworkCookieJar::setAllSitesCookies(const QList<QNetworkCookie>& cookieList)
-{
-	this->setAllCookies(cookieList);
+	QWebEngineHttpRequest req(base_url, QWebEngineHttpRequest::Get);
+	ui_->web_view->load(req);
+	loginfo(*An<Logger>()) << "Cookies sent to browser.";
 }
 
 Browser::~Browser()
@@ -152,10 +107,10 @@ void Browser::CloseButton()
 	QMessageBox::StandardButtons reply;
 	reply = QMessageBox::question(this
 		, "Warning"
-		, "Are you sure you want to quit?"
+		, "<p align = 'center'>Do you really want to quit SecureBrowser and finish the test? </p>"
 		, QMessageBox::Yes | QMessageBox::No
 		, QMessageBox::No);
-	
+
 	if (reply == QMessageBox::Yes)
 		Browser::close();
 }

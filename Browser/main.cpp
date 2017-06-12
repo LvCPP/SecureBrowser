@@ -76,22 +76,18 @@ int main(int argc, char* argv[])
 
 	LoginDialog login_app(login, password);
 
-	
-
-	loginfo(*logger) << "Start login";
+	loginfo(*logger) << "Login dialog started successfully.";
 	if (!login_app.exec())
 	{
-		logerror(*logger) << "User aborted logging in. Finish program.";
+		logerror(*logger) << "Login dialog failed. Program finished.";
 		Cleanup(file);
 		return 0;
 	}
 
-	std::ofstream f("browser_main.txt");
+	// for sending cookies to browser
 	std::string moodle_cookies;
 	login_app.GetMoodleSession(moodle_cookies);
-	f << moodle_cookies;
-	f.close();
-
+	
 	// Setting up inspectors
 	KeyboardInspector ki;
 	SetupKeyboardInspector(ki);
@@ -122,7 +118,7 @@ int main(int argc, char* argv[])
 
 	cam_cap->Start();
 
-	loginfo(*logger) << "Start Browser";
+	loginfo(*logger) << "Browser started successfully.";
 	Browser w(moodle_cookies);
 	w.showMaximized();
 	int result = a.exec();
@@ -132,7 +128,7 @@ int main(int argc, char* argv[])
 	wi.StopWindowsInspector();
 	ki.Stop();
 
-	loginfo(*logger) << "Program finished with code " << result;
+	logerror(*logger) << "Program finished with code " << result;
 	Cleanup(file);
 	return result;
 }

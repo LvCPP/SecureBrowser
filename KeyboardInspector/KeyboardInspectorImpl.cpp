@@ -26,13 +26,13 @@ KeyboardInspectorImpl::~KeyboardInspectorImpl()
 void KeyboardInspectorImpl::Start()
 {
 	msg_loop_thread_ = std::thread(&KeyboardInspectorImpl::MessageLoop, this);
-	OutputDebugStringA("KEYBOARD INSPECTOR STARTED WORKING\n");
+	loginfo(*An<Logger>()) << "Keyboard Inspector started working";
 }
 
 void KeyboardInspectorImpl::Stop()
 {
 	PostThreadMessage(GetThreadId(msg_loop_thread_.native_handle()), WM_QUIT, 0, 0);
-	OutputDebugStringA("KEYBOARD INSPECTOR STOPPED WORKING\n");
+	loginfo(*An<Logger>()) << "Keyboard Inspector stopped working";
 	UnhookWindowsHookEx(keyboard_hook);
 }
 
@@ -55,6 +55,10 @@ bool KeyboardInspectorImpl::ChangeIgnoreFlagIfNecessary(const KeySequence& ks
 	if (it != key_seq_to_handler.end())
 		if (it->second)
 			return !it->second(ks);
+		else
+			return false;
+	else
+		return false;
 }
 
 void KeyboardInspectorImpl::MessageLoop()
@@ -79,8 +83,6 @@ LRESULT CALLBACK KeyboardInspectorImpl::LowLevelKeyboardProc(int code, WPARAM wP
 	if (!current_key_seq_.IsKeySet(key))
 	{
 		current_key_seq_ += key;
-		std::string dbg = "key pressed: " + current_key_seq_.GetText() + "\n";
-		OutputDebugStringA(dbg.c_str());
 		ignore_key_ = ChangeIgnoreFlagIfNecessary(current_key_seq_, key_seq_to_handler_);
 	}
 
