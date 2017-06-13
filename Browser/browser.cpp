@@ -1,13 +1,23 @@
 #include "browser.h"
 #include "ui_browser.h"
+#include <Logger.h>
+#include <An.hpp>
+
+#include <QtNetwork/QNetworkCookie>
+#include <QtWebEngineCore/QWebEngineHttpRequest>
+
+#include <string>
 
 using namespace SecureBrowser;
+using namespace Utils;
+using namespace BrowserLogger;
 
-Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, QWidget *parent)
+Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::string cookies, QWidget *parent)
 	: QWidget(parent)
 	, ui_(new Ui::Browser())
 	, link_to_quiz_(link_to_quiz)
 	, password_to_quiz_(password_to_quiz)
+	, cookies_(cookies)
 {
 	ui_->setupUi(this);
 	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
@@ -30,7 +40,21 @@ Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, QWidget
 	ui_->push_btn_forward->setEnabled(false);
 	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
-	ui_->web_view->load(QUrl(QString::fromStdString(link_to_quiz_)));
+
+	// for connecting with the Moodle server
+	profile_ = new QWebEngineProfile(this);
+
+	QUrl base_url = QUrl(QString::fromStdString(link_to_quiz_));
+
+	store_ = ui_->web_view->page()->profile()->cookieStore();
+	std::string cookie_number = cookies_.substr(14, cookies_.length() - 14);
+	QNetworkCookie moodle_cookie("MoodleSession", cookie_number.c_str());
+	store_->setCookie(moodle_cookie, base_url);
+	store_->loadAllCookies();
+
+	QWebEngineHttpRequest req(base_url, QWebEngineHttpRequest::Get);
+
+	ui_->web_view->load(req);
 }
 
 Browser::~Browser()
@@ -88,10 +112,11 @@ void Browser::CloseButton()
 	QMessageBox::StandardButtons reply;
 	reply = QMessageBox::question(this
 		, "Warning"
-		, "Are you sure you want to quit?"
+		, "<p align = 'center'>Do you really want to quit SecureBrowser and finish the test? </p>"
 		, QMessageBox::Yes | QMessageBox::No
 		, QMessageBox::No);
-	
+
 	if (reply == QMessageBox::Yes)
 		Browser::close();
 }
+

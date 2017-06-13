@@ -5,6 +5,10 @@
 #include <qmessagebox.h>
 #include <string>
 
+#include <QtWebEngineWidgets/QWebEngineProfile>
+#include <QtWebEngineCore/QWebEngineCookieStore>
+#include <QUrl>
+
 namespace Ui 
 { 
 class Browser;
@@ -20,7 +24,8 @@ class Browser : public QWidget
 	Q_OBJECT
 
 public:
-	Browser(std::string link_to_quiz, std::string password_to_quiz, QWidget *parent = 0);
+	explicit Browser(QWidget *parent = 0);
+	explicit Browser(std::string link_to_quiz, std::string password_to_quiz, std::string cookies, QWidget* parent = Q_NULLPTR);
 	~Browser();
 
 private slots:
@@ -32,11 +37,14 @@ private slots:
 	void ButtonBackHistory();
 	void ButtonForwardHistory();
 	void CloseButton();
-
+	
 private:
 	QScopedPointer<Ui::Browser> ui_;
 	std::string link_to_quiz_;
 	std::string password_to_quiz_;
+	std::string cookies_;
+	QWebEngineProfile* profile_;
+	QWebEngineCookieStore* store_;
 };
 
 }

@@ -95,7 +95,7 @@
     
     <!-- Qt required files -->
     <ComponentGroup Id="ComponentGroupQtStuff" Directory="INSTALLFOLDER">
-      <Component Id="BrowserStuff" Guid="11d6ce37-73ac-4545-a620-2ce0e10c3e8c">
+      <Component Id="QtStuff" Guid="11d6ce37-73ac-4545-a620-2ce0e10c3e8c">
           <File Id="icudtl.dat"
               Name="icudtl.dat"
               Source="$(var.SolutionDir)3rd-party-libraries\qt\icudtl.dat"
@@ -111,6 +111,18 @@
         <File Id="qtwebengine_resources_200p.pak"
               Name="qtwebengine_resources_200p.pak"
               Source="$(var.SolutionDir)3rd-party-libraries\qt\qtwebengine_resources_200p.pak"
+              ReadOnly="yes" />
+        <File Id="d3dcompiler_47.dll"
+              Name="d3dcompiler_47.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\d3dcompiler_47.dll"
+              ReadOnly="yes" />
+        <File Id="libEGL.dll"
+              Name="libEGL.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\libEGL.dll"
+              ReadOnly="yes" />
+        <File Id="libGLESv2.dll"
+              Name="libGLESv2.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\libGLESv2.dll"
               ReadOnly="yes" />
       </Component>
     </ComponentGroup>

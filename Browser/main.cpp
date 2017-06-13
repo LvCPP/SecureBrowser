@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 
 	std::string login = input.at(1);
 	std::string password = input.at(2);
-
+	
 	An<Logger> logger;
 
 	std::ofstream file(path + "Logs\\" + "log.txt", std::ios::out);
@@ -75,14 +75,18 @@ int main(int argc, char* argv[])
 	QApplication a(argc, argv);
 
 	LoginDialog login_app(login, password, path);
-	
 	loginfo(*logger) << "Start login";
+	
 	if (!login_app.exec())
 	{
-		logerror(*logger) << "User aborted logging in. Finish program.";
+		logerror(*logger) << "Login dialog failed. Program finished.";
 		Cleanup(file);
 		return 0;
 	}
+
+	 //for sending cookies to browser
+	std::string moodle_cookies;
+	login_app.GetMoodleSession(moodle_cookies);
 	
 	// Setting up inspectors
 //	KeyboardInspector ki;
@@ -120,7 +124,7 @@ int main(int argc, char* argv[])
 	std::string link_to_quiz = input.at(3);
 	std::string password_to_quiz = input.at(4);
 
-	Browser w(link_to_quiz, password_to_quiz);
+	Browser w(link_to_quiz, password_to_quiz, moodle_cookies);
 	w.showMaximized();
 	int result = a.exec();
 
@@ -129,7 +133,7 @@ int main(int argc, char* argv[])
 //	wi.StopWindowsInspector();
 //	ki.Stop();
 
-	loginfo(*logger) << "Program finished with code " << result;
+	logerror(*logger) << "Program finished with code " << result;
 	Cleanup(file);
 	return result;
 }
@@ -210,7 +214,7 @@ void SetupKeyboardInspector(KeyboardInspector& ki)
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_LALT + KEY_ESC);
 	ki.IgnoreKeySequence(KEY_RCONTROL + KEY_RALT + KEY_ESC);
 
-	// F1 - F12
+	// F1 - F24
 	ki.IgnoreKeySequence(KEY_F1);
 	ki.IgnoreKeySequence(KEY_F2);
 	ki.IgnoreKeySequence(KEY_F3);

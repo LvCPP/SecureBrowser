@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'LoginDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.9.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -255,7 +255,7 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_9);
 
-        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_3 = new QSpacerItem(414, 13, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout->addItem(verticalSpacer_3);
 
@@ -280,7 +280,7 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_4);
 
-        verticalSpacer_6 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_6 = new QSpacerItem(20, 28, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout->addItem(verticalSpacer_6);
 
@@ -485,7 +485,7 @@ public:
         camera_select_label->setText(QApplication::translate("Wizard", "<html><head/><body><p align=\"center\"><span style=\" font-size:10pt;\">Please select your camera for face and ID detection:</span></p></body></html>", Q_NULLPTR));
         image_label->setText(QString());
         take_photo_button->setText(QApplication::translate("Wizard", "Take photo", Q_NULLPTR));
-        accept_photo_button->setText(QApplication::translate("Wizard", "Accept photo", Q_NULLPTR));
+        accept_photo_button->setText(QApplication::translate("Wizard", "Save photo", Q_NULLPTR));
         decline_photo_button->setText(QApplication::translate("Wizard", "Decline photo", Q_NULLPTR));
         last_page_label->setText(QApplication::translate("Wizard", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:600;\">You have finished the authentication process. Please get ready for the test!</span></p></body></html>", Q_NULLPTR));
     } // retranslateUi

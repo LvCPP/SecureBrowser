@@ -88,5 +88,4 @@ namespace SBKeyboardInspector
 	const Key KEY_F22 = Key(VK_F22);
 	const Key KEY_F23 = Key(VK_F23);
 	const Key KEY_F24 = Key(VK_F24);
-
 }

@@ -3,6 +3,10 @@
 #include <WebCamController.h>
 #include <QtWidgets/QApplication>
 
+#include <iostream>
+#include <fstream>
+#include <string>
+
 using namespace Utils;
 using namespace CameraInspector;
 using namespace Login;
@@ -15,8 +19,10 @@ int main(int argc, char *argv[])
 	LoginDialog login_dialog;
 	login_dialog.show();
 
-
 	int result = a.exec();
+
+	std::string cookies;
+	login_dialog.GetMoodleSession(cookies);
 
 	An<WebCamController>()->UnregisterForDeviceNotification();
 	return result;
