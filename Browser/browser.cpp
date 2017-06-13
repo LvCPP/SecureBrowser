@@ -40,16 +40,17 @@ Browser::Browser(std::string cookies, QWidget *parent)
 	// for connecting with the Moodle server
 	profile_ = new QWebEngineProfile(this);
 
-	QUrl base_url = QUrl("https://softserve.academy");
+	QUrl base_url = QUrl("https://softserve.academy/");
 
 	store_ = ui_->web_view->page()->profile()->cookieStore();
 	std::string cookie_number = cookies_.substr(14, cookies_.length() - 14);
 	QNetworkCookie moodle_cookie("MoodleSession", cookie_number.c_str());
 	store_->setCookie(moodle_cookie, base_url);
+	store_->loadAllCookies();
 
 	QWebEngineHttpRequest req(base_url, QWebEngineHttpRequest::Get);
+
 	ui_->web_view->load(req);
-	loginfo(*An<Logger>()) << "Cookies sent to browser.";
 }
 
 Browser::~Browser()

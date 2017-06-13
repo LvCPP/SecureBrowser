@@ -167,12 +167,17 @@ void LoginDialog::CheckLogin()
 		DWORD data = WINHTTP_DISABLE_REDIRECTS;
 		BOOL res = WinHttpSetOption(handle, WINHTTP_OPTION_DISABLE_FEATURE, &data, sizeof(data));
 		if (!res)
+		{
 			DWORD error = GetLastError();
+			logwarning(*An<Logger>()) << "Could not disable redirect.";
+		}
 		else
+		{
 			loginfo(*An<Logger>()) << "Redirect disabled.";
+		}
 	});
 
-	utility::string_t base_url = U("https://softserve.academy/");
+	utility::string_t base_url = U("https://softserve.academy");
 	http_client client(base_url, config);
 		
 	http_request req(methods::POST);
@@ -190,7 +195,7 @@ void LoginDialog::CheckLogin()
 	{
 		if (to_utf8string(it->first) == "Set-Cookie")
 		{
-			std::size_t found = to_utf8string(it->second).find("MOODLEID1_=deleted");
+			std::size_t found = to_utf8string(it->second).find("MOODLEID");
 			if (found != std::string::npos)
 			{
 				if (QMessageBox::information(this, tr("Login"),

@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 
 	std::string login = input.at(1);
 	std::string password = input.at(2);
-
+	
 	An<Logger> logger;
 
 	std::ofstream file(path + "log.txt", std::ios::out);
@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	// for sending cookies to browser
+	 //for sending cookies to browser
 	std::string moodle_cookies;
 	login_app.GetMoodleSession(moodle_cookies);
 	
