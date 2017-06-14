@@ -10,4 +10,4 @@ public:
 	static bool IsInsideVBox();
 };
 
-}//namespace SI
+} // namespace SI

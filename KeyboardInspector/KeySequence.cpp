@@ -20,7 +20,7 @@ KeySequence::KeySequence(const Key& key)
 std::string KeySequence::GetText() const
 {
 	std::string result;
-	for (std::size_t i = VIRTUAL_KEY_COUNT - 1; i > 0; --i)
+	for (size_t i = VIRTUAL_KEY_COUNT - 1; i > 0; --i)
 		if (keys_.test(i))
 		{
 			if (!result.empty())

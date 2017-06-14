@@ -65,7 +65,7 @@ bool FakeWindowService::StartWindowRoutine(HWND fake_window)
 {
 	fake_window_handle_ = CreateWindowA("STATIC", "fake", WS_MINIMIZE, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
 	SetWindowTextA(fake_window_handle_, "Fake Window!");
-	if (fake_window_handle_ == NULL)
+	if (fake_window_handle_ == nullptr)
 	{
 		return false;
 	}
@@ -75,7 +75,7 @@ bool FakeWindowService::StartWindowRoutine(HWND fake_window)
 	MSG msg;
 	BOOL result;
 
-	while ((result = GetMessage(&msg, NULL, 0, 0)) != 0)
+	while ((result = GetMessage(&msg, nullptr, 0, 0)) != 0)
 	{
 		if (result == -1)
 		{

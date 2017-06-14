@@ -10,19 +10,19 @@ class http_response;
 }
 }
 
-namespace BrowserHttp {
+namespace BrowserHttp 
+{
 
 class HttpResponse
 {
 public:
 	HttpResponse();
 	static HttpResponse FromHttpImpl(const web::http::http_response& impl);
-	HTTPCLIENT_API std::multimap<std::string, std::string> GetHeaders();
+	HTTPCLIENT_API std::multimap<std::string, std::string> GetHeaders() const;
 
 private:
 	std::shared_ptr<web::http::http_response> response_;
 	HttpResponse(const web::http::http_response& impl);
 };
 
-}
-
+} // namespace BrowserHttp

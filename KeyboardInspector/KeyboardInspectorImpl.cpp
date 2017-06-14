@@ -8,7 +8,7 @@ using namespace BrowserLogger;
 
 static constexpr UINT IS_RELEASED = 0x80;
 
-HMODULE KeyboardInspectorImpl::instance = 0;
+HMODULE KeyboardInspectorImpl::instance = nullptr;
 HHOOK keyboard_hook;
 MSG message;
 bool KeyboardInspectorImpl::ignore_key_ = false;
@@ -63,9 +63,9 @@ bool KeyboardInspectorImpl::ChangeIgnoreFlagIfNecessary(const KeySequence& ks
 
 void KeyboardInspectorImpl::MessageLoop()
 { 
-	keyboard_hook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardInspectorImpl::LowLevelKeyboardProc, instance, 0);
+	keyboard_hook = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, instance, 0);
 
-	while (GetMessage(&message, NULL, 0, 0))
+	while (GetMessage(&message, nullptr, 0, 0))
 	{
 		TranslateMessage(&message);
 		DispatchMessage(&message);
@@ -75,9 +75,9 @@ void KeyboardInspectorImpl::MessageLoop()
 LRESULT CALLBACK KeyboardInspectorImpl::LowLevelKeyboardProc(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code != HC_ACTION)
-		return CallNextHookEx(NULL, code, wParam, lParam);
+		return CallNextHookEx(nullptr, code, wParam, lParam);
 	
-	PKBDLLHOOKSTRUCT kb = (PKBDLLHOOKSTRUCT)lParam;
+	PKBDLLHOOKSTRUCT kb = reinterpret_cast<PKBDLLHOOKSTRUCT>(lParam);
 
 	Key key(LOBYTE(kb->vkCode));
 	if (!current_key_seq_.IsKeySet(key))
@@ -99,5 +99,5 @@ LRESULT CALLBACK KeyboardInspectorImpl::LowLevelKeyboardProc(int code, WPARAM wP
 		return 1;
 	}
 
-	return CallNextHookEx(NULL, code, wParam, lParam);
+	return CallNextHookEx(nullptr, code, wParam, lParam);
 }

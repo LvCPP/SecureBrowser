@@ -321,4 +321,4 @@ KEYBOARDINSPECTOR_API extern const Key KEY_F22;
 KEYBOARDINSPECTOR_API extern const Key KEY_F23;
 KEYBOARDINSPECTOR_API extern const Key KEY_F24;
 
-}  //end of namespace
+} // namespace SBKeyboardInspector

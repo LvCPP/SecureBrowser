@@ -12,7 +12,6 @@
 #include <QImage>
 #include <QSettings>
 
-#include <string>
 #include <functional>
 #include <map>
 
@@ -42,11 +41,11 @@ static const QString reg_value_name = "FirstRun";
 // constructor for the test project
 LoginDialog::LoginDialog(QWidget* parent)
 	: QWizard(parent)
-	, is_frame_enabled_(true)
+	, ui_(new Ui::Wizard)
 	, is_login_checked_(false)
+	, is_frame_enabled_(true)
 	, is_frame_updated_(true)
 	, is_photo_made_(false)
-	, ui_(new Ui::Wizard)
 {
 	ui_->setupUi(this);
 
@@ -56,21 +55,21 @@ LoginDialog::LoginDialog(QWidget* parent)
 		| Qt::MSWindowsFixedSizeDialogHint
 		| Qt::WindowCloseButtonHint);
 
-	QList<QWizard::WizardButton> layout;
-	layout << QWizard::Stretch << QWizard::NextButton << QWizard::FinishButton;
+	QList<WizardButton> layout;
+	layout << Stretch << NextButton << FinishButton;
 	this->setButtonLayout(layout);
 }
 
 LoginDialog::LoginDialog(std::string login, std::string password, std::string path, QWidget* parent)
 	: QWizard(parent)
-	, is_frame_enabled_(true)
+	, ui_(new Ui::Wizard)
 	, is_login_checked_(false)
+	, is_frame_enabled_(true)
 	, is_frame_updated_(true)
 	, is_photo_made_(false)
 	, login_(login)
 	, password_(password)
 	, path_(path)
-	, ui_(new Ui::Wizard)
 {
 	ui_->setupUi(this);
 
@@ -80,8 +79,8 @@ LoginDialog::LoginDialog(std::string login, std::string password, std::string pa
 		| Qt::MSWindowsFixedSizeDialogHint
 		| Qt::WindowCloseButtonHint);
 
-	QList<QWizard::WizardButton> layout;
-	layout << QWizard::Stretch << QWizard::NextButton << QWizard::FinishButton;
+	QList<WizardButton> layout;
+	layout << Stretch << NextButton << FinishButton;
 	this->setButtonLayout(layout);
 }
 
@@ -89,8 +88,6 @@ void LoginDialog::initializePage(int id)
 {
 	switch (id)
 	{
-	case WELCOME_PAGE:
-		return;
 	case LOGIN_PAGE:
 		ui_->login_button->setEnabled(false);
 		ui_->username_lineedit->setText(QString::fromStdString(login_));
@@ -98,7 +95,7 @@ void LoginDialog::initializePage(int id)
 		ui_->agree_checkbox->setCheckState(Qt::Unchecked);
 		connect(ui_->login_button, SIGNAL(clicked()), this, SLOT(CheckLogin()));
 		connect(ui_->agree_checkbox, SIGNAL(toggled(bool)), ui_->login_button, SLOT(setEnabled(bool)));
-		return;
+		break;
 	case MAKE_PHOTO_PAGE:
 		RefreshComboBox();
 		InitCamera();
@@ -107,9 +104,11 @@ void LoginDialog::initializePage(int id)
 		connect(ui_->camera_select_combobox, SIGNAL(activated(int)), this, SLOT(ChooseCamera(int)));
 		connect(ui_->decline_photo_button, SIGNAL(clicked()), this, SLOT(DeclinePhotoButtonClicked()));
 		connect(ui_->accept_photo_button, SIGNAL(clicked()), this, SLOT(AcceptPhotoButtonClicked()));
-		return;
+		break;
+	case WELCOME_PAGE:
 	case LAST_PAGE:
-	default: return;
+	default:
+		break;
 	}
 }
 
@@ -165,11 +164,11 @@ void LoginDialog::CheckLogin()
 		if (!res)
 		{
 			DWORD error = GetLastError();
-			logwarning(*An<Logger>()) << "Could not disable redirect.";
+			logwarning(*An<Logger>()) << "Could not disable redirect with error " << error;
 		}
 		else
 		{
-			loginfo(*An<Logger>()) << "Redirect disabled.";
+			logdebug(*An<Logger>()) << "Redirect disabled.";
 		}
 	});
 
@@ -190,7 +189,7 @@ void LoginDialog::CheckLogin()
 	{
 		if (to_utf8string(it->first) == "Set-Cookie")
 		{
-			std::size_t found = to_utf8string(it->second).find("MOODLEID");
+			size_t found = to_utf8string(it->second).find("MOODLEID");
 			if (found != std::string::npos)
 			{
 				if (QMessageBox::information(this, tr("Login"),
@@ -203,8 +202,8 @@ void LoginDialog::CheckLogin()
 					ui_->login_button->setEnabled(false);
 					loginfo(*An<Logger>()) << "User was logged in.";
 				}
-				std::size_t moodle_session_pos = to_utf8string(it->second).find("MoodleSession");
-				std::size_t semicolon_pos = to_utf8string(it->second).find(";", moodle_session_pos);
+				size_t moodle_session_pos = to_utf8string(it->second).find("MoodleSession");
+				size_t semicolon_pos = to_utf8string(it->second).find(";", moodle_session_pos);
 				this->moodle_session_ = to_utf8string(it->second).substr(moodle_session_pos, semicolon_pos - moodle_session_pos);
 			}
 			else
@@ -221,10 +220,6 @@ void LoginDialog::CheckLogin()
 					loginfo(*An<Logger>()) << "User was not logged in.";
 				}
 			}
-		}
-		else
-		{
-			continue;	
 		}
 	}
 }
@@ -266,12 +261,11 @@ void LoginDialog::CameraThread()
 			id_frame_ = An<WebCamController>()->GetActiveCamera().GetFrame();
 
 			QImage img(640, 480, QImage::Format_RGB32);
-			int index = 0;
 			for (int y = 0; y < 480; ++y)
 			{
 				for (int x = 0; x < 640; ++x)
 				{
-					index = y * 640 + x;
+					int index = y * 640 + x;
 					img.setPixel(x, y, reinterpret_cast<int*>(id_frame_.GetData())[index]);
 				}
 			}
@@ -307,6 +301,8 @@ void LoginDialog::DeclinePhotoButtonClicked()
 void LoginDialog::AcceptPhotoButtonClicked()
 {
 	ui_->accept_photo_button->setEnabled(false);
+	ui_->decline_photo_button->setEnabled(false);
+
 	FileSystemFrameSaver saver;
 	saver.SetNameToSave("ID_photo");
 	saver.SetPathToSave(path_ + "Photos\\");
@@ -332,47 +328,3 @@ void LoginDialog::closeEvent(QCloseEvent* close_button)
 			worker_.join();
 	}
 }
-
-/* Use this method if you want to write to the registry 
- the keys defining the first run of the application. */
-void LoginDialog::SetFirstRunSetting()
-{
-	QSettings setting(reg_path);
-	setting.setDefaultFormat(QSettings::Registry64Format);
-	// Windows only:
-	// Explicitly access the 64-bit system registry from a 32-bit application running on 64-bit Windows.
-	// On 32-bit Windows or from a 64-bit application on 64-bit Windows, this works the same as
-	// specifying NativeFormat. Was added in Qt 5.7.
-
-	setting.beginGroup(reg_group_name);
-	bool first_run = false;
-	setting.setValue(reg_value_name, first_run);
-	setting.endGroup();
-}
-
-/* Use this method if you want to know whether the application 
-is run for the first time or not. */
-bool LoginDialog::IsFirstRun()
-{
-	QSettings setting(reg_path);
-	setting.setDefaultFormat(QSettings::Registry64Format);
-	setting.beginGroup(reg_group_name);
-	QStringList keys = setting.childKeys();
-	if (!keys.contains(reg_value_name, Qt::CaseInsensitive))
-		return true;
-	else
-		return false;
-	setting.endGroup();
-}
-
-/* Use this method if you want to remove first run settings
-from the registry which were set by LoginDialog::SetFirstRunSetting() method. */
-void LoginDialog::RemoveFirstRunSetting()
-{
-	QSettings setting(reg_path);
-	setting.setDefaultFormat(QSettings::Registry64Format);
-	setting.beginGroup(reg_group_name);
-	setting.remove(reg_value_name);
-	setting.endGroup();
-}
-

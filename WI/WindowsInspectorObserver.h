@@ -11,8 +11,6 @@ namespace SBWindowsInspector
 class WindowsInspectorObserver
 {
 public:
-	~WindowsInspectorObserver() = default;
-
 	void Attach(const std::shared_ptr<IWindowsInspectorObserver>& observer);
 	void Detach(const std::shared_ptr<IWindowsInspectorObserver>& observer);
 private:
@@ -26,5 +24,4 @@ private:
 
 };
 
-
-}
+} // namespace SBWindowsInspector
