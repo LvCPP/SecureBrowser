@@ -17,11 +17,11 @@ UINT Key::GetVirtualCode() const
 
 std::string Key::GetText() const
 {
-	auto it = VK2TEXT.find(Key::GetVirtualCode());
+	auto it = VK2TEXT.find(GetVirtualCode());
 	if (it != VK2TEXT.end())
 		return it->second;
 	else
-		return "VK (" + std::to_string(Key::GetVirtualCode()) + ") ";
+		return "VK (" + std::to_string(GetVirtualCode()) + ") ";
 }
 
 KeySequence Key::operator+(const Key& k) const

@@ -9,4 +9,4 @@ public:
 	virtual void EventHappened() = 0;
 };
 
-}
+} // namespace SI

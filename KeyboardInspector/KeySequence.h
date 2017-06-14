@@ -8,7 +8,7 @@
 namespace SBKeyboardInspector
 {
 
-static constexpr std::size_t VIRTUAL_KEY_COUNT = 0xFF + 1;
+static constexpr size_t VIRTUAL_KEY_COUNT = 0xFF + 1;
 
 class KeySequence 
 {
@@ -29,10 +29,12 @@ public:
 private:
 	std::bitset<VIRTUAL_KEY_COUNT> keys_;
 };
-}
+
+} // namespace SBKeyboardInspector
 
 namespace std
 {
+
 template<>
 struct hash<SBKeyboardInspector::KeySequence>
 {
@@ -41,7 +43,8 @@ struct hash<SBKeyboardInspector::KeySequence>
 		return ks.GetHash();
 	}
 };
-}
+
+} // namespace std
 
 
 

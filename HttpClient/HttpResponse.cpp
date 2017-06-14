@@ -21,7 +21,7 @@ HttpResponse HttpResponse::FromHttpImpl(const http_response& impl)
 	return HttpResponse(impl);
 }
 
-std::multimap<std::string, std::string> HttpResponse::GetHeaders()
+std::multimap<std::string, std::string> HttpResponse::GetHeaders() const
 {
 	std::multimap<std::string, std::string> response_headers;
 

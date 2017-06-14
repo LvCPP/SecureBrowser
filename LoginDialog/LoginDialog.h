@@ -1,16 +1,12 @@
 #pragma once
 #include "ui_LoginDialog.h"
 #include <LoginDialogUtils.h>
-#include <StableFrame.h>
 #include <Frame.h>
-#include <CameraInspectorUtils.h>
 
 #include <QWidget>
-#include <QDialog>
 #include <QCloseEvent>
 
 #include <thread>
-#include <string>
 
 using namespace CameraInspector;
 
@@ -27,10 +23,6 @@ public:
 	LOGIN_DIALOG_API ~LoginDialog() = default;
 
 	LOGIN_DIALOG_API void GetMoodleSession(std::string& session) const;
-		
-	LOGIN_DIALOG_API void SetFirstRunSetting();
-	LOGIN_DIALOG_API bool IsFirstRun();
-	LOGIN_DIALOG_API void RemoveFirstRunSetting();
 
 private:
 	void initializePage(int id) override;	
@@ -76,4 +68,4 @@ public slots:
 	void CheckLogin();
 };
 
-}
+} // namespace Login

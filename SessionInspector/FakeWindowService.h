@@ -1,7 +1,6 @@
 #pragma once
 #include "IFakeWindowServiceObserver.h"
 #include <windows.h>
-#include <Wtsapi32.h>
 #include <vector>
 #include <memory>
 #include <thread>
@@ -10,7 +9,6 @@ struct ObserverInfo;
 
 namespace SI
 {
-
 
 struct ObserverInfo
 {
@@ -46,4 +44,4 @@ private:
 	std::thread worker_;
 };
 
-}//namespace SI
+} // namespace SI
