@@ -61,6 +61,40 @@ WindowsData WindowsInspector::WindowInfo(HWND hwnd)
 	return data;
 }
 
+void WindowsInspector::Attach(const std::shared_ptr<IWindowsInspectorObserver>& observer)
+{
+	observers_.emplace_back(observer);
+}
+
+void WindowsInspector::Detach(const std::shared_ptr<IWindowsInspectorObserver>& observer)
+{
+	const size_t temp_id = ObserverInfo::GetPointerId(observer);
+	observers_.erase(std::remove_if(observers_.begin(), observers_.end(),
+		[temp_id](const ObserverInfo& o)
+	{
+		return o.id == temp_id;
+	}), observers_.end());
+}
+
+void WindowsInspector::Notify(WindowsEvents win_event, WindowsData data)
+{
+	// Remove any dead observers.  These are ones which have expired().
+	observers_.erase(std::remove_if(observers_.begin(), observers_.end(),
+		[](const ObserverInfo& o)
+	{
+		return o.ptr.expired();
+	}), observers_.end());
+
+	// Notify any valid observers of events.
+	std::for_each(observers_.cbegin(), observers_.cend(),
+		[&](const ObserverInfo& o)
+	{
+		auto observer = o.ptr.lock();
+		if (observer) {
+			observer->OnEvent(win_event, data);
+		}
+	});
+}
 
 void CALLBACK WinEventProc(
 	HWINEVENTHOOK	hWinEventHook
@@ -71,7 +105,8 @@ void CALLBACK WinEventProc(
 	, DWORD         dwEventThread
 	, DWORD         dwmsEventTime)
 {
-	WindowsInspectorObserver wd_obs;
+	WindowsInspector wd_obs;
+
 	if (hwnd != GetAncestor(hwnd, GA_ROOTOWNER))
 		return;
 	switch (event)
