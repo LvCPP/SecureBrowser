@@ -58,6 +58,7 @@ LoginDialog::LoginDialog(QWidget* parent)
 	QList<WizardButton> layout;
 	layout << Stretch << NextButton << FinishButton;
 	this->setButtonLayout(layout);
+
 }
 
 LoginDialog::LoginDialog(std::string login, std::string password, std::string path, QWidget* parent)

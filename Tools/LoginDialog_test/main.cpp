@@ -16,13 +16,10 @@ int main(int argc, char *argv[])
 	An<WebCamController>()->RegisterForDeviceNotification();
 
 	QApplication a(argc, argv);
-	LoginDialog login_dialog;
+	LoginDialog login_dialog("lv-28-226215", "Z7_7_P", argv[0]);
 	login_dialog.show();
 
 	int result = a.exec();
-
-	std::string cookies;
-	login_dialog.GetMoodleSession(cookies);
 
 	An<WebCamController>()->UnregisterForDeviceNotification();
 	return result;
