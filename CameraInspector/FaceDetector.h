@@ -5,7 +5,6 @@
 #include <vector>
 #include <memory>
 #include <chrono>
-#include <ctime>
 #include <string>
 
 class FaceDetectorImpl;// forward-declare private "implementation" class

@@ -10,7 +10,7 @@ Frame::Frame()
 }
 
 Frame::Frame(Frame&& frame)
-	: Frame(std::move(frame.cv_mat_impl_))
+	: Frame(move(frame.cv_mat_impl_))
 {
 }
 
@@ -29,12 +29,20 @@ Frame::Frame(std::shared_ptr<cv::Mat> impl)
 {
 }
 
-Frame& CameraInspector::Frame::operator=(Frame&& rhs)
+Frame& Frame::operator=(Frame&& rhs) noexcept
 {
 	if (this == &rhs)
 		return *this;
 
-	cv_mat_impl_ = std::make_shared<cv::Mat>(std::move(rhs.GetImpl()));
+	try
+	{
+		cv_mat_impl_ = std::make_shared<cv::Mat>(std::move(rhs.GetImpl()));
+	}
+	catch(std::bad_alloc&)
+	{
+		// If std::bad_alloc exception is thrown, std::make_shared has no effect.	
+	}
+
 	return *this;
 }
 

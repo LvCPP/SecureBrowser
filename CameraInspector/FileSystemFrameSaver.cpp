@@ -1,5 +1,5 @@
 #include "FileSystemFrameSaver.h"
-#include <opencv2\highgui\highgui.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <vector>
 
 constexpr int QUALITY_HIGH = 92;
@@ -17,7 +17,7 @@ void FileSystemFrameSaver::Save(const Frame& frame)
 	SaveToDisk(frame, name_to_save_, path_to_save_);
 }
 
-void FileSystemFrameSaver::Save(const Frame& frame, const std::string& name)
+void FileSystemFrameSaver::Save(const Frame& frame, const std::string& name) const
 {
 	SaveToDisk(frame, name, path_to_save_);
 }

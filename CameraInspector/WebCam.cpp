@@ -1,5 +1,6 @@
 #include "WebCam.h"
 #include "CameraException.h"
+#include "escapi.h"
 
 using namespace CameraInspector;
 
@@ -19,18 +20,18 @@ WebCam::WebCam(std::string name, std::string unique_name, unsigned short id)
 {
 }
 
-void WebCam::Initialize()
+void WebCam::Initialize() const
 {
 	if (initCapture(id_, &GetParameters()) == 0)
 		throw CameraException("Initialization capture failed");
 }
 
-void WebCam::DeInitialize()
+void WebCam::DeInitialize() const
 {
 	deinitCapture(id_);
 }
 
-Frame WebCam::GetFrame()
+Frame WebCam::GetFrame() const
 {
 	doCapture(id_);
 	SimpleCapParams& parameters(GetParameters());

@@ -23,14 +23,15 @@ public:
 	
 	CI_API void Start();
 	CI_API void Stop();
-	
-	CI_API StableFrame GetCurrentStableFrame() const;
+
+	static
+	CI_API StableFrame GetCurrentStableFrame();
 	
 	CI_API void AddFrameHandler(const std::shared_ptr<IFrameHandler>& handler);
 	
 private:
 	static Frame ReadFromCamera();
-	void WaitForInit();
+	static void WaitForInit();
 
 	void ProcessHandlers();
 	std::vector<std::shared_ptr<IFrameHandler>> handlers_;

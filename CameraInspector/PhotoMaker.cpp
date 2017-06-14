@@ -35,7 +35,7 @@ void PhotoMaker::ProcessFrame(const Frame& frame)
 		{
 			// Calling logger ...
 			save_next_frame_ = false;
-			throw ex;
+			throw;
 		}
 		save_next_frame_ = false;
 	}
@@ -68,7 +68,7 @@ void PhotoMaker::Save(const Frame& frame) const
 	}
 }
 
-std::shared_ptr<IFrameSaver> PhotoMaker::GetSaver()
+std::shared_ptr<IFrameSaver> PhotoMaker::GetSaver() const
 {
 	return saver_;
 }

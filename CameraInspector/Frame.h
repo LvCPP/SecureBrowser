@@ -16,7 +16,7 @@ public:
 	CI_API Frame(cv::Mat mat);
 	CI_API Frame(std::shared_ptr<cv::Mat> impl);
 	CI_API virtual ~Frame() = default;
-	CI_API Frame& operator= (Frame&& rhs);
+	CI_API Frame& operator= (Frame&& rhs) noexcept;
 		
 	CI_API bool IsEmpty() const;
 	  

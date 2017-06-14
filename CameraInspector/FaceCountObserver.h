@@ -10,10 +10,10 @@ class FaceCountObserver : public IFaceDetectorObserver
 {
 public:
 	CI_API FaceCountObserver(std::shared_ptr<PhotoMaker> photo_maker);
-	CI_API void OnFaceQuantityChanged(int face_count, const Frame& frame_to_save);
+	CI_API void OnFaceQuantityChanged(int face_count, const Frame& frame_to_save) override;
 
 private:
 	std::shared_ptr<PhotoMaker> photo_maker_;
 };
 
-}
+} // namespace CameraInspector
