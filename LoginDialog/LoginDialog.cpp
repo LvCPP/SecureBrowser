@@ -280,7 +280,6 @@ void LoginDialog::TakePhoto()
 		tr("<p align='center'>You may save the photo or take another one<br>"
 			"on pushing the decline photo button</p>"),
 		QMessageBox::Ok);
-
 }
 
 void LoginDialog::DeclinePhotoButtonClicked()
