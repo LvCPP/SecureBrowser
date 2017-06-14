@@ -49,7 +49,7 @@
   
     <DirectoryRef Id="TARGETDIR">
        <Merge Id="VCRedist" 
-              SourceFile="$(var.SolutionDir)3rd-party-libraries\microsoft\Microsoft_VC140_CRT_x86.msm" 
+              SourceFile="$(var.SolutionDir)Resources\Microsoft_VC140_CRT_x86.msm" 
               DiskId="1"
               Language="0"/>
     </DirectoryRef>
@@ -93,10 +93,14 @@
     
     <!-- Resources -->
     <ComponentGroup Id="ComponentGroupResources" Directory="ResourceFolder">
-      <Component Id="haarcascade_frontalface_alt.xml" Guid="60b311bd-aa22-4801-ae23-ab2beac99b45">
+      <Component Id="ComponentResources" Guid="60b311bd-aa22-4801-ae23-ab2beac99b45">
         <File Id="haarcascade_frontalface_alt.xml"
               Name="haarcascade_frontalface_alt.xml"
-              Source="$(var.SolutionDir)Build\Release\Resources\haarcascade_frontalface_alt.xml"
+              Source="$(var.SolutionDir)Resources\haarcascade_frontalface_alt.xml"
+              ReadOnly="yes" />
+       <File Id="splash.png"
+              Name="splash.png"
+              Source="$(var.SolutionDir)Resources\splash.png"
               ReadOnly="yes" />
       </Component>
     </ComponentGroup>

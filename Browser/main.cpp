@@ -11,6 +11,7 @@
 #include <SessionInspector.h>
 
 #include <QtWidgets/QApplication>
+#include <QSplashScreen>
 
 #include <windows.h>
 #include <fstream>
@@ -67,18 +68,23 @@ int main(int argc, char* argv[])
 
 	std::string login = input.at(1);
 	std::string password = input.at(2);
-	
+
+	QApplication app(argc, argv);
+	QSplashScreen splash_screen(QPixmap(QString::fromStdString(path + "Resources\\splash.png")));
+	splash_screen.setEnabled(false); // Prevent user from closing the splash
+	splash_screen.show();
+	app.processEvents(); // Make sure splash screen gets drawn ASAP
+
 	An<Logger> logger;
 
 	std::ofstream file(path + "Logs\\" + "log.txt", std::ios::out);
 	logger->SetOutput(file);
 	loginfo(*logger) << "Program initialized";
 	
-	QApplication a(argc, argv);
-
 	LoginDialog login_app(login, password, path);
 	loginfo(*logger) << "Start login";
 	
+	splash_screen.hide();
 	if (!login_app.exec())
 	{
 		logerror(*logger) << "Login dialog failed. Program finished.";
@@ -86,7 +92,9 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	 //for sending cookies to browser
+	splash_screen.show();
+
+	// for sending cookies to browser
 	std::string moodle_cookies;
 	login_app.GetMoodleSession(moodle_cookies);
 
@@ -115,9 +123,11 @@ int main(int argc, char* argv[])
 	std::string link_to_quiz = input.at(3);
 	std::string password_to_quiz = input.at(4);
 
-	Browser w(link_to_quiz, password_to_quiz, moodle_cookies);
-	w.showMaximized();
-	int result = a.exec();
+	Browser browser_app(link_to_quiz, password_to_quiz, moodle_cookies);
+	browser_app.showMaximized();
+
+	splash_screen.finish(&browser_app);
+	int result = app.exec();
 
 	cam_cap->Stop();
 
