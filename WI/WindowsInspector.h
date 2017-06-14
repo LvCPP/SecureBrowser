@@ -7,16 +7,22 @@
 #include <iostream>
 #include <fstream>
 
+
 namespace SBWindowsInspector
 {
 
 enum class WindowsEvents
 {
 	WindowCreated,
-	WindowRestored
+	WindowMoved,
+	WindowMinimized,
+	WindowSwitched,
+	WindowDestroyed,
+	WindowFocusChanged
 };
 
-class WindowsInspector
+
+class WindowsInspector /*: public WindowsInspectorObserver*/
 {
 public:
 	WINDOWSINSPECTOR_API ~WindowsInspector();
@@ -31,6 +37,7 @@ protected:
 
 private:
 	std::thread worker_;
+
 };
 
 } // namespace SBWindowsInspector

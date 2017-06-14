@@ -1,5 +1,6 @@
 #include "WindowsInspector.h"
 #include "IWindowsInspectorObserver.h"
+#include "WindowsInspectorObserver.h"
 #include "TlHelp32.h"
 
 using namespace SBWindowsInspector;
@@ -70,6 +71,7 @@ void CALLBACK WinEventProc(
 	, DWORD         dwEventThread
 	, DWORD         dwmsEventTime)
 {
+	WindowsInspectorObserver wd_obs;
 	if (hwnd != GetAncestor(hwnd, GA_ROOTOWNER))
 		return;
 	switch (event)
@@ -77,7 +79,7 @@ void CALLBACK WinEventProc(
 	case EVENT_OBJECT_CREATE:
 		OutputDebugStringA("Window Created: \n");
 		//ShowWindow(hwnd, SW_MINIMIZE);
-		Notify(WindowsEvents::WindowCreated, WindowsData(hwnd)/*WindowsInspector::WindowInfo(hwnd)*/);
+		wd_obs.Notify(WindowsEvents::WindowCreated, WindowsData(hwnd)/*WindowsInspector::WindowInfo(hwnd)*/);
 		break;
 
 	//case EVENT_SYSTEM_MOVESIZEEND:
@@ -100,9 +102,10 @@ void CALLBACK WinEventProc(
 	//	WindowsInspector::WindowInfo(hwnd);
 	//	ShowWindow(hwnd, SW_MINIMIZE);
 	//	break;
-	case EVENT_SYSTEM_MINIMIZEEND:
+	case EVENT_OBJECT_FOCUS:
 		OutputDebugStringA("Focus on window: \n");
-		Notify(WindowsEvents::WindowRestored, WindowsData(hwnd));
+		wd_obs.Notify(WindowsEvents::WindowFocusChanged, WindowsData(hwnd));
+		WindowsInspector::WindowInfo(hwnd);
 		//ShowWindow(hwnd, SW_MINIMIZE);
 		break;
 	default:

@@ -4,24 +4,6 @@
 
 using namespace SBWindowsInspector;
 
-struct ObserverInfo
-{
-	ObserverInfo(const std::shared_ptr<IWindowsInspectorObserver>& observer)
-		: id(GetPointerId(observer))
-		, ptr(observer)
-	{
-	};
-
-
-	static size_t GetPointerId(const std::shared_ptr<IWindowsInspectorObserver>& observer)
-	{
-		return reinterpret_cast<size_t>(observer.get());
-	}
-
-	size_t id;
-	std::weak_ptr<IWindowsInspectorObserver> ptr;
-};
-
 void WindowsInspectorObserver::Attach(const std::shared_ptr<IWindowsInspectorObserver>& observer)
 {
 	observers_.emplace_back(observer);
@@ -55,4 +37,9 @@ void WindowsInspectorObserver::Notify(WindowsEvents win_event, WindowsData data)
 			observer->OnEvent(win_event, data);
 		}
 	});
+}
+
+void WindowsInspectorObserver::OnEvent(WindowsEvents win_event, WindowsData data)
+{
+	std::cout << "check" << std::endl;
 }
