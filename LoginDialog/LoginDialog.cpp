@@ -10,7 +10,6 @@
 #include <QString>
 #include <QMessageBox>
 #include <QImage>
-#include <QSettings>
 
 #include <functional>
 #include <map>
@@ -32,11 +31,6 @@ using namespace BrowserLogger;
 
 // alias for working with http_client
 using utf8string = std::string;
-
-// for working with registry
-static const QString reg_path = "HKEY_CURRENT_USER\\Software\\SoftServe\\SecureBrowser";
-static const QString reg_group_name = "Run";
-static const QString reg_value_name = "FirstRun";
 
 // constructor for the test project
 LoginDialog::LoginDialog(QWidget* parent)

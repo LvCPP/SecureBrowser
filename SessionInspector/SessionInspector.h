@@ -3,7 +3,7 @@
 namespace SI
 {
 
-class SessionInstector
+class SessionInspector
 {
 public:
 	static bool IsCurrentSessionRemoteable();

@@ -12,7 +12,7 @@ using namespace BrowserLogger;
 using namespace Utils;
 using namespace SI;
 
-bool SessionInstector::IsCurrentSessionRemoteable()
+bool SessionInspector::IsCurrentSessionRemoteable()
 {
 	bool is_remotable = false;
 	if (GetSystemMetrics(SM_REMOTESESSION))
@@ -54,7 +54,7 @@ bool SessionInstector::IsCurrentSessionRemoteable()
 	return is_remotable;
 }
 
-bool SessionInstector::IsInsideVBox()
+bool SessionInspector::IsInsideVBox()
 {
 	if (CreateFile("\\\\.\\VBoxMiniRdrDN", GENERIC_READ, FILE_SHARE_READ,
 		nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr) != INVALID_HANDLE_VALUE)
@@ -63,8 +63,5 @@ bool SessionInstector::IsInsideVBox()
 		return true;
 	}
 
-	else
-	{
-		return false;
-	}
+	return false;
 }
