@@ -6,7 +6,7 @@
            Version="1.0.0.0"
            Manufacturer="Lv-231.C++"
            UpgradeCode="95d7e711-80be-404d-a6ee-8d1d2e7a3886">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Package InstallerVersion="301" Compressed="yes" InstallScope="perMachine" />
 
     <!-- Setting UI -->
     <UIRef Id="WixUI_InstallDir" />
@@ -20,6 +20,7 @@
     <MediaTemplate EmbedCab="yes" />
    
     <Feature Id="ProductFeature" Title="SecureBrowser" Level="1">
+      <MergeRef Id="VCRedist"/>
       <ComponentRef Id="RegistryEntries" />
       <ComponentGroupRef Id="ComponentGroupDirectories" />
       <ComponentGroupRef Id="ComponentGroupResources" />
@@ -45,6 +46,13 @@
       </Directory>
       <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
+  
+    <DirectoryRef Id="TARGETDIR">
+       <Merge Id="VCRedist" 
+              SourceFile="$(var.SolutionDir)3rd-party-libraries\microsoft\Microsoft_VC140_CRT_x86.msm" 
+              DiskId="1"
+              Language="0"/>
+    </DirectoryRef>
   </Fragment>
 
   <!-- Setting up registry -->
