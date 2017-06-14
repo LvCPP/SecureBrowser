@@ -87,8 +87,8 @@ int main(int argc, char* argv[])
 	 //for sending cookies to browser
 	std::string moodle_cookies;
 	login_app.GetMoodleSession(moodle_cookies);
-	
-	// Setting up inspectors
+
+// Setting up inspectors
 //	KeyboardInspector ki;
 //	SetupKeyboardInspector(ki);
 //	ki.Start();

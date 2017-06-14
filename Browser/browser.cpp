@@ -43,7 +43,6 @@ Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::st
 
 	// for connecting with the Moodle server
 	profile_ = new QWebEngineProfile(this);
-
 	QUrl base_url = QUrl(QString::fromStdString(link_to_quiz_));
 
 	store_ = ui_->web_view->page()->profile()->cookieStore();
@@ -53,8 +52,9 @@ Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::st
 	store_->loadAllCookies();
 
 	QWebEngineHttpRequest req(base_url, QWebEngineHttpRequest::Get);
-
+	
 	ui_->web_view->load(req);
+
 }
 
 Browser::~Browser()

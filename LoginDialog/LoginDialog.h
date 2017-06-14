@@ -27,7 +27,7 @@ public:
 	LOGIN_DIALOG_API ~LoginDialog() = default;
 
 	LOGIN_DIALOG_API void GetMoodleSession(std::string& session) const;
-	
+		
 	LOGIN_DIALOG_API void SetFirstRunSetting();
 	LOGIN_DIALOG_API bool IsFirstRun();
 	LOGIN_DIALOG_API void RemoveFirstRunSetting();

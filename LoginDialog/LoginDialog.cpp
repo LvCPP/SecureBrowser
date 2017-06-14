@@ -145,7 +145,7 @@ int LoginDialog::nextId() const
 // for sending cookies to the browser
 void LoginDialog::GetMoodleSession(std::string& session) const
 {
-	session = this->moodle_session_;
+	session = moodle_session_;
 }
 
 void LoginDialog::CheckLogin()
@@ -156,7 +156,7 @@ void LoginDialog::CheckLogin()
 	utf8string request_body = body_text;
 	utf8string content_type = "application/x-www-form-urlencoded";
 
-	// for disabling redirect
+	 //for disabling redirect
 	http_client_config config;
 	config.set_nativehandle_options([](native_handle handle)
 	{
@@ -173,12 +173,11 @@ void LoginDialog::CheckLogin()
 		}
 	});
 
-	utility::string_t base_url = U("https://softserve.academy");
+	utility::string_t base_url = U("https://softserve.academy/");
 	http_client client(base_url, config);
 		
 	http_request req(methods::POST);
 	req.set_request_uri(U("/login/index.php"));
-
 	req.set_body(body_text, content_type);
 	http_response response = client.request(req).get();
 	
@@ -204,8 +203,9 @@ void LoginDialog::CheckLogin()
 					ui_->login_button->setEnabled(false);
 					loginfo(*An<Logger>()) << "User was logged in.";
 				}
-				std::size_t semicolon_pos = to_utf8string(it->second).find(";");
-				this->moodle_session_ = to_utf8string(it->second).substr(0, semicolon_pos);
+				std::size_t moodle_session_pos = to_utf8string(it->second).find("MoodleSession");
+				std::size_t semicolon_pos = to_utf8string(it->second).find(";", moodle_session_pos);
+				this->moodle_session_ = to_utf8string(it->second).substr(moodle_session_pos, semicolon_pos - moodle_session_pos);
 			}
 			else
 			{

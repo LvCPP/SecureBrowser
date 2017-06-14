@@ -139,6 +139,8 @@ void main(int argc, char** argv)
 	std::string input = path_of_executable + " " + argv[1];
 	std::string path_to_browser = std::regex_replace(path_of_executable, std::regex("Startup"), "Browser");
 
+
+
 	HANDLE browser = StartBrowser(path_to_browser, const_cast<char*>(input.c_str()));
 
 	if(browser)
