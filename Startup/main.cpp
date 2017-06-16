@@ -1,18 +1,41 @@
 #include <Windows.h>
 #include <cstdio>
 #include <regex>
+#include <map>
 
 constexpr ACCESS_MASK ACCESS_RIGHTS = GENERIC_ALL;
 
-bool ChangeSingleFeature(HKEY reg_key, LPCWSTR sub_key, DWORD value, LPCWSTR value_name)
+struct RegisterData
+{
+	HKEY reg_key;
+	LPCWSTR sub_key;
+	LPCWSTR value_name;
+	DWORD prev_value;
+};
+
+std::map<LPCWSTR, RegisterData> previous_reg;
+
+bool ChangeSingleFeature(RegisterData reg_data, DWORD value)
 {
 	bool is_success = false;
 
+
 	HKEY hkey;
-	if (RegCreateKeyEx(reg_key, sub_key, 0, nullptr, REG_OPTION_VOLATILE, KEY_WRITE | KEY_WOW64_32KEY,
+	if (RegCreateKeyEx(reg_data.reg_key, reg_data.sub_key, 0, nullptr, REG_OPTION_VOLATILE, KEY_READ | KEY_WRITE | KEY_WOW64_32KEY,
 		nullptr, &hkey, nullptr) == ERROR_SUCCESS)
 	{
-		if (RegSetValueEx(hkey, value_name, 0, REG_DWORD, (PBYTE)&value, sizeof(DWORD)) == ERROR_SUCCESS)
+		DWORD previous_data;
+		DWORD  buff;
+		if (RegGetValue(hkey, nullptr, reg_data.value_name, RRF_RT_REG_DWORD, nullptr, &previous_data, &buff) == ERROR_SUCCESS)
+		{
+			if (previous_data != 0 && value != 0)
+			{
+				previous_reg[reg_data.value_name] = reg_data;
+				previous_reg[reg_data.value_name].prev_value = value;
+			}
+		}
+
+		if (RegSetValueEx(hkey, reg_data.value_name, 0, REG_DWORD, (PBYTE)&value, sizeof(DWORD)) == ERROR_SUCCESS)
 		{
 			is_success = true;
 		}
@@ -22,43 +45,54 @@ bool ChangeSingleFeature(HKEY reg_key, LPCWSTR sub_key, DWORD value, LPCWSTR val
 	return is_success;
 }
 
+void RestoreData()
+{
+	for (auto it = previous_reg.begin(); it != previous_reg.end(); ++it)
+	{
+		ChangeSingleFeature(it->second, it->second.prev_value);
+	}
+	previous_reg.clear();
+}
+
 bool ChangeAllFeatures(DWORD value)
 {
 	bool is_success = true;
 
 	// Task Manager
-	HKEY reg_key = HKEY_CURRENT_USER;
-	LPCWSTR sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
-	LPCWSTR value_name = L"DisableTaskMgr";
-	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+	RegisterData data;
+	data.prev_value = -1;
+	data.reg_key = HKEY_CURRENT_USER;
+	data.sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
+	data.value_name = L"DisableTaskMgr";
+	if (ChangeSingleFeature(data, value) == false)
 		is_success = false;
 
 	// Change Password
-	value_name = L"DisableChangePassword";
-	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+	data.value_name = L"DisableChangePassword";
+	if (ChangeSingleFeature(data, value) == false)
 		is_success = false;
 
 	// Lock
-	value_name = L"DisableLockWorkstation";
-	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+	data.value_name = L"DisableLockWorkstation";
+	if (ChangeSingleFeature(data, value) == false)
 		is_success = false;
 
 	// Log Off
-	sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer";
-	value_name = L"NoLogOff";
-	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+	data.sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer";
+	data.value_name = L"NoLogOff";
+	if (ChangeSingleFeature(data, value) == false)
 		is_success = false;
 
 	// Shut Down
-	value_name = L"NoClose";
-	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+	data.value_name = L"NoClose";
+	if (ChangeSingleFeature(data, value) == false)
 		is_success = false;
 
 	// User Switching
-	reg_key = HKEY_LOCAL_MACHINE;
-	sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
-	value_name = L"HideFastUserSwitching";
-	if (ChangeSingleFeature(reg_key, sub_key, value, value_name) == false)
+	data.reg_key = HKEY_LOCAL_MACHINE;
+	data.sub_key = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
+	data.value_name = L"HideFastUserSwitching";
+	if (ChangeSingleFeature(data, value) == false)
 		is_success = false;
 
 	return is_success;
@@ -126,19 +160,18 @@ void main(int argc, char** argv)
 		return;
 	}
 
-	ChangeAllFeatures(1);
-	
 	HDESK sb_desktop = CreateHiddenDesktop("SecureBrowser");
 	HDESK original_desktop = GetThreadDesktop(GetCurrentThreadId());
 
 	//Need to switch thread into context of new desktop to register hotkeys
 	SetThreadDesktop(sb_desktop);
 	ClearClipboard();
+	ChangeAllFeatures(1);
 	SwitchDesktop(sb_desktop);
 
 	std::string input = path_of_executable + " " + argv[1];
 	std::string path_to_browser = std::regex_replace(path_of_executable, std::regex("Startup"), "Browser");
-
+	
 	HANDLE browser = StartBrowser(path_to_browser, const_cast<char*>(input.c_str()));
 
 	if(browser)
@@ -146,11 +179,13 @@ void main(int argc, char** argv)
 		WaitForSingleObject(browser, INFINITE);
 	}
 
+	ChangeAllFeatures(0);
+	RestoreData();
+
+	SwitchDesktop(original_desktop);
 	CloseDesktop(sb_desktop);
 
-	ChangeAllFeatures(0);
 	ClearClipboard();
-	SwitchDesktop(original_desktop);
 
 	CloseHandle(sb_desktop);
 }

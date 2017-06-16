@@ -1,18 +1,16 @@
 #include "FaceDetector.h"
 #include "StableFrame.h"
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <memory>
 #include <thread>
 
 using namespace CameraInspector;
-using namespace std;
 
 namespace
 {
-constexpr char* CASCADE_FILE_PATH = R"(Resources\haarcascade_frontalface_alt.xml)";
+constexpr char* CASCADE_FILE = R"(haarcascade_frontalface_alt.xml)";
 constexpr double SCALE_FACTOR = 1.1;
 constexpr int MIN_NEIGHBORS = 2;
 constexpr int FLAGS = cv::CASCADE_SCALE_IMAGE;
@@ -25,8 +23,8 @@ constexpr int SHIFT = 0;
 class FaceDetectorImpl
 {
 public:
-	FaceDetectorImpl()
-		:face_cascade_(CASCADE_FILE_PATH)
+	FaceDetectorImpl(std::string path_to_resources)
+		:face_cascade_(path_to_resources + CASCADE_FILE)
 	{
 	}
 	cv::CascadeClassifier& GetFaceCascade() { return face_cascade_; }
@@ -41,7 +39,7 @@ struct ObserverInfo
 		: id(GetPointerId(observer))
 		, ptr(observer)
 	{
-	};
+	}
 
 
 	static size_t GetPointerId(const std::shared_ptr<IFaceDetectorObserver>& observer)
@@ -53,13 +51,12 @@ struct ObserverInfo
 	std::weak_ptr<IFaceDetectorObserver> ptr;
 };
 
-FaceDetector::FaceDetector()
+FaceDetector::FaceDetector(std::string path_to_resources)
 	: faces_quantity_(1)
-	, pimpl_ (std::make_unique<FaceDetectorImpl>())
+	, frequency_(std::chrono::seconds(5))
 	, last_time_proceeded_(std::chrono::high_resolution_clock::now())
-	, frequency_(5s)
+	, pimpl_ (std::make_unique<FaceDetectorImpl>(path_to_resources))
 {
-
 };
 
 void FaceDetector::Attach(const std::shared_ptr<IFaceDetectorObserver>& observer)
@@ -104,9 +101,9 @@ void FaceDetector::SetFrequency(std::chrono::seconds frequency)
 
 void FaceDetector::ProcessFrame(const Frame& frame)
 {
-	auto currentTime = chrono::high_resolution_clock::now();
+	auto currentTime = std::chrono::high_resolution_clock::now();
 	
-	bool isTimeToProceed = chrono::duration_cast<chrono::seconds>
+	bool isTimeToProceed = std::chrono::duration_cast<std::chrono::seconds>
 		(currentTime - last_time_proceeded_).count() > frequency_.count();
 
 	if (!isTimeToProceed)
@@ -119,20 +116,9 @@ void FaceDetector::ProcessFrame(const Frame& frame)
 	cvtColor(cv_frame, frame_gray, cv::COLOR_BGR2GRAY);
 
 	std::vector<cv::Rect> faces;
+
 	// Detect faces
-
 	pimpl_->GetFaceCascade().detectMultiScale(frame_gray, faces, SCALE_FACTOR, MIN_NEIGHBORS, FLAGS, cv::Size(30, 30));
-
-#ifdef _DEBUG
-	for (size_t ic = 0; ic < faces.size(); ic++) // Iterate through all current elements (detected faces)
-	{
-		cv::Point pt1(faces[ic].x, faces[ic].y); // Display detected faces on main window - live stream from camera
-		cv::Point pt2((faces[ic].x + faces[ic].width), (faces[ic].y + faces[ic].height));
-		rectangle(cv_frame, pt1, pt2, COLOR_GREEN, THICKNESS, LINE_TYPE, SHIFT);
-	}
-//	imshow("Debug window", cv_frame);
-//	cv::waitKey(10);
-#endif // DEBUG
 
 	const size_t new_faces_quantity = faces.size();
 	if (new_faces_quantity != faces_quantity_)

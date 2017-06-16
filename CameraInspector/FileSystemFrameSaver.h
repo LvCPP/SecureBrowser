@@ -14,7 +14,8 @@ public:
 	CI_API virtual ~FileSystemFrameSaver() = default;
 
 	CI_API void Save(const Frame& frame) override;
-	CI_API void Save(const Frame& frame, const std::string& name);
+	CI_API void Save(const Frame& frame, const std::string& name) const;
+	static
 	CI_API void Save(const Frame& frame, const std::string& name, const std::string& path);
 	
 	CI_API void SetPathToSave(const std::string& path) noexcept;

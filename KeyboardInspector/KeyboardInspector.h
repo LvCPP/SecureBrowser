@@ -27,7 +27,7 @@ private:
 };
 
 
-} // end of namespace
+} // namespace SBKeyboardInspector
 
 
 

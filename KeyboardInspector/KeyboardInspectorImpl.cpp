@@ -8,7 +8,7 @@ using namespace BrowserLogger;
 
 static constexpr UINT IS_RELEASED = 0x80;
 
-HMODULE KeyboardInspectorImpl::instance = 0;
+HMODULE KeyboardInspectorImpl::instance = nullptr;
 HHOOK keyboard_hook;
 MSG message;
 bool KeyboardInspectorImpl::ignore_key_ = false;
@@ -26,13 +26,13 @@ KeyboardInspectorImpl::~KeyboardInspectorImpl()
 void KeyboardInspectorImpl::Start()
 {
 	msg_loop_thread_ = std::thread(&KeyboardInspectorImpl::MessageLoop, this);
-	OutputDebugStringA("KEYBOARD INSPECTOR STARTED WORKING\n");
+	loginfo(*An<Logger>()) << "Keyboard Inspector started working";
 }
 
 void KeyboardInspectorImpl::Stop()
 {
 	PostThreadMessage(GetThreadId(msg_loop_thread_.native_handle()), WM_QUIT, 0, 0);
-	OutputDebugStringA("KEYBOARD INSPECTOR STOPPED WORKING\n");
+	loginfo(*An<Logger>()) << "Keyboard Inspector stopped working";
 	UnhookWindowsHookEx(keyboard_hook);
 }
 
@@ -55,13 +55,17 @@ bool KeyboardInspectorImpl::ChangeIgnoreFlagIfNecessary(const KeySequence& ks
 	if (it != key_seq_to_handler.end())
 		if (it->second)
 			return !it->second(ks);
+		else
+			return false;
+	else
+		return false;
 }
 
 void KeyboardInspectorImpl::MessageLoop()
 { 
-	keyboard_hook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardInspectorImpl::LowLevelKeyboardProc, instance, 0);
+	keyboard_hook = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, instance, 0);
 
-	while (GetMessage(&message, NULL, 0, 0))
+	while (GetMessage(&message, nullptr, 0, 0))
 	{
 		TranslateMessage(&message);
 		DispatchMessage(&message);
@@ -71,16 +75,14 @@ void KeyboardInspectorImpl::MessageLoop()
 LRESULT CALLBACK KeyboardInspectorImpl::LowLevelKeyboardProc(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code != HC_ACTION)
-		return CallNextHookEx(NULL, code, wParam, lParam);
+		return CallNextHookEx(nullptr, code, wParam, lParam);
 	
-	PKBDLLHOOKSTRUCT kb = (PKBDLLHOOKSTRUCT)lParam;
+	PKBDLLHOOKSTRUCT kb = reinterpret_cast<PKBDLLHOOKSTRUCT>(lParam);
 
 	Key key(LOBYTE(kb->vkCode));
 	if (!current_key_seq_.IsKeySet(key))
 	{
 		current_key_seq_ += key;
-		std::string dbg = "key pressed: " + current_key_seq_.GetText() + "\n";
-		OutputDebugStringA(dbg.c_str());
 		ignore_key_ = ChangeIgnoreFlagIfNecessary(current_key_seq_, key_seq_to_handler_);
 	}
 
@@ -97,5 +99,5 @@ LRESULT CALLBACK KeyboardInspectorImpl::LowLevelKeyboardProc(int code, WPARAM wP
 		return 1;
 	}
 
-	return CallNextHookEx(NULL, code, wParam, lParam);
+	return CallNextHookEx(nullptr, code, wParam, lParam);
 }

@@ -40,7 +40,7 @@ void WebCameraCapture::Stop()
 	}
 }
 
-StableFrame WebCameraCapture::GetCurrentStableFrame() const
+StableFrame WebCameraCapture::GetCurrentStableFrame()
 {
 	return StableFrame(ReadFromCamera());
 }
@@ -79,9 +79,9 @@ namespace Utils
 {
 
 template<> 
-void AnFill<CameraInspector::WebCameraCapture>(An<CameraInspector::WebCameraCapture>& an)
+void AnFill<WebCameraCapture>(An<WebCameraCapture>& an)
 {
-	static CameraInspector::WebCameraCapture wcc;
+	static WebCameraCapture wcc;
 	an = &wcc;
 }
 

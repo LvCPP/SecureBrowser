@@ -1,13 +1,9 @@
 #pragma once
 #include "ui_LoginDialog.h"
 #include <LoginDialogUtils.h>
-#include <StableFrame.h>
 #include <Frame.h>
-#include <CameraInspectorUtils.h>
 
 #include <QWidget>
-#include <QtWidgets/QDialog>
-#include <QStringList>
 #include <QCloseEvent>
 
 #include <thread>
@@ -22,21 +18,20 @@ class LoginDialog : public QWizard
 	Q_OBJECT
 
 public:
-	LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, QWidget* parent = Q_NULLPTR);
-	LOGIN_DIALOG_API ~LoginDialog();
+	explicit LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, std::string path, QWidget* parent = Q_NULLPTR);
+	explicit LOGIN_DIALOG_API LoginDialog(QWidget* parent = Q_NULLPTR);
+	LOGIN_DIALOG_API ~LoginDialog() = default;
+
+	LOGIN_DIALOG_API void GetMoodleSession(std::string& session) const;
 
 private:
+	void initializePage(int id) override;	
+	int nextId() const override;
+	void closeEvent(QCloseEvent* close_button) override;
+
 	void CameraThread();
 	void RefreshComboBox();
 	void InitCamera();
-
-	int nextId() const override;
-	void initializePage(int id) override;
-	void closeEvent(QCloseEvent* close_button) override;
-
-	void SetFirstRunSetting();
-	bool IsFirstRun();
-	void RemoveFirstRunSetting();
 
 	enum
 	{
@@ -46,8 +41,9 @@ private:
 		, LAST_PAGE
 	};
 
-	Ui::Wizard* ui_;
-
+	QScopedPointer<Ui::Wizard> ui_;
+	
+	std::string moodle_session_;
 	bool is_login_checked_;
 	Frame id_frame_;
 	mutable std::thread worker_;
@@ -57,17 +53,20 @@ private:
 	QStringList camera_list_;
 	std::string login_;
 	std::string password_;
+	std::string path_;
 	
 signals:
 	void UpdateImage(QPixmap image);
-	
+	void LoginAccepted();
+
 private slots:
-	void TakePhoto();
 	void ChooseCamera(int id);
-	void DeclinePhotoButtonClicked();
+	void TakePhoto();
 	void AcceptPhotoButtonClicked();
-	void CheckLogin();
+	void DeclinePhotoButtonClicked();
 	
+public slots:
+	void CheckLogin();
 };
 
-}
+} // namespace Login

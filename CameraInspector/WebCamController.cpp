@@ -3,6 +3,7 @@
 #include <An.hpp>
 #include <Logger.h>
 #include <algorithm>
+#include "escapi.h"
 
 using namespace CameraInspector;
 using namespace Utils;
@@ -132,10 +133,8 @@ WebCam WebCamController::GetActiveCamera() const
 	{
 		return *activated_camera_;
 	}
-	else
-	{
-		throw CameraException("Camera is not available right now");
-	}
+	
+	throw CameraException("Camera is not available right now");
 }
 
 namespace Utils

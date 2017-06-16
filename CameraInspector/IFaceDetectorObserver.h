@@ -1,6 +1,5 @@
 #pragma once
 #include "Frame.h"
-#include "CameraInspectorUtils.h"
 
 namespace CameraInspector
 {
@@ -12,4 +11,4 @@ public:
 	virtual void OnFaceQuantityChanged(int face_count, const Frame& frame_to_save) = 0;
 };
 
-}
+} // namespace CameraInspector

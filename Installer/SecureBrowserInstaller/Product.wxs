@@ -6,7 +6,7 @@
            Version="1.0.0.0"
            Manufacturer="Lv-231.C++"
            UpgradeCode="95d7e711-80be-404d-a6ee-8d1d2e7a3886">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Package InstallerVersion="301" Compressed="yes" InstallScope="perMachine" />
 
     <!-- Setting UI -->
     <UIRef Id="WixUI_InstallDir" />
@@ -18,11 +18,16 @@
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
-
+   
     <Feature Id="ProductFeature" Title="SecureBrowser" Level="1">
-      <ComponentGroupRef Id="Components" />
-      <ComponentGroupRef Id="ComponentResources" />
+      <MergeRef Id="VCRedist"/>
       <ComponentRef Id="RegistryEntries" />
+      <ComponentGroupRef Id="ComponentGroupDirectories" />
+      <ComponentGroupRef Id="ComponentGroupResources" />
+      <ComponentGroupRef Id="ComponentGroupQtStuff" />
+      <ComponentGroupRef Id="ComponentGroupPlatformsFolder" />
+      <ComponentGroupRef Id="ComponentGroupImageformatsFolder" />
+      <ComponentGroupRef Id="Components" />
     </Feature>
   </Product>
   
@@ -31,12 +36,23 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="INSTALLFOLDER" Name="SecureBrowser">
         <Directory Id="ResourceFolder" Name="Resources" />
+        <Directory Id="PhotosFolder" Name="Photos" />
+        <Directory Id="LogsFolder" Name="Logs" />
+        <Directory Id="PlatformsFolder" Name="platforms" />
+        <Directory Id="ImageformatsFolder" Name="imageformats" />
       </Directory>
       <Directory Id="MenuFolder">
         <Directory Id="StartMenuFolder" Name="Secure Browser" />
       </Directory>
       <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
+  
+    <DirectoryRef Id="TARGETDIR">
+       <Merge Id="VCRedist" 
+              SourceFile="$(var.SolutionDir)Resources\Microsoft_VC140_CRT_x86.msm" 
+              DiskId="1"
+              Language="0"/>
+    </DirectoryRef>
   </Fragment>
 
   <!-- Setting up registry -->
@@ -61,19 +77,89 @@
   <!-- Product components -->
   <Fragment>
     
+    <!-- Empty directories -->
+    <ComponentGroup Id="ComponentGroupDirectories">
+      <Component Id="ComponentPhotosFolder"
+                 Guid="16f60cbe-f1ab-4797-9ca7-c2d46e84c2e0"
+                 Directory="PhotosFolder">
+        <CreateFolder />
+      </Component>
+      <Component Id="ComponentLogsFolder"
+                 Guid="53b8736e-17c6-41f0-ade0-518cd3c4ab5d"
+                 Directory="LogsFolder">
+        <CreateFolder />
+      </Component>
+    </ComponentGroup>
+    
     <!-- Resources -->
-    <ComponentGroup Id="ComponentResources" Directory="ResourceFolder">
-      <Component Id="haarcascade_frontalface_alt.xml" Guid="60b311bd-aa22-4801-ae23-ab2beac99b45">
+    <ComponentGroup Id="ComponentGroupResources" Directory="ResourceFolder">
+      <Component Id="ComponentResources" Guid="60b311bd-aa22-4801-ae23-ab2beac99b45">
         <File Id="haarcascade_frontalface_alt.xml"
               Name="haarcascade_frontalface_alt.xml"
-              Source="$(var.SolutionDir)Build\Release\Resources\haarcascade_frontalface_alt.xml"
+              Source="$(var.SolutionDir)Resources\haarcascade_frontalface_alt.xml"
+              ReadOnly="yes" />
+       <File Id="splash.png"
+              Name="splash.png"
+              Source="$(var.SolutionDir)Resources\splash.png"
               ReadOnly="yes" />
       </Component>
     </ComponentGroup>
-
-    <!-- Other components -->
+    
+    <!-- Qt required files -->
+    <ComponentGroup Id="ComponentGroupQtStuff" Directory="INSTALLFOLDER">
+      <Component Id="QtStuff" Guid="11d6ce37-73ac-4545-a620-2ce0e10c3e8c">
+          <File Id="icudtl.dat"
+              Name="icudtl.dat"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\icudtl.dat"
+              ReadOnly="yes" />
+        <File Id="qtwebengine_resources.pak"
+              Name="qtwebengine_resources.pak"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\qtwebengine_resources.pak"
+              ReadOnly="yes" />
+        <File Id="qtwebengine_resources_100p.pak"
+              Name="qtwebengine_resources_100p.pak"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\qtwebengine_resources_100p.pak"
+              ReadOnly="yes" />
+        <File Id="qtwebengine_resources_200p.pak"
+              Name="qtwebengine_resources_200p.pak"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\qtwebengine_resources_200p.pak"
+              ReadOnly="yes" />
+        <File Id="d3dcompiler_47.dll"
+              Name="d3dcompiler_47.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\d3dcompiler_47.dll"
+              ReadOnly="yes" />
+        <File Id="libEGL.dll"
+              Name="libEGL.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\libEGL.dll"
+              ReadOnly="yes" />
+        <File Id="libGLESv2.dll"
+              Name="libGLESv2.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\libGLESv2.dll"
+              ReadOnly="yes" />
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="ComponentGroupPlatformsFolder" Directory="PlatformsFolder">
+      <Component Id="ComponentPlatformsFolder" Guid="18a685a8-66b0-40b2-a295-b026dbbe8a76">
+        <File Id="qwindows.dll"
+              Name="qwindows.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\qwindows.dll"
+              ReadOnly="yes" />
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="ComponentGroupImageformatsFolder" Directory="ImageformatsFolder">
+      <Component Id="ComponentImageformatsFolder" Guid="7ba49ec1-51af-4ece-bea8-022dd8fbe45c">
+        <File Id="qico.dll"
+              Name="qico.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\qico.dll"
+              ReadOnly="yes" />
+        <File Id="qjpeg.dll"
+              Name="qjpeg.dll"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\qjpeg.dll"
+              ReadOnly="yes"/>
+      </Component>
+    </ComponentGroup>
+    
     <ComponentGroup Id="Components" Directory="INSTALLFOLDER">
-      
       <!-- Executables -->
       <Component Id="Startup.exe" Guid="e155beaa-ba87-4484-832d-f87373ab93db">
         <File Id="Startup.exe" 
@@ -94,136 +180,101 @@
                        Value="1"
                        KeyPath="yes" />
       </Component>
-      
       <Component Id="Browser.exe" Guid="6b3b6b65-cb2c-4494-8fd5-8d9825daf6a9">
         <File Id="Browser.exe"
               Name="Browser.exe"
               Source="$(var.Browser.TargetDir)Browser.exe" />
       </Component>
+      <Component Id="QtWebEngineProcess.exe" Guid="e2e542df-f316-45f7-bf3e-b89a2dcc15ed">
+        <File Id="QtWebEngineProcess.exe"
+              Name="QtWebEngineProcess.exe"
+              Source="$(var.SolutionDir)3rd-party-libraries\qt\QtWebEngineProcess.exe" />
+      </Component>
+      
 
       <!-- Modules -->
-      <Component Id="CameraInspector.dll" Guid="01256d3b-d729-4d8e-be97-d975676d2e30">
+      <Component Id="SecureBrowserDLLs" Guid="01256d3b-d729-4d8e-be97-d975676d2e30">
         <File Id="CameraInspector.dll" 
               Name="CameraInspector.dll" 
               Source="$(var.CameraInspector.TargetDir)CameraInspector.dll" />
-      </Component>
-      <Component Id="HttpClient.dll" Guid="4adf1c1d-7064-4672-be25-eb13835c682e">
         <File Id="HttpClient.dll" 
               Name="HttpClient.dll" 
-      Source="$(var.HttpClient.TargetDir)HttpClient.dll" />
-      </Component>
-      <Component Id="KeyboardInspector.dll" Guid="1c1dcb17-e8f1-4cc0-b5a3-21dc6fd12448">
+              Source="$(var.HttpClient.TargetDir)HttpClient.dll" />
         <File Id="KeyboardInspector.dll" 
               Name="KeyboardInspector.dll" 
               Source="$(var.KeyboardInspector.TargetDir)KeyboardInspector.dll" />
-      </Component>
-      <Component Id="Logger.dll" Guid="cf71a220-ac21-40f4-afad-37e8fbd74386">
         <File Id="Logger.dll" 
               Name="Logger.dll" 
               Source="$(var.Logger.TargetDir)Logger.dll" />
-      </Component>
-      <Component Id="LoginDialog.dll" Guid="2d529f4c-ed6c-4fa7-a70d-1105031f9a8d">
         <File Id="LoginDialog.dll" 
               Name="LoginDialog.dll" 
               Source="$(var.LoginDialog.TargetDir)LoginDialog.dll" />
-      </Component>
-      <Component Id="WI.dll" Guid="acc89dc5-7478-4d58-9a6f-a7168d994a73">
         <File Id="WI.dll" 
               Name="WI.dll" 
               Source="$(var.WI.TargetDir)WI.dll" />
       </Component>
 
       <!--3rd party libraries -->
-      <Component Id="escapi.dll" Guid="4457c075-98d4-4058-b9f8-342050421e6c">
+      <Component Id="OtherDLLs" Guid="4457c075-98d4-4058-b9f8-342050421e6c">
         <File Id="escapi.dll"
               Name="escapi.dll"
               Source="$(var.SolutionDir)3rd-party-libraries\escapi\escapi.dll" />
-      </Component>
-      <Component Id="cpprest140_2_9.dll" Guid="74b545be-d53f-4e50-8e6f-177c58dfb352">
         <File Id="cpprest140_2_9.dll"
               Name="cpprest140_2_9.dll"
               Source="$(var.SolutionDir)Build\Release\cpprest140_2_9.dll" />
       </Component>
       
       <!-- OpenCV -->
-      <Component Id="opencv_core2411.dll" Guid="923cb1cd-bc01-40c1-baf8-c2337fe8a36c">
+      <Component Id="OpenCVDLLs" Guid="923cb1cd-bc01-40c1-baf8-c2337fe8a36c">
         <File Id="opencv_core2411.dll" 
               Name="opencv_core2411.dll" 
               Source="$(var.SolutionDir)Build\Release\opencv_core2411.dll" />
-      </Component>
-      <Component Id="opencv_highgui2411.dll" Guid="9adcfede-af06-4eeb-943b-f2725a6dacf1">
         <File Id="opencv_highgui2411.dll" 
               Name="opencv_highgui2411.dll" 
               Source="$(var.SolutionDir)Build\Release\opencv_highgui2411.dll" />
-      </Component>
-      <Component Id="opencv_imgproc2411.dll" Guid="9c1dca73-5838-4d52-bed1-c87d5d1a525e">
         <File Id="opencv_imgproc2411.dll" 
               Name="opencv_imgproc2411.dll" 
               Source="$(var.SolutionDir)Build\Release\opencv_imgproc2411.dll" />
-      </Component>
-      <Component Id="opencv_objdetect2411.dll" Guid="c315737c-15a8-4b84-938d-f6be86521c65">
         <File Id="opencv_objdetect2411.dll" 
               Name="opencv_objdetect2411.dll" 
               Source="$(var.SolutionDir)Build\Release\opencv_objdetect2411.dll" />
       </Component>
 
       <!-- Qt -->
-      <Component Id="Qt5Core.dll" Guid="214d8a2c-1537-4fed-a8ee-39d2f14c55c3">
+      <Component Id="QtDLLs" Guid="214d8a2c-1537-4fed-a8ee-39d2f14c55c3">
         <File Id="Qt5Core.dll" 
               Name="Qt5Core.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Core.dll" />
-      </Component>
-      <Component Id="Qt5Gui.dll" Guid="e4c09753-d75d-4389-97c5-7fadebc4096e">
         <File Id="Qt5Gui.dll" 
               Name="Qt5Gui.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Gui.dll" />
-      </Component>
-      <Component Id="Qt5Network.dll" Guid="8a3f6efa-aa46-418b-8859-8420ebfa4f73">
         <File Id="Qt5Network.dll" 
               Name="Qt5Network.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Network.dll" />
-      </Component>
-      <Component Id="Qt5Positioning.dll" Guid="37ee5cb3-fb36-415e-b77c-0dce03d5c706">
         <File Id="Qt5Positioning.dll" 
               Name="Qt5Positioning.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Positioning.dll" />
-      </Component>
-      <Component Id="Qt5PrintSupport.dll" Guid="69f8a288-93df-4557-a5c6-059330cf642a">
         <File Id="Qt5PrintSupport.dll" 
               Name="Qt5PrintSupport.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5PrintSupport.dll" />
-      </Component>
-      <Component Id="Qt5Qml.dll" Guid="3aaa9421-445e-471c-9b92-9a87ffac2647">
         <File Id="Qt5Qml.dll" 
               Name="Qt5Qml.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Qml.dll" />
-      </Component>
-      <Component Id="Qt5Quick.dll" Guid="69e93a7f-02cc-4eab-b977-a2b877473f23">
         <File Id="Qt5Quick.dll" 
               Name="Qt5Quick.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Quick.dll" />
-      </Component>
-      <Component Id="Qt5QuickWidgets.dll" Guid="bf2c207e-5642-4f4e-9943-8494210e3c74">
         <File Id="Qt5QuickWidgets.dll" 
               Name="Qt5QuickWidgets.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5QuickWidgets.dll" />
-      </Component>
-      <Component Id="Qt5WebChannel.dll" Guid="ec3ead41-9a41-4334-b71e-6dd30194bf2e">
         <File Id="Qt5WebChannel.dll" 
               Name="Qt5WebChannel.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5WebChannel.dll" />
-      </Component>
-      <Component Id="Qt5WebEngineCore.dll" Guid="b3565e42-3afd-4293-aa98-e09b1984b05a">
         <File Id="Qt5WebEngineCore.dll" 
               Name="Qt5WebEngineCore.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5WebEngineCore.dll" />
-      </Component>
-      <Component Id="Qt5WebEngineWidgets.dll" Guid="e0d90781-e7b3-470c-a58d-64237897d122">
         <File Id="Qt5WebEngineWidgets.dll" 
               Name="Qt5WebEngineWidgets.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5WebEngineWidgets.dll" />
-      </Component>
-      <Component Id="Qt5Widgets.dll" Guid="977b01be-44fd-4adc-9d36-d1064f2d3c7a">
         <File Id="Qt5Widgets.dll" 
               Name="Qt5Widgets.dll" 
               Source="$(var.SolutionDir)3rd-party-libraries\qt\Qt5Widgets.dll" />

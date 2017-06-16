@@ -31,7 +31,7 @@ void HttpRequest::AddRequestHeader(const std::string& name, const std::string& v
 	request_->headers().add(to_string_t(name), to_string_t(value));
 }
 
-std::multimap<std::string, std::string> HttpRequest::GetHeaders()
+std::multimap<std::string, std::string> HttpRequest::GetHeaders() const
 {
 	std::multimap<std::string, std::string> request_headers;
 
@@ -48,7 +48,7 @@ void HttpRequest::SetBody(const std::vector<unsigned char>& body)
 	request_->set_body(body);
 }
 
-void BrowserHttp::HttpRequest::SetBody(const std::string& body,const std::string& content_type)
+void HttpRequest::SetBody(const std::string& body,const std::string& content_type)
 {
 	request_->set_body(body, content_type);
 }
@@ -58,7 +58,7 @@ std::vector<unsigned char> HttpRequest::GetBody() const
 	return request_->extract_vector().get();
 }
 
-std::string BrowserHttp::HttpRequest::GetStringBody() const
+std::string HttpRequest::GetStringBody() const
 {
 	return request_->extract_utf8string().get();
 }
