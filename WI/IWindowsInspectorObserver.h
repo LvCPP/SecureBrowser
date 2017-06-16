@@ -3,8 +3,10 @@
 #include "WindowsInspector.h"
 #include "windows.h"
 
+
 namespace SBWindowsInspector
 {
+enum class WindowsEvents;
 
 class IWindowsInspectorObserver
 {
@@ -13,4 +15,4 @@ public:
 	virtual void OnEvent(WindowsEvents win_event, WindowsData data) = 0;
 };
 
-} //SBWindowsInspector
+} // namespace SBWindowsInspector

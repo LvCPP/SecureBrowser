@@ -3,10 +3,11 @@
 #include "WindowsInspectorData.h"
 #include "IWindowsInspectorObserver.h"
 #include <Logger.h>
-#include <thread>
 #include <windows.h>
 #include <iostream>
 #include <fstream>
+#include <thread>
+#include <memory>
 
 
 namespace SBWindowsInspector

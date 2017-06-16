@@ -99,4 +99,4 @@ const static std::unordered_map <UINT, std::string> Events =
 
 };
 
-} //SBWindowsInspector
+} // namespace SBWindowsInspector

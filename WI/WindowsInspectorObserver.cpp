@@ -1,6 +1,5 @@
 #include "WindowsInspectorObserver.h"
-#include <memory>
-#include <algorithm>
+
 
 using namespace SBWindowsInspector;
 

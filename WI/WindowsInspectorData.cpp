@@ -1,6 +1,6 @@
 #include "WindowsInspectorData.h"
-#include <string>
 #include <Windows.h>
+#include <string>
 
 using namespace SBWindowsInspector;
 

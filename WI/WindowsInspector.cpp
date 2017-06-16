@@ -2,6 +2,7 @@
 #include "IWindowsInspectorObserver.h"
 #include "WindowsInspectorObserver.h"
 #include "TlHelp32.h"
+#include <algorithm>
 
 using namespace SBWindowsInspector;
 using namespace BrowserLogger;
@@ -42,14 +43,14 @@ WindowsData WindowsInspector::WindowInfo(HWND hwnd)
 							//logdebug(*An<Logger>()) << "Process Id: " << processid_;
 							//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
 
-							ShowWindow(hwnd, SW_MINIMIZE);
+							//ShowWindow(hwnd, SW_MINIMIZE);
 
 							std::cout << "Title: " << wnd_title << std::endl;
 							std::cout << "Process Id: " << processid_ << std::endl;
 							std::cout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
-							data.SetTitle(wnd_title);
-							data.SetProcessId(processid_);
-							data.SetProcessName(pe32.szExeFile);
+							//data.SetTitle(wnd_title);
+							//data.SetProcessId(processid_);
+							//data.SetProcessName(pe32.szExeFile);
 						}
 					}
 					while (Process32Next(handle_, &pe32));
@@ -105,43 +106,36 @@ void CALLBACK WinEventProc(
 	, DWORD         dwEventThread
 	, DWORD         dwmsEventTime)
 {
-	WindowsInspector wd_obs;
-
+	//WindowsInspector wd_obs;
 	if (hwnd != GetAncestor(hwnd, GA_ROOTOWNER))
 		return;
 	switch (event)
 	{
 	case EVENT_OBJECT_CREATE:
 		OutputDebugStringA("Window Created: \n");
-		//ShowWindow(hwnd, SW_MINIMIZE);
-		wd_obs.Notify(WindowsEvents::WindowCreated, WindowsData(hwnd)/*WindowsInspector::WindowInfo(hwnd)*/);
+		//wd_obs.Notify(WindowsEvents::WindowCreated, WindowsData(hwnd)/*WindowsInspector::WindowInfo(hwnd)*/);
 		break;
 
-	//case EVENT_SYSTEM_MOVESIZEEND:
-	//	OutputDebugStringA("Window Moved: \n");
-	//	WindowsInspector::WindowInfo(hwnd);
-	//	ShowWindow(hwnd, SW_MINIMIZE);
-	//	break;
-	//case EVENT_SYSTEM_MINIMIZESTART:
-	//	OutputDebugStringA("Window Minimized: \n");
-	//	WindowsInspector::WindowInfo(hwnd);
-	//	ShowWindow(hwnd, SW_MINIMIZE);
-	//	break;
-	//case EVENT_SYSTEM_SWITCHEND:
-	//	OutputDebugStringA("Window Switched: \n");
-	//	WindowsInspector::WindowInfo(hwnd);
-	//	ShowWindow(hwnd, SW_MINIMIZE);
-	//	break;
-	//case EVENT_OBJECT_DESTROY:
-	//	OutputDebugStringA("Window Destroyed: \n");
-	//	WindowsInspector::WindowInfo(hwnd);
-	//	ShowWindow(hwnd, SW_MINIMIZE);
-	//	break;
+	case EVENT_SYSTEM_MOVESIZEEND:
+		OutputDebugStringA("Window Moved: \n");
+		WindowsInspector::WindowInfo(hwnd);
+		break;
+	case EVENT_SYSTEM_MINIMIZESTART:
+		OutputDebugStringA("Window Minimized: \n");
+		WindowsInspector::WindowInfo(hwnd);
+		break;
+	case EVENT_SYSTEM_SWITCHEND:
+		OutputDebugStringA("Window Switched: \n");
+		WindowsInspector::WindowInfo(hwnd);
+		break;
+	case EVENT_OBJECT_DESTROY:
+		OutputDebugStringA("Window Destroyed: \n");
+		WindowsInspector::WindowInfo(hwnd);
+		break;
 	case EVENT_OBJECT_FOCUS:
 		OutputDebugStringA("Focus on window: \n");
-		wd_obs.Notify(WindowsEvents::WindowFocusChanged, WindowsData(hwnd));
+		//wd_obs.Notify(WindowsEvents::WindowFocusChanged, WindowsData(hwnd));
 		WindowsInspector::WindowInfo(hwnd);
-		//ShowWindow(hwnd, SW_MINIMIZE);
 		break;
 	default:
 		break;

@@ -19,4 +19,4 @@ private:
 
 };
 
-} //SBWindowsInspector
+} // namespace SBWindowsInspector
