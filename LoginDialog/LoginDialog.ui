@@ -108,7 +108,7 @@
          </font>
         </property>
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;You are invited to pass &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Technical test&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; as one of the stages to be enrolled in SoftServe IT Academy. Please input your credentials:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;You are invited to pass &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;the test&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; as one of the stages to be enrolled in SoftServe IT Academy. Please input your credentials:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>

@@ -57,7 +57,8 @@ private:
 	
 signals:
 	void UpdateImage(QPixmap image);
-	
+	void LoginAccepted();
+
 private slots:
 	void ChooseCamera(int id);
 	void TakePhoto();

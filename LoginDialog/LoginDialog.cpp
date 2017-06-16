@@ -48,11 +48,14 @@ LoginDialog::LoginDialog(QWidget* parent)
 		| Qt::CustomizeWindowHint
 		| Qt::MSWindowsFixedSizeDialogHint
 		| Qt::WindowCloseButtonHint);
-
+	
 	QList<WizardButton> layout;
 	layout << Stretch << NextButton << FinishButton;
 	this->setButtonLayout(layout);
 
+	//this->button(QWizard::NextButton)->setEnabled(false);
+	/*QAbstractButton* btn = this->button(QWizard::NextButton);
+	btn->setEnabled(false);*/
 }
 
 LoginDialog::LoginDialog(std::string login, std::string password, std::string path, QWidget* parent)
@@ -90,6 +93,7 @@ void LoginDialog::initializePage(int id)
 		ui_->agree_checkbox->setCheckState(Qt::Unchecked);
 		connect(ui_->login_button, SIGNAL(clicked()), this, SLOT(CheckLogin()));
 		connect(ui_->agree_checkbox, SIGNAL(toggled(bool)), ui_->login_button, SLOT(setEnabled(bool)));
+		connect(this, SIGNAL(LoginAccepted()), this, SLOT(next()));
 		break;
 	case MAKE_PHOTO_PAGE:
 		RefreshComboBox();
@@ -103,7 +107,6 @@ void LoginDialog::initializePage(int id)
 	case WELCOME_PAGE:
 	case LAST_PAGE:
 	default:
-		break;
 	}
 }
 
@@ -141,6 +144,8 @@ void LoginDialog::GetMoodleSession(std::string& session) const
 {
 	session = moodle_session_;
 }
+
+#include <QAbstractButton>
 
 void LoginDialog::CheckLogin()
 {
@@ -187,8 +192,8 @@ void LoginDialog::CheckLogin()
 			size_t found = to_utf8string(it->second).find("MOODLEID");
 			if (found != std::string::npos)
 			{
-				if (QMessageBox::information(this, tr("Login"),
-					tr("<p align='center'>User found. You are logged in!</p>"), QMessageBox::Ok) == QMessageBox::Ok)
+				//if (QMessageBox::information(this, tr("Login"),
+					//tr("<p align='center'>User found. You are logged in!</p>"), QMessageBox::Ok) == QMessageBox::Ok)
 				{
 					is_login_checked_ = true;
 					ui_->username_lineedit->setEnabled(false);
@@ -200,6 +205,7 @@ void LoginDialog::CheckLogin()
 				size_t moodle_session_pos = to_utf8string(it->second).find("MoodleSession");
 				size_t semicolon_pos = to_utf8string(it->second).find(";", moodle_session_pos);
 				this->moodle_session_ = to_utf8string(it->second).substr(moodle_session_pos, semicolon_pos - moodle_session_pos);
+				emit LoginAccepted();
 			}
 			else
 			{
