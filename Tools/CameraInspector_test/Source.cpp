@@ -88,7 +88,7 @@ void TestFaceDetector()
 {
 	An<WebCameraCapture> cam_cap;
 
-	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>();
+	const std::shared_ptr<FaceDetector> face_detector = std::make_shared<FaceDetector>("");
 
 	std::shared_ptr<IFrameSaver> shared_saver = std::make_shared<FileSystemFrameSaver>(FileSystemFrameSaver());
 	dynamic_cast<FileSystemFrameSaver&>(*shared_saver).SetPathToSave("");
