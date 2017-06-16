@@ -476,7 +476,7 @@ public:
         welcome_background_label->setText(QString());
         login_page->setTitle(QString());
         login_page->setSubTitle(QString());
-        top_label->setText(QApplication::translate("Wizard", "<html><head/><body><p align=\"center\"><span style=\" font-size:10pt;\">You are invited to pass </span><span style=\" font-size:10pt; font-weight:600;\">Technical test</span><span style=\" font-size:10pt;\"> as one of the stages to be enrolled in SoftServe IT Academy. Please input your credentials:</span></p></body></html>", Q_NULLPTR));
+        top_label->setText(QApplication::translate("Wizard", "<html><head/><body><p align=\"center\"><span style=\" font-size:10pt;\">You are invited to pass </span><span style=\" font-size:10pt;\">the test</span><span style=\" font-size:10pt;\"> as one of the stages to be enrolled in SoftServe IT Academy. Please input your credentials:</span></p></body></html>", Q_NULLPTR));
         username_label->setText(QApplication::translate("Wizard", "Username*", Q_NULLPTR));
         password_label->setText(QApplication::translate("Wizard", "Password*", Q_NULLPTR));
         agree_checkbox->setText(QString());

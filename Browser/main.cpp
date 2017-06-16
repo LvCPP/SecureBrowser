@@ -19,6 +19,10 @@
 #include <sstream>
 #include <iterator>
 
+// for checking Internet connection
+#include <wininet.h>
+#pragma comment(lib,"wininet.lib")
+
 using namespace SecureBrowser;
 using namespace BrowserLogger;
 using namespace CameraInspector;
@@ -52,6 +56,14 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	bool bConnect = InternetCheckConnection(L"https://softserve.academy/", FLAG_ICC_FORCE_CONNECTION, 0);
+	if (!bConnect)
+	{
+		ExitAlertDialog(L"Internet connection doesn't exist."
+			"Please check your Internet connection!");
+		return -1;
+	}
+	
 	std::vector<std::string> input = Split(std::string(argv[1]), '$');
 	if (input.at(0) != "sb://")
 	{
