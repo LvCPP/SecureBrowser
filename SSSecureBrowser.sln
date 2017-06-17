@@ -118,6 +118,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPserver", "Tools\TCPserver\TCPserver.vcxproj", "{C9A04459-B9FC-49DE-BDAF-7001DB891FD3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPclient_test", "Tools\TCPclient_test\TCPclient_test.vcxproj", "{832D1D55-696A-4072-8139-FE71874D92AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{02FD2379-EFE0-4E30-B616-B1DB298A2400} = {02FD2379-EFE0-4E30-B616-B1DB298A2400}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
