@@ -2,26 +2,18 @@
 #include "WindowsInspector.h"
 #include "IWindowsInspectorObserver.h"
 #include <vector>
-
-struct ObserverInfo;
+#include <memory>
 
 namespace SBWindowsInspector
 {
 
-class WindowsInspectorObserver
+
+class WindowsInspectorObserver : public IWindowsInspectorObserver
 {
 public:
-	void Attach(const std::shared_ptr<IWindowsInspectorObserver>& observer);
-	void Detach(const std::shared_ptr<IWindowsInspectorObserver>& observer);
-private:
-	void Notify(char wnd_title_, DWORD processid_, wchar_t processname_);
+	~WindowsInspectorObserver() = default;
 
-	char wnd_title_;
-	DWORD processID;
-	wchar_t processname;
-
-	std::vector<ObserverInfo> observers_;
-
+	virtual void OnEvent(WindowsEvents win_event, WindowsData data) override;
 };
 
 } // namespace SBWindowsInspector

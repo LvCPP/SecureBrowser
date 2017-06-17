@@ -1,14 +1,17 @@
 #pragma once
+#include "WindowsInspectorData.h"
+#include "WindowsInspector.h"
 #include "windows.h"
 
 namespace SBWindowsInspector
 {
+enum class WindowsEvents;
 
 class IWindowsInspectorObserver
 {
 public:
 	virtual  ~IWindowsInspectorObserver() = default;
-	virtual void OnWindowChanged(char wnd_title_, DWORD processid_, wchar_t processname_) = 0;
+	virtual void OnEvent(WindowsEvents win_event, WindowsData data) = 0;
 };
 
 } // namespace SBWindowsInspector

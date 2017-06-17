@@ -21,7 +21,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -88,12 +88,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="WindowsInspectorData.cpp" />
     <ClCompile Include="WindowsInspector.cpp" />
     <ClCompile Include="WindowsInspectorObserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IWindowsInspectorObserver.h" />
     <ClInclude Include="WindowsInspector.h" />
+    <ClInclude Include="WindowsInspectorData.h" />
     <ClInclude Include="WindowsInspectorObserver.h" />
     <ClInclude Include="WindowsInspectorUtils.h" />
   </ItemGroup>
