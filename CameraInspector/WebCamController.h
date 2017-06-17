@@ -2,9 +2,7 @@
 #include "WebCam.h"
 #include "Frame.h"
 #include <An.hpp>
-#include "escapi.h"
 #include <vector>
-#include <string>
 #include <mutex>
 #include <functional>
 

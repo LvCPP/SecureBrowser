@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>Tools/Login_test/Resources/intro_background.jpg</file>
-    </qresource>
-</RCC>

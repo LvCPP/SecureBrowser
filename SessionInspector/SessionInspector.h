@@ -3,11 +3,11 @@
 namespace SI
 {
 
-class SessionInstector
+class SessionInspector
 {
 public:
 	static bool IsCurrentSessionRemoteable();
 	static bool IsInsideVBox();
 };
 
-}//namespace SI
+} // namespace SI

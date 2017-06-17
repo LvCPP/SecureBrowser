@@ -40,8 +40,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>Resources/closed.ico</normaloff>Resources/closed.ico</iconset>
+          <iconset resource="browser.qrc">
+           <normaloff>:/Browser/Resources/closed.ico</normaloff>:/Browser/Resources/closed.ico</iconset>
          </property>
         </widget>
        </item>

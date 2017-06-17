@@ -12,7 +12,7 @@ using namespace BrowserLogger;
 using namespace Utils;
 using namespace SI;
 
-bool SessionInstector::IsCurrentSessionRemoteable()
+bool SessionInspector::IsCurrentSessionRemoteable()
 {
 	bool is_remotable = false;
 	if (GetSystemMetrics(SM_REMOTESESSION))
@@ -22,11 +22,10 @@ bool SessionInstector::IsCurrentSessionRemoteable()
 	}
 	else
 	{
-		HKEY reg_key = NULL;
-		LONG result;
+		HKEY reg_key = nullptr;
 
-		result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, TERMINAL_SERVER_KEY,
-			0, KEY_READ, &reg_key);
+		LONG result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, TERMINAL_SERVER_KEY,
+		                           0, KEY_READ, &reg_key);
 
 		if (result == ERROR_SUCCESS)
 		{
@@ -34,7 +33,7 @@ bool SessionInstector::IsCurrentSessionRemoteable()
 			DWORD cb_glass_session_id = sizeof(dw_glass_session_id);
 			DWORD type = 0;
 
-			result = RegQueryValueEx(reg_key, GLASS_SESSION_ID, NULL, &type
+			result = RegQueryValueEx(reg_key, GLASS_SESSION_ID, nullptr, &type
 				, (BYTE*)&dw_glass_session_id, &cb_glass_session_id);
 
 			if (result == ERROR_SUCCESS)
@@ -55,17 +54,14 @@ bool SessionInstector::IsCurrentSessionRemoteable()
 	return is_remotable;
 }
 
-bool SessionInstector::IsInsideVBox()
+bool SessionInspector::IsInsideVBox()
 {
 	if (CreateFile("\\\\.\\VBoxMiniRdrDN", GENERIC_READ, FILE_SHARE_READ,
-		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL) != INVALID_HANDLE_VALUE)
+		nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr) != INVALID_HANDLE_VALUE)
 	{
 		logwarning(*An<Logger>()) << "Inside virtual box";
 		return true;
 	}
 
-	else
-	{
-		return false;
-	}
+	return false;
 }

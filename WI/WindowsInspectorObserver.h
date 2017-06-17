@@ -14,9 +14,6 @@ public:
 	~WindowsInspectorObserver() = default;
 
 	virtual void OnEvent(WindowsEvents win_event, WindowsData data) override;
-
-private:
-
 };
 
 } // namespace SBWindowsInspector

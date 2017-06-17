@@ -6,7 +6,8 @@
 
 class HttpClientImpl;
 
-namespace BrowserHttp {
+namespace BrowserHttp 
+{
 
 class HttpClient
 {
@@ -21,5 +22,4 @@ private:
 	std::shared_ptr<HttpClientImpl> client_impl_;
 };
 
-}
-
+} // namespace BrowserHttp 

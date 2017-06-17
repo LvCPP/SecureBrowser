@@ -140,7 +140,7 @@ void CALLBACK WinEventProc(
 void WindowsInspector::MessageLoop()
 {
 	window_hook_ = SetWinEventHook(EVENT_MIN, EVENT_MAX, hinst_, WinEventProc, 0, 0, WINEVENT_INCONTEXT | WINEVENT_SKIPOWNPROCESS);
-	while (GetMessage(&message_, NULL, 0, 0))
+	while (GetMessage(&message_, nullptr, 0, 0))
 	{
 		TranslateMessage(&message_);
 		DispatchMessage(&message_);

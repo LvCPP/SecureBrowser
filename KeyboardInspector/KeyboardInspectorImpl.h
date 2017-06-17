@@ -35,4 +35,4 @@ private:
 	static std::unordered_map<KeySequence, KeySequenceHandler> key_seq_to_handler_;
 };
 
-} // end of namespace
+} // namespace SBKeyboardInspector

@@ -30,16 +30,16 @@ public:
 
 	HTTPCLIENT_API void SetRequestUri(const std::string& uri);
 	HTTPCLIENT_API void SetBody(const std::vector<unsigned char>& body);
-	std::string GetRequestUri() const;
-	std::map<std::string, std::string> GetHeaders();
-	std::vector<unsigned char> GetBody() const;
-	const web::http::http_request& GetRequestImpl() const { return *request_; }
+	HTTPCLIENT_API void SetBody(const std::string& body, const std::string& content_type);
+	HTTPCLIENT_API std::string GetRequestUri() const;
+	HTTPCLIENT_API std::multimap<std::string, std::string> GetHeaders() const;
+	HTTPCLIENT_API std::vector<unsigned char> GetBody() const;
+	HTTPCLIENT_API std::string GetStringBody() const;
+	HTTPCLIENT_API const web::http::http_request& GetRequestImpl() const { return *request_; }
 	web::http::http_request& GetRequestImpl() { return *request_; }
 
 private:
 	std::shared_ptr<web::http::http_request> request_;
 };
 
-}
-
-
+} // namespace BrowserHttp

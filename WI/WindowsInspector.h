@@ -9,7 +9,6 @@
 #include <thread>
 #include <memory>
 
-
 namespace SBWindowsInspector
 {
 
