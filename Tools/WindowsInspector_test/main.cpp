@@ -6,7 +6,7 @@ int main()
 {
 	WindowsInspector wi;
 	wi.StartWindowsInspector();
-	Sleep(1500000);
+	Sleep(150000);
 	wi.StopWindowsInspector();
 
 

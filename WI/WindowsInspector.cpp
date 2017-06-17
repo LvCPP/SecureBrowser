@@ -12,11 +12,6 @@ HWINEVENTHOOK window_hook_;
 HINSTANCE hinst_;
 MSG message_;
 
-WindowsInspector::~WindowsInspector()
-{
-	StopAndWait();
-}
-
 WindowsData WindowsInspector::WindowInfo(HWND hwnd)
 {
 	char wnd_title[255];
@@ -43,17 +38,17 @@ WindowsData WindowsInspector::WindowInfo(HWND hwnd)
 							//logdebug(*An<Logger>()) << "Process Id: " << processid_;
 							//logdebug(*An<Logger>()) << "Process name: " <<pe32.szExeFile;
 
-							//ShowWindow(hwnd, SW_MINIMIZE);
+							auto processname = pe32.szExeFile;
 
 							std::cout << "Title: " << wnd_title << std::endl;
 							std::cout << "Process Id: " << processid_ << std::endl;
-							std::cout << "Process name: " << pe32.szExeFile << std::endl << std::endl;
+							std::cout << "Process name: " << processname << std::endl << std::endl;
+
 							//data.SetTitle(wnd_title);
 							//data.SetProcessId(processid_);
-							//data.SetProcessName(pe32.szExeFile);
+							//data.SetProcessName(processname);
 						}
-					}
-					while (Process32Next(handle_, &pe32));
+					} while (Process32Next(handle_, &pe32));
 				} 
 			}
 			CloseHandle(handle_);
@@ -91,7 +86,8 @@ void WindowsInspector::Notify(WindowsEvents win_event, WindowsData data)
 		[&](const ObserverInfo& o)
 	{
 		auto observer = o.ptr.lock();
-		if (observer) {
+		if (observer) 
+		{
 			observer->OnEvent(win_event, data);
 		}
 	});
@@ -106,14 +102,13 @@ void CALLBACK WinEventProc(
 	, DWORD         dwEventThread
 	, DWORD         dwmsEventTime)
 {
-	//WindowsInspector wd_obs;
 	if (hwnd != GetAncestor(hwnd, GA_ROOTOWNER))
 		return;
 	switch (event)
 	{
 	case EVENT_OBJECT_CREATE:
 		OutputDebugStringA("Window Created: \n");
-		//wd_obs.Notify(WindowsEvents::WindowCreated, WindowsData(hwnd)/*WindowsInspector::WindowInfo(hwnd)*/);
+		WindowsInspector::WindowInfo(hwnd);
 		break;
 
 	case EVENT_SYSTEM_MOVESIZEEND:
@@ -134,7 +129,6 @@ void CALLBACK WinEventProc(
 		break;
 	case EVENT_OBJECT_FOCUS:
 		OutputDebugStringA("Focus on window: \n");
-		//wd_obs.Notify(WindowsEvents::WindowFocusChanged, WindowsData(hwnd));
 		WindowsInspector::WindowInfo(hwnd);
 		break;
 	default:
@@ -156,7 +150,6 @@ void WindowsInspector::MessageLoop()
 
 void WindowsInspector::StartWindowsInspector()
 {
-
 	worker_ = std::thread(&WindowsInspector::MessageLoop, this);
 	OutputDebugStringA("WINDOWS INSPECTOR STARTED WORKING\n");
 }
@@ -166,11 +159,11 @@ void WindowsInspector::StopWindowsInspector()
 	PostThreadMessage(GetThreadId(worker_.native_handle()), WM_QUIT, 0, 0);
 	OutputDebugStringA("WINDOWS INSPECTOR STOPPED WORKING\n");
 	UnhookWinEvent(window_hook_);
+	StopAndWait();
 }
 
 void WindowsInspector::StopAndWait()
 {
-	StopWindowsInspector();
 	if (worker_.joinable())
 		worker_.join();
 }

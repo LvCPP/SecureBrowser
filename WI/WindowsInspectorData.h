@@ -1,8 +1,7 @@
 #pragma once
-
+#include <unordered_map>
 #include <windows.h>
 #include <string.h>
-#include <unordered_map>
 
 namespace SBWindowsInspector
 {
@@ -17,6 +16,7 @@ public:
 	void SetTitle(char* title);
 	void SetProcessName(char* process_name);
 	void SetProcessId(DWORD processid);
+
 	UINT GetEventCode() const;
 	char* GetTitle();
 	char* GetProcessName();
@@ -25,12 +25,13 @@ public:
 
 private:
 	HWND hwnd_;
-	char* title_;
+	char* wnd_title_;
 	char* process_name_;
 	DWORD processid_;
 	UINT event_code_;
 
 };
+
 const static std::unordered_map <UINT, std::string> Events =
 {
 	{EVENT_MIN, "Event_Min"},

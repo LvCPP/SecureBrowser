@@ -1,7 +1,7 @@
 #pragma once
+#include "IWindowsInspectorObserver.h"
 #include "WindowsInspectorUtils.h"
 #include "WindowsInspectorData.h"
-#include "IWindowsInspectorObserver.h"
 #include <Logger.h>
 #include <windows.h>
 #include <iostream>
@@ -43,11 +43,9 @@ enum class WindowsEvents
 };
 
 
-class WindowsInspector /*: public WindowsInspectorObserver*/
+class WindowsInspector 
 {
 public:
-	WINDOWSINSPECTOR_API ~WindowsInspector();
-
 	WINDOWSINSPECTOR_API void StartWindowsInspector();
 	WINDOWSINSPECTOR_API void StopWindowsInspector();
 	void StopAndWait();

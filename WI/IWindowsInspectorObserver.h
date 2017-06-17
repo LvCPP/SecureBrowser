@@ -3,7 +3,6 @@
 #include "WindowsInspector.h"
 #include "windows.h"
 
-
 namespace SBWindowsInspector
 {
 enum class WindowsEvents;

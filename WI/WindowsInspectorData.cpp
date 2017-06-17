@@ -16,7 +16,7 @@ UINT WindowsData::GetEventCode() const
 
 char* WindowsData::GetTitle()
 {
-	return title_;
+	return wnd_title_;
 }
 
 char* WindowsData::GetProcessName()
@@ -38,13 +38,15 @@ std::string WindowsData::GetText() const
 		return "Event (" + std::to_string(WindowsData::GetEventCode()) + ") ";
 }
 
-void WindowsData::SetTitle(char* title)
+void WindowsData::SetTitle(char* wnd_title)
 { 
-	strcpy(title_, title); 
+	wnd_title_ = new char[strlen(wnd_title)];
+	strcpy(wnd_title_, wnd_title);
 }
 
 void WindowsData::SetProcessName(char* process_name)
 { 
+	process_name_ = new char[strlen(process_name)];
 	strcpy(process_name_, process_name); 
 }
 
@@ -57,4 +59,3 @@ void WindowsData::SetHwnd(HWND hwnd)
 {
 	hwnd_ = hwnd;
 }
-
