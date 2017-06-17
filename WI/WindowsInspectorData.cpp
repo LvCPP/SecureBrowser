@@ -14,28 +14,28 @@ UINT WindowsData::GetEventCode() const
 	return event_code_;
 }
 
-char* WindowsData::GetTitle()
+char* WindowsData::GetTitle() const
 {
 	return wnd_title_;
 }
 
-char* WindowsData::GetProcessName()
+char* WindowsData::GetProcessName() const
 {
 	return process_name_;
 }
 
-DWORD WindowsData::GetProcessId()
+DWORD WindowsData::GetProcessId() const
 {
 	return processid_;
 }
 
 std::string WindowsData::GetText() const
 {
-	auto it = Events.find(WindowsData::GetEventCode());
+	auto it = Events.find(GetEventCode());
 	if (it != Events.end())
 		return it->second;
 	else
-		return "Event (" + std::to_string(WindowsData::GetEventCode()) + ") ";
+		return "Event (" + std::to_string(GetEventCode()) + ") ";
 }
 
 void WindowsData::SetTitle(char* wnd_title)

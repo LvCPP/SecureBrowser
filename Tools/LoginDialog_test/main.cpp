@@ -3,10 +3,6 @@
 #include <WebCamController.h>
 #include <QtWidgets/QApplication>
 
-#include <iostream>
-#include <fstream>
-#include <string>
-
 using namespace Utils;
 using namespace CameraInspector;
 using namespace Login;

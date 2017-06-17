@@ -18,9 +18,9 @@ public:
 	void SetProcessId(DWORD processid);
 
 	UINT GetEventCode() const;
-	char* GetTitle();
-	char* GetProcessName();
-	DWORD GetProcessId();
+	char* GetTitle() const;
+	char* GetProcessName() const;
+	DWORD GetProcessId() const;
 	std::string GetText() const;
 
 private:

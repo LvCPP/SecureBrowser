@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <mutex>
 
 namespace TCP_client
@@ -20,8 +19,8 @@ class Client
 public:
 	Client(const std::string& ip);
 
-	ErrorCode GetConfig(std::string& config);
-	ErrorCode SendFile(const std::string& path_to_file, const std::string& session);
+	ErrorCode GetConfig(std::string& config) const;
+	ErrorCode SendFile(const std::string& path_to_file, const std::string& session) const;
 
 
 private:

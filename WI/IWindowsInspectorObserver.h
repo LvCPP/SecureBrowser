@@ -1,7 +1,5 @@
 #pragma once
 #include "WindowsInspectorData.h"
-#include "WindowsInspector.h"
-#include "windows.h"
 
 namespace SBWindowsInspector
 {

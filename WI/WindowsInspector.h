@@ -4,8 +4,6 @@
 #include "WindowsInspectorData.h"
 #include <Logger.h>
 #include <windows.h>
-#include <iostream>
-#include <fstream>
 #include <thread>
 #include <memory>
 

@@ -6,7 +6,6 @@
 #include <Windows.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string>
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -77,14 +76,14 @@ std::vector<char> CreateSendFileMessage(const std::string& file_path)
 
 	std::string filename = pos != std::string::npos ? file_path.substr(pos + 1) : file_path;
 
-	*((std::int32_t*)(messgage.data() + 13)) = filename.size();
+	*reinterpret_cast<int32_t*>(messgage.data() + 13) = filename.size();
 	messgage.insert(messgage.end(), filename.data(), filename.data() + filename.size());
 
 	size_t write_pos = messgage.size();
 	messgage.insert(messgage.end(), 8, 0);
 
-	std::uint64_t file_size = FileSize(file_path);
-	*((std::uint64_t*)(messgage.data() + write_pos)) = file_size;
+	uint64_t file_size = FileSize(file_path);
+	*reinterpret_cast<uint64_t*>(messgage.data() + write_pos) = file_size;
 
 	std::ifstream input(file_path, std::ios::binary);
 	// copies all data into buffer
@@ -99,23 +98,22 @@ std::vector<char> CreateSendFileMessage(const std::string& file_path)
 
 std::string ParseReplyConfigMessage(const std::vector<char>& buffer)
 {
-	std::uint64_t size = *((std::uint64_t*)(buffer.data() + 5));
+	uint64_t size = *(uint64_t*)(buffer.data() + 5);
 	return std::string(buffer.data() + 13, size);
 }
 
-ErrorCode Client::GetConfig(std::string& config)
+ErrorCode Client::GetConfig(std::string& config) const
 {
 	WSADATA wsaData;
 	SOCKET ConnectSocket = INVALID_SOCKET;
-	struct addrinfo *result = NULL,
-		*ptr = NULL,
-		hints;
+	addrinfo* result = nullptr;
+	addrinfo* ptr = nullptr;
+	addrinfo hints;
 	char recvbuf[DEFAULT_BUFLEN];
-	int iResult;
 	int recvbuflen = DEFAULT_BUFLEN;
 
 	// Initialize Winsock
-	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0)
 	{
 		printf("WSAStartup failed with error: %d\n", iResult);
@@ -137,7 +135,7 @@ ErrorCode Client::GetConfig(std::string& config)
 		}
 
 		// Attempt to connect to an address until one succeeds
-		for (ptr = result; ptr != NULL; ptr = ptr->ai_next)
+		for (ptr = result; ptr != nullptr; ptr = ptr->ai_next)
 		{
 
 			// Create a SOCKET for connecting to server
@@ -225,19 +223,18 @@ ErrorCode Client::GetConfig(std::string& config)
 }
 
 
-ErrorCode Client::SendFile(const std::string& path_to_file, const std::string& session)
+ErrorCode Client::SendFile(const std::string& path_to_file, const std::string& session) const
 {
 	WSADATA wsaData;
 	SOCKET ConnectSocket = INVALID_SOCKET;
-	struct addrinfo *result = NULL,
-		*ptr = NULL,
-		hints;
+	addrinfo* result = nullptr;
+	addrinfo* ptr = nullptr;
+	addrinfo hints;
 	char recvbuf[DEFAULT_BUFLEN];
-	int iResult;
 	int recvbuflen = DEFAULT_BUFLEN;
 
 	// Initialize Winsock
-	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0) 
 	{
 		printf("WSAStartup failed with error: %d\n", iResult);
@@ -259,7 +256,7 @@ ErrorCode Client::SendFile(const std::string& path_to_file, const std::string& s
 		}
 
 		// Attempt to connect to an address until one succeeds
-		for (ptr = result; ptr != NULL; ptr = ptr->ai_next)
+		for (ptr = result; ptr != nullptr; ptr = ptr->ai_next)
 		{
 			// Create a SOCKET for connecting to server
 			ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,

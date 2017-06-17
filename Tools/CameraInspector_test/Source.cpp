@@ -9,14 +9,12 @@
 
 #include <opencv2\highgui\highgui.hpp>		// used only for displaying images and input control
 
-#include <Windows.h>
 #include <iostream>
 #include <thread>
 
 
 using namespace CameraInspector;
 using namespace Utils;
-using namespace std;
 
 int TestPhotoMaker()
 {
@@ -32,7 +30,6 @@ int TestPhotoMaker()
 	
 	std::cout << "Press Esc to capture the screen" << std::endl;
 
-	char choose = 0;
 	while (cv::waitKey(30) != 27)
 	{
 		try
@@ -100,7 +97,7 @@ void TestFaceDetector()
 
 	cam_cap->AddFrameHandler(face_detector);
 	cam_cap->AddFrameHandler(shared_maker);
-	face_detector->SetFrequency(3s);
+	face_detector->SetFrequency(std::chrono::seconds(3));
 	cam_cap->Start();
 	std::this_thread::sleep_for(std::chrono::seconds(20000));
 	cam_cap->Stop();

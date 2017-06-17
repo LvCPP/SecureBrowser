@@ -5,12 +5,7 @@
 #include <Windows.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string>
-#include <iostream>
-#include <cctype>
-#include <set>
 #include <vector>
-#include <algorithm>
 #include <iterator>
 #include <array>
 #include <fstream>
@@ -34,7 +29,7 @@ std::vector<char> CreateConfigReplay()
 	std::vector<char> message{ 'g', 'g', 'w', 'p', 1 };
 
 	std::array<char, 8> size = {};
-	*((std::uint64_t*)size.data()) = default_cfg.size();
+	*reinterpret_cast<std::uint64_t*>(size.data()) = default_cfg.size();
 
 	message.insert(message.end(), size.data(), size.data() + size.size());
 
@@ -44,23 +39,21 @@ std::vector<char> CreateConfigReplay()
 }
 }
 
-int __cdecl main(void)
+int __cdecl main()
 {
 	WSADATA wsaData;
-	int iResult;
 
 	SOCKET ListenSocket = INVALID_SOCKET;
 	SOCKET ClientSocket = INVALID_SOCKET;
 
-	struct addrinfo *result = NULL;
+	struct addrinfo* result = nullptr;
 	struct addrinfo hints;
 
-	int iSendResult;
 	char recvbuf[DEFAULT_BUFLEN] = {};
 	int recvbuflen = DEFAULT_BUFLEN;
 
 	// Initialize Winsock
-	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0)
 	{
 		printf("WSAStartup failed with error: %d\n", iResult);
@@ -74,7 +67,7 @@ int __cdecl main(void)
 	hints.ai_flags = AI_PASSIVE;
 
 	// Resolve the server address and port
-	iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+	iResult = getaddrinfo(nullptr, DEFAULT_PORT, &hints, &result);
 	if (iResult != 0)
 	{
 		printf("getaddrinfo failed with error: %d\n", iResult);
@@ -117,7 +110,7 @@ int __cdecl main(void)
 		}
 
 		// Accept a client socket
-		ClientSocket = accept(ListenSocket, NULL, NULL);
+		ClientSocket = accept(ListenSocket, nullptr, nullptr);
 		if (ClientSocket == INVALID_SOCKET)
 		{
 			printf("accept failed with error: %d\n", WSAGetLastError());
@@ -158,7 +151,7 @@ int __cdecl main(void)
 			printf("Preparing answer\n");
 
 			auto replay = CreateConfigReplay();
-			iSendResult = send(ClientSocket, replay.data(), replay.size(), 0);
+			int iSendResult = send(ClientSocket, replay.data(), replay.size(), 0);
 
 			if (iSendResult == SOCKET_ERROR)
 			{
@@ -169,12 +162,12 @@ int __cdecl main(void)
 		}
 		else if (buffer[4] == 2)
 		{
-			const int string_size = *((uint32_t*)(buffer.data() + 13));
+			const int string_size = *reinterpret_cast<uint32_t*>(buffer.data() + 13);
 			std::string fileName(buffer.data() + 17, string_size);
 
 			std::ofstream file(fileName, std::ios::binary);
 
-			const std::uint64_t file_size = *((uint64_t*)(buffer.data() + 17 + string_size));
+			const uint64_t file_size = *reinterpret_cast<uint64_t*>(buffer.data() + 17 + string_size);
 
 			file.write(buffer.data() + 17 + string_size + 8, file_size);
 		}
@@ -191,9 +184,4 @@ int __cdecl main(void)
 			return 1;
 		}
 	}
-	// cleanup
-	closesocket(ClientSocket);
-	WSACleanup();
-
-	return 0;
 }

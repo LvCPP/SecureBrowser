@@ -2,6 +2,7 @@
 //
 #include <Client.h>
 #include <iostream>
+#include <string>
 
 using namespace TCP_client;
 
