@@ -3,6 +3,8 @@
 #include <string>
 #include <mutex>
 
+namespace TCP_client
+{
 enum class ErrorCode
 {
 	ErrorUnknown = 0,
@@ -13,18 +15,18 @@ enum class ErrorCode
 };
 
 
-
 class Client
 {
 public:
 	Client(const std::string& ip);
 
-	ErrorCode get_config(std::string& config);
-	ErrorCode send_file(const std::string& path_to_file, const std::string& session);
+	ErrorCode GetConfig(std::string& config);
+	ErrorCode SendFile(const std::string& path_to_file, const std::string& session);
 
 
 private:
 
-	std::string m_ip;
-	std::mutex m_mutex;
+	std::string ip_;
+	std::mutex mutex_;
 };
+}

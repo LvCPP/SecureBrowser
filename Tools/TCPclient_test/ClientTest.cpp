@@ -3,13 +3,15 @@
 #include <Client.h>
 #include <iostream>
 
+using namespace TCP_client;
+
 int main()
 {
-	Client c("127.0.0.1");
+	Client c("10.4.55.13");
 
 	std::string s;
-	c.get_config(s);
-	c.send_file("D:\\SS\\master\\alpaca.jpg", "");
+	c.GetConfig(s);
+	c.SendFile("D:\\SS\\master\\alpaca.jpg", "");
 
 	std::cout << s;
 	return 0;
