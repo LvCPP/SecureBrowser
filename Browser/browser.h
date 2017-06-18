@@ -34,6 +34,7 @@ private slots:
 	void ButtonBackHistory() const;
 	void ButtonForwardHistory() const;
 	void CloseButton();
+	void SetQuizPassword();
 	
 private:
 	QScopedPointer<Ui::Browser> ui_;

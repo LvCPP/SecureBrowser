@@ -32,6 +32,7 @@ Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::st
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetNewTitle);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
+	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::SetQuizPassword);
 
 	ui_->push_btn_back->setEnabled(false);
 	ui_->push_btn_forward->setEnabled(false);
@@ -116,3 +117,15 @@ void Browser::CloseButton()
 		close();
 }
 
+void Browser::SetQuizPassword()
+{
+	ui_->web_view->page()->toHtml([&](QString html)
+	{
+		if (html.indexOf("id=\"id_quizpassword\" value=\"\"") != -1)
+		{
+			QString test = html.replace("id=\"id_quizpassword\" value=\"\"", QString::fromStdString("id=\"id_quizpassword\" value=\"" + password_to_quiz_ + "\" readonly"));
+
+			ui_->web_view->setHtml(html);
+		}
+	});
+}
