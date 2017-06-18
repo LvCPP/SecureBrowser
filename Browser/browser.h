@@ -22,7 +22,11 @@ class Browser : public QWidget
 	Q_OBJECT
 
 public:
-	explicit Browser(std::string link_to_quiz, std::string password_to_quiz, std::string cookies, QWidget* parent = Q_NULLPTR);
+	explicit Browser(std::string link_to_quiz
+		, std::string password_to_quiz
+		, std::string cookies
+		, QString body
+		, QWidget* parent = Q_NULLPTR);
 	~Browser();
 
 private slots:
@@ -40,6 +44,7 @@ private:
 	std::string link_to_quiz_;
 	std::string password_to_quiz_;
 	std::string cookies_;
+	QString body_;
 	QWebEngineProfile* profile_;
 	QWebEngineCookieStore* store_;
 };

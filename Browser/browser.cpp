@@ -9,12 +9,18 @@ using namespace SecureBrowser;
 using namespace Utils;
 using namespace BrowserLogger;
 
-Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::string cookies, QWidget *parent)
+Browser::Browser(std::string link_to_quiz
+	, std::string password_to_quiz
+	, std::string cookies
+	, QString body
+	, QWidget *parent)
+
 	: QWidget(parent)
 	, ui_(new Ui::Browser())
 	, link_to_quiz_(link_to_quiz)
 	, password_to_quiz_(password_to_quiz)
 	, cookies_(cookies)
+	, body_(body)
 {
 	ui_->setupUi(this);
 	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint);
@@ -38,9 +44,8 @@ Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::st
 	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
 
-	// for connecting with the Moodle server
 	profile_ = new QWebEngineProfile(this);
-	QUrl base_url = QUrl(QString::fromStdString(link_to_quiz_));
+	QUrl base_url = QUrl("https://softserve.academy/");
 
 	store_ = ui_->web_view->page()->profile()->cookieStore();
 	std::string cookie_number = cookies_.substr(14, cookies_.length() - 14);
@@ -48,9 +53,7 @@ Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::st
 	store_->setCookie(moodle_cookie, base_url);
 	store_->loadAllCookies();
 
-	QWebEngineHttpRequest req(base_url, QWebEngineHttpRequest::Get);
-	
-	ui_->web_view->load(req);
+	ui_->web_view->setHtml(body_);
 
 }
 

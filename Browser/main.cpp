@@ -99,9 +99,13 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	 //for sending cookies to browser
+	 //for sending cookies to the browser's constructor
 	std::string moodle_cookies;
 	login_app.GetMoodleSession(moodle_cookies);
+
+	//for sending sesskey to the browser's constructor
+	QString body;
+	login_app.GetRespBody(body);
 
 	An<WebCameraCapture> cam_cap;
 
@@ -128,7 +132,7 @@ int main(int argc, char* argv[])
 	std::string link_to_quiz = input.at(3);
 	std::string password_to_quiz = input.at(4);
 
-	Browser w(link_to_quiz, password_to_quiz, moodle_cookies);
+	Browser w(link_to_quiz, password_to_quiz, moodle_cookies, body);
 	w.showMaximized();
 	int result = a.exec();
 
