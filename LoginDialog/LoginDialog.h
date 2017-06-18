@@ -19,10 +19,11 @@ class LoginDialog : public QWizard
 
 public:
 	explicit LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, std::string path, QWidget* parent = Q_NULLPTR);
-	explicit LOGIN_DIALOG_API LoginDialog(QWidget* parent = Q_NULLPTR);
+	//explicit LOGIN_DIALOG_API LoginDialog(QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API ~LoginDialog() = default;
 
 	LOGIN_DIALOG_API void GetMoodleSession(std::string& session) const;
+	LOGIN_DIALOG_API void GetRespBody(QString& body) const;
 
 private:
 	void initializePage(int id) override;	
@@ -44,7 +45,10 @@ private:
 	QScopedPointer<Ui::Wizard> ui_;
 	
 	std::string moodle_session_;
+	std::string resp_body3_;
+	std::string sesskey_;
 	bool is_login_checked_;
+	bool moodle_session_found_;
 	Frame id_frame_;
 	mutable std::thread worker_;
 	mutable bool is_frame_enabled_;
@@ -54,11 +58,11 @@ private:
 	std::string login_;
 	std::string password_;
 	std::string path_;
-	
+			
 signals:
 	void UpdateImage(QPixmap image);
 	void LoginAccepted();
-
+		
 private slots:
 	void ChooseCamera(int id);
 	void TakePhoto();

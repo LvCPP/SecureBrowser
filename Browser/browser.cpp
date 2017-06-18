@@ -3,22 +3,27 @@
 #include <Logger.h>
 
 #include <QtNetwork/QNetworkCookie>
-#include <QtWebEngineCore/QWebEngineHttpRequest>
 
 using namespace SecureBrowser;
 using namespace Utils;
 using namespace BrowserLogger;
 
-Browser::Browser(std::string quiz_id, std::string password_to_quiz, std::string cookies, QWidget *parent)
+Browser::Browser(std::string quiz_id
+	, std::string password_to_quiz
+	, std::string cookies
+	, QString body
+	, QWidget *parent)
+	
 	: QWidget(parent)
 	, ui_(new Ui::Browser())
 	, quiz_id_(quiz_id)
 	, password_to_quiz_(password_to_quiz)
 	, cookies_(cookies)
+	, body_(body)
 {
 	ui_->setupUi(this);
 	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint);
-	
+
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
 	connect(ui_->push_btn_reload, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
@@ -30,24 +35,22 @@ Browser::Browser(std::string quiz_id, std::string password_to_quiz, std::string 
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetNewTitle);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
-	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::SetQuizPassword);
 
 	ui_->push_btn_back->setEnabled(false);
 	ui_->push_btn_forward->setEnabled(false);
 	ui_->push_btn_reload->setEnabled(false);
 	ui_->web_view->setContextMenuPolicy(Qt::NoContextMenu);
 
-	// for connecting with the Moodle server
 	profile_ = new QWebEngineProfile(this);
-	QUrl base_url = QUrl(QString::fromStdString("https://softserve.academy"));
+	QUrl base_url = QUrl("https://softserve.academy/");
 
 	store_ = ui_->web_view->page()->profile()->cookieStore();
 	std::string cookie_number = cookies_.substr(14, cookies_.length() - 14);
 	QNetworkCookie moodle_cookie("MoodleSession", cookie_number.c_str());
 	store_->setCookie(moodle_cookie, base_url);
 	store_->loadAllCookies();
-	
-	ui_->web_view->load(QUrl(QString::fromStdString("https://softserve.academy/mod/quiz/view.php?id=" + quiz_id_)));
+
+	ui_->web_view->setHtml(body_);
 }
 
 Browser::~Browser()
@@ -100,17 +103,4 @@ void Browser::CloseButton()
 
 	if (reply == QMessageBox::Yes)
 		close();
-}
-
-void Browser::SetQuizPassword()
-{
-	ui_->web_view->page()->toHtml([&](QString html)
-	{
-		if (html.indexOf("id=\"id_quizpassword\" value=\"\"") != -1)
-		{
-			QString test = html.replace("id=\"id_quizpassword\" value=\"\"", QString::fromStdString("id=\"id_quizpassword\" value=\"" + password_to_quiz_ + "\" readonly"));
-
-			ui_->web_view->setHtml(html);
-		}
-	});
 }
