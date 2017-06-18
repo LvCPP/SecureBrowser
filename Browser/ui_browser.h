@@ -9,8 +9,8 @@
 #ifndef UI_BROWSER_H
 #define UI_BROWSER_H
 
-#include <QWebEngineView>
 #include <QtCore/QVariant>
+#include <QtWebEngineWidgets/QWebEngineView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
@@ -18,7 +18,6 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
@@ -40,7 +39,6 @@ public:
     QPushButton *push_btn_forward;
     QPushButton *push_btn_reload;
     QPushButton *push_btn_stop;
-    QLineEdit *line_edit;
     QLabel *label;
     QWebEngineView *web_view;
     QHBoxLayout *horizontalLayout_2;
@@ -113,11 +111,6 @@ public:
 
         horizontalLayout->addWidget(push_btn_stop);
 
-        line_edit = new QLineEdit(Browser);
-        line_edit->setObjectName(QStringLiteral("line_edit"));
-
-        horizontalLayout->addWidget(line_edit);
-
         label = new QLabel(Browser);
         label->setObjectName(QStringLiteral("label"));
         QFont font;
@@ -130,6 +123,7 @@ public:
 
         horizontalLayout->addWidget(label);
 
+        horizontalLayout->setStretch(4, 1);
 
         verticalLayout->addLayout(horizontalLayout);
 

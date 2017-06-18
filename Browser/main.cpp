@@ -132,10 +132,10 @@ int main(int argc, char* argv[])
 
 	loginfo(*logger) << "Start Browser";
 
-	std::string link_to_quiz = input.at(3);
+	std::string quiz_id = input.at(3);
 	std::string password_to_quiz = input.at(4);
 
-	Browser browser_app(link_to_quiz, password_to_quiz, moodle_cookies);
+	Browser browser_app(quiz_id, password_to_quiz, moodle_cookies);
 	browser_app.showMaximized();
 
 	splash_screen.finish(&browser_app);

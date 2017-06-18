@@ -48,7 +48,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,1">
        <item>
         <widget class="QPushButton" name="push_btn_back">
          <property name="toolTip">
@@ -109,9 +109,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="line_edit"/>
-       </item>
-       <item>
         <widget class="QLabel" name="label">
          <property name="font">
           <font>
@@ -132,7 +129,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QWebEngineView" name="web_view" native="true"/>
+      <widget class="QWebEngineView" name="web_view"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -185,7 +182,7 @@
   <customwidget>
    <class>QWebEngineView</class>
    <extends>QWidget</extends>
-   <header location="global">QWebEngineView</header>
+   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

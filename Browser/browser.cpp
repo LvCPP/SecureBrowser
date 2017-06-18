@@ -9,17 +9,16 @@ using namespace SecureBrowser;
 using namespace Utils;
 using namespace BrowserLogger;
 
-Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::string cookies, QWidget *parent)
+Browser::Browser(std::string quiz_id, std::string password_to_quiz, std::string cookies, QWidget *parent)
 	: QWidget(parent)
 	, ui_(new Ui::Browser())
-	, link_to_quiz_(link_to_quiz)
+	, quiz_id_(quiz_id)
 	, password_to_quiz_(password_to_quiz)
 	, cookies_(cookies)
 {
 	ui_->setupUi(this);
 	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog | Qt::CustomizeWindowHint);
 	
-	connect(ui_->line_edit, &QLineEdit::returnPressed, this, &Browser::SlotEnter);
 	connect(ui_->push_btn_back, &QPushButton::clicked, ui_->web_view, &QWebEngineView::back);
 	connect(ui_->push_btn_forward, &QPushButton::clicked, ui_->web_view, &QWebEngineView::forward);
 	connect(ui_->push_btn_reload, &QPushButton::clicked, ui_->web_view, &QWebEngineView::reload);
@@ -28,7 +27,6 @@ Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::st
 	connect(ui_->web_view, &QWebEngineView::loadProgress, ui_->load_progress_page, &QProgressBar::setValue);
 	connect(ui_->web_view, &QWebEngineView::loadStarted, this, &Browser::ShowProgressBar);
 	connect(ui_->web_view, &QWebEngineView::loadFinished, this, &Browser::HideProgressBar);
-	connect(ui_->web_view, &QWebEngineView::urlChanged, this, &Browser::SetUrl);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::SetNewTitle);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonBackHistory);
 	connect(ui_->web_view, &QWebEngineView::titleChanged, this, &Browser::ButtonForwardHistory);
@@ -41,38 +39,19 @@ Browser::Browser(std::string link_to_quiz, std::string password_to_quiz, std::st
 
 	// for connecting with the Moodle server
 	profile_ = new QWebEngineProfile(this);
-	QUrl base_url = QUrl(QString::fromStdString(link_to_quiz_));
+	QUrl base_url = QUrl(QString::fromStdString("https://softserve.academy"));
 
 	store_ = ui_->web_view->page()->profile()->cookieStore();
 	std::string cookie_number = cookies_.substr(14, cookies_.length() - 14);
 	QNetworkCookie moodle_cookie("MoodleSession", cookie_number.c_str());
 	store_->setCookie(moodle_cookie, base_url);
 	store_->loadAllCookies();
-
-	QWebEngineHttpRequest req(base_url, QWebEngineHttpRequest::Get);
 	
-	ui_->web_view->load(req);
-
+	ui_->web_view->load(QUrl(QString::fromStdString("https://softserve.academy/mod/quiz/view.php?id=" + quiz_id_)));
 }
 
 Browser::~Browser()
 {
-}
-
-void Browser::SlotEnter() const
-{
-	QUrl url = QUrl::fromUserInput(ui_->line_edit->text());
-	ui_->web_view->load(url);
-}
-
-void Browser::SetUrl(const QUrl &url) const
-{
-	ui_->line_edit->setText(url.toString());
-}
-
-void Browser::SetNewTitle() const
-{
-	ui_->label->setText(ui_->web_view->title());
 }
 
 void Browser::ShowProgressBar() const
@@ -88,6 +67,12 @@ void Browser::HideProgressBar() const
 	ui_->push_btn_reload->setEnabled(true);
 	ui_->push_btn_stop->setEnabled(false);
 }
+
+void Browser::SetNewTitle() const
+{
+	ui_->label->setText(ui_->web_view->title());
+}
+
 
 void Browser::ButtonBackHistory() const
 {
