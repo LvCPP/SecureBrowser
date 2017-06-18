@@ -87,11 +87,10 @@ std::vector<char> CreateSendFileMessage(const std::string& file_path)
 
 	std::ifstream input(file_path, std::ios::binary);
 	// copies all data into buffer
-	std::vector<char> buffer((
-		std::istreambuf_iterator<char>(input)),
-		(std::istreambuf_iterator<char>()));
+	std::vector<char> buffer(file_size);
+	input.read(&buffer[0], file_size);
 
-	messgage.insert(messgage.end(), buffer.begin(), buffer.end());
+	messgage.insert(messgage.end(), buffer.begin(), buffer.begin() + file_size);
 
 	return messgage;
 }
