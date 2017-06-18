@@ -54,11 +54,11 @@ Browser::Browser(std::string link_to_quiz
 	store_->loadAllCookies();
 
 	ui_->web_view->setHtml(body_);
-
 }
 
 Browser::~Browser()
 {
+	delete store_;
 }
 
 void Browser::SlotEnter() const

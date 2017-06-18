@@ -33,8 +33,7 @@ using namespace BrowserLogger;
 // alias for working with http_client
 using utf8string = std::string;
 
-// constructor for the common project
-LoginDialog::LoginDialog(std::string login, std::string password, std::string path, QWidget* parent)
+ LoginDialog::LoginDialog(std::string login, std::string password, std::string path, QWidget* parent)
 	: QWizard(parent)
 	, ui_(new Ui::Wizard)
 	, is_login_checked_(false)
@@ -116,21 +115,13 @@ int LoginDialog::nextId() const
 	}
 }
 
-#include <iostream>
-#include <fstream>
-
 void LoginDialog::CheckLogin()
 {
-	std::ofstream f("CheckLogin.txt");
-		
 	std::string username = ui_->username_lineedit->text().toStdString();
 	std::string password = ui_->password_lineedit->text().toStdString();
 	std::string body_text = "username=" + username + "&password=" + password + "&anchor=";
 	utf8string request_body = body_text;
 	utf8string content_type = "application/x-www-form-urlencoded";
-
-	/////////////////////////////////////
-	f << "BODY_TEXT: " << body_text;
 
 	//for disabling redirect
 	http_client_config config;
@@ -149,6 +140,7 @@ void LoginDialog::CheckLogin()
 		}
 	});
 
+	// POST-request to host
 	utility::string_t base_url = U("https://softserve.academy/");
 	http_client client(base_url, config);
 
@@ -158,44 +150,31 @@ void LoginDialog::CheckLogin()
 	http_response response = client.request(req).get();
 	http_headers& resp_headers = response.headers();
 
-	//////////////////////////////////////////
-	f << "FIRST RESPONSE HEADERS: ";
-	for (std::map<utility::string_t
-		, utility::string_t>::iterator it
-		= resp_headers.begin()
-		; it != resp_headers.end()
-		; ++it)
-	{
-
-
-	utf8string resp_body = response.extract_utf8string().get();
-
-	for (std::map<utility::string_t
-		, utility::string_t>::iterator it
-		= resp_headers.begin()
-		; it != resp_headers.end()
-		; ++it)
+	for (std::map <utility::string_t, utility::string_t>::iterator it
+		= resp_headers.begin(); it != resp_headers.end(); ++it)
 	{
 		if (to_utf8string(it->first) == "Set-Cookie")
 		{
 			size_t found = to_utf8string(it->second).find("MOODLEID");
 			if (found != std::string::npos)
 			{
-				{
-					is_login_checked_ = true;
-					ui_->username_lineedit->setEnabled(false);
-					ui_->password_lineedit->setEnabled(false);
-					ui_->agree_checkbox->setEnabled(false);
-					ui_->login_button->setEnabled(false);
-					loginfo(*An<Logger>()) << "User was logged in.";
-				}
+				is_login_checked_ = true;
+				ui_->username_lineedit->setEnabled(false);
+				ui_->password_lineedit->setEnabled(false);
+				ui_->agree_checkbox->setEnabled(false);
+				ui_->login_button->setEnabled(false);
+				loginfo(*An<Logger>()) << "User was logged in.";
+
+				// for searching MoodleSession cookies
 				size_t moodle_session_pos = to_utf8string(it->second).find("MoodleSession");
 				size_t semicolon_pos = to_utf8string(it->second).find(";", moodle_session_pos);
-				this->moodle_session_ = to_utf8string(it->second).substr(moodle_session_pos, semicolon_pos - moodle_session_pos);
+				moodle_session_ = to_utf8string(it->second).substr(moodle_session_pos, semicolon_pos - moodle_session_pos);
+
 				emit LoginAccepted();
 			}
 			else
 			{
+				// MoodleSession not found = login not accepted
 				if (QMessageBox::warning(this, tr("Login"),
 					tr("<p align='center'>User not found.<br>"
 						"Please provide correct username and password!</p>"),
@@ -204,41 +183,44 @@ void LoginDialog::CheckLogin()
 					ui_->username_lineedit->setText(QString::fromStdString(login_));
 					ui_->password_lineedit->setText(QString::fromStdString(password_));
 					ui_->agree_checkbox->setCheckState(Qt::Unchecked);
-					this->moodle_session_ = "";
 					loginfo(*An<Logger>()) << "User was not logged in.";
 				}
 			}
 		}
 	}
 
-	std::string ms = "MoodleSession=" + moodle_session_;
+	if (!is_login_checked_)
+		return;
 
+	// GET-request to host
 	http_client client2(base_url, config);
-
 	http_request req2(methods::GET);
 	req2.set_request_uri(U("/login/index.php"));
-	req2.headers().add(L"Cookie", ms.c_str());
+	req2.headers().add(L"Cookie", moodle_session_.c_str());
 	http_response response2 = client.request(req2).get();
-	http_headers& resp_headers2 = response2.headers();
 	utf8string resp_body2 = response2.extract_utf8string().get();
 
+	// for finding sesskey in response to GET-request
 	size_t sesskey_word_pos = resp_body2.find("sesskey");
 	size_t sesskey_pos = resp_body2.find("\"", sesskey_word_pos + 10);
 	sesskey_ = resp_body2.substr(sesskey_word_pos + 10, sesskey_pos - sesskey_word_pos - 10);
 
+	// POST-request to quiz page
 	http_client client3(base_url, config);
 	http_request req3(methods::POST);
 	req3.set_request_uri(U("/mod/quiz/startattempt.php"));
-	req3.headers().add(L"Cookie", ms.c_str());
-	body_text = "&sesskey=" + sesskey_ + "&_qf__mod_quiz_preflight_check_form=1&quizpassword=231&submitbutton=Start+attempt&cmid=3257";
-	request_body = body_text;
+	req3.headers().add(L"Cookie", moodle_session_.c_str());
+	std::string quiz_id = "3257";
+	std::string quizpassword = "231";
+	body_text = "&sesskey=" + sesskey_
+		+ "&_qf__mod_quiz_preflight_check_form=1&quizpassword=" + quizpassword
+		+ "&submitbutton=Start+attempt&cmid=" + quiz_id;
+
 	req3.set_body(body_text, content_type);
 	http_response response3 = client.request(req3).get();
-	http_headers& resp_headers3 = response3.headers();
+	
+	// for sending html-page to the browser
 	resp_body3_ = response3.extract_utf8string().get();
-
-	f.close();
-
 }
 
 // for sending cookies to the browser
@@ -247,19 +229,11 @@ void LoginDialog::GetMoodleSession(std::string& session) const
 	session = moodle_session_;
 }
 
-// for sending sesskey to the browser
-void LoginDialog::GetSessionKey(std::string& sesskey) const
-{
-	sesskey = sesskey_;
-}
-
-// for sending resp_bofy to the browser
+// for sending resp_body to the browser
 void LoginDialog::GetRespBody(QString& body) const
 {
-	QString qstr = QString::fromUtf8(resp_body3_.c_str());
-	body = qstr;
+	body = QString::fromUtf8(resp_body3_.c_str());
 }
-
 
 void LoginDialog::RefreshComboBox()
 {
@@ -325,15 +299,6 @@ void LoginDialog::TakePhoto()
 		QMessageBox::Ok);
 }
 
-void LoginDialog::DeclinePhotoButtonClicked()
-{
-	ui_->take_photo_button->setEnabled(true);
-	ui_->accept_photo_button->setDisabled(true);
-	ui_->decline_photo_button->setDisabled(true);
-	is_frame_updated_ = true;
-	loginfo(*An<Logger>()) << "User's ID photo declined.";
-}
-
 void LoginDialog::AcceptPhotoButtonClicked()
 {
 	ui_->accept_photo_button->setEnabled(false);
@@ -345,6 +310,15 @@ void LoginDialog::AcceptPhotoButtonClicked()
 	saver.Save(id_frame_);
 	is_photo_made_ = true;
 	loginfo(*An<Logger>()) << "User's ID photo saved to disk.";
+}
+
+void LoginDialog::DeclinePhotoButtonClicked()
+{
+	ui_->take_photo_button->setEnabled(true);
+	ui_->accept_photo_button->setDisabled(true);
+	ui_->decline_photo_button->setDisabled(true);
+	is_frame_updated_ = true;
+	loginfo(*An<Logger>()) << "User's ID photo declined.";
 }
 
 void LoginDialog::closeEvent(QCloseEvent* close_button)
