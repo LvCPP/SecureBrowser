@@ -128,7 +128,7 @@ int __cdecl main()
 			iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
 			if (iResult > 0)
 			{
-				buffer.insert(buffer.end(), recvbuf, recvbuf + recvbuflen);
+				buffer.insert(buffer.end(), recvbuf, recvbuf + iResult);
 			}
 			else if (iResult == 0)
 			{
@@ -162,7 +162,7 @@ int __cdecl main()
 		}
 		else if (buffer[4] == 2)
 		{
-			const int string_size = *reinterpret_cast<uint32_t*>(buffer.data() + 13);
+			const uint32_t string_size = *reinterpret_cast<uint32_t*>(buffer.data() + 13);
 			std::string fileName(buffer.data() + 17, string_size);
 
 			std::ofstream file(fileName, std::ios::binary);
@@ -170,6 +170,10 @@ int __cdecl main()
 			const uint64_t file_size = *reinterpret_cast<uint64_t*>(buffer.data() + 17 + string_size);
 
 			file.write(buffer.data() + 17 + string_size + 8, file_size);
+			file.close();
+
+			printf("Received file with file name size %d file name %s file size %d", 
+				string_size, fileName.c_str(), file_size);
 		}
 
 		buffer.clear();
