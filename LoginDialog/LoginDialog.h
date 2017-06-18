@@ -18,8 +18,7 @@ class LoginDialog : public QWizard
 	Q_OBJECT
 
 public:
-	explicit LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, std::string path, QWidget* parent = Q_NULLPTR);
-	//explicit LOGIN_DIALOG_API LoginDialog(QWidget* parent = Q_NULLPTR);
+	explicit LOGIN_DIALOG_API LoginDialog(std::string login, std::string password, std::string quiz_id, std::string password_to_quiz, std::string path, QWidget* parent = Q_NULLPTR);
 	LOGIN_DIALOG_API ~LoginDialog() = default;
 
 	LOGIN_DIALOG_API void GetMoodleSession(std::string& session) const;
@@ -58,6 +57,8 @@ private:
 	std::string login_;
 	std::string password_;
 	std::string path_;
+	std::string quiz_id_;
+	std::string password_to_quiz_;
 			
 signals:
 	void UpdateImage(QPixmap image);
@@ -68,7 +69,7 @@ private slots:
 	void TakePhoto();
 	void AcceptPhotoButtonClicked();
 	void DeclinePhotoButtonClicked();
-	void FinishButtonCliked();
+	void FinishButtonClicked();
 	
 public slots:
 	void CheckLogin();

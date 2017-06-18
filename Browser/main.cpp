@@ -80,6 +80,8 @@ int main(int argc, char* argv[])
 
 	std::string login = input.at(1);
 	std::string password = input.at(2);
+	std::string quiz_id = input.at(3);
+	std::string password_to_quiz = input.at(4);
 
 	QApplication app(argc, argv);
 	QSplashScreen splash_screen(QPixmap(QString::fromStdString(path + "Resources\\splash.png")));
@@ -93,7 +95,7 @@ int main(int argc, char* argv[])
 	logger->SetOutput(file);
 	loginfo(*logger) << "Program initialized";
 	
-	LoginDialog login_app(login, password, path);
+	LoginDialog login_app(login, password, quiz_id, password_to_quiz, path);
 	loginfo(*logger) << "Start login";
 	
 	splash_screen.hide();
@@ -135,9 +137,6 @@ int main(int argc, char* argv[])
 	cam_cap->Start();
 
 	loginfo(*logger) << "Start Browser";
-
-	std::string quiz_id = input.at(3);
-	std::string password_to_quiz = input.at(4);
 
 	Browser browser_app(quiz_id, password_to_quiz, moodle_cookies, body);
 	browser_app.showMaximized();

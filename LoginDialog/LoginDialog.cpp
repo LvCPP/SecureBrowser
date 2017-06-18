@@ -32,7 +32,7 @@ using namespace BrowserLogger;
 // Alias for working with http_client
 using utf8string = std::string;
 
- LoginDialog::LoginDialog(std::string login, std::string password, std::string path, QWidget* parent)
+ LoginDialog::LoginDialog(std::string login, std::string password, std::string quiz_id, std::string password_to_quiz, std::string path, QWidget* parent)
 	: QWizard(parent)
 	, ui_(new Ui::Wizard)
 	, is_login_checked_(false)
@@ -42,6 +42,8 @@ using utf8string = std::string;
 	, login_(login)
 	, password_(password)
 	, path_(path)
+	, quiz_id_(quiz_id)
+	, password_to_quiz_(password_to_quiz)
 {
 	ui_->setupUi(this);
 
@@ -80,7 +82,7 @@ void LoginDialog::initializePage(int id)
 		break;
 	case WELCOME_PAGE:
 	case LAST_PAGE:
-		connect(this->button(FinishButton), SIGNAL(clicked()), this, SLOT(FinishButtonCliked()));
+		connect(this->button(FinishButton), SIGNAL(clicked()), this, SLOT(FinishButtonClicked()));
 		break;
 	default:
 		break;
@@ -317,7 +319,7 @@ void LoginDialog::closeEvent(QCloseEvent* close_button)
 	}
 }
 
-void LoginDialog::FinishButtonCliked()
+void LoginDialog::FinishButtonClicked()
 {
 	// POST-request to quiz page
 	utility::string_t base_url = U("https://softserve.academy/");
@@ -326,11 +328,9 @@ void LoginDialog::FinishButtonCliked()
 	http_request req(methods::POST);
 	req.set_request_uri(U("/mod/quiz/startattempt.php"));
 	req.headers().add(L"Cookie", moodle_session_.c_str());
-	std::string quiz_id = "3257";
-	std::string quizpassword = "231";
 	std::string body_text = "&sesskey=" + sesskey_
-		+ "&_qf__mod_quiz_preflight_check_form=1&quizpassword=" + quizpassword
-		+ "&submitbutton=Start+attempt&cmid=" + quiz_id;
+		+ "&_qf__mod_quiz_preflight_check_form=1&quizpassword=" + password_to_quiz_
+		+ "&submitbutton=Start+attempt&cmid=" + quiz_id_;
 
 	req.set_body(body_text, content_type);
 	http_response response = client.request(req).get();
