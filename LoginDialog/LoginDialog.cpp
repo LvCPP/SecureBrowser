@@ -80,6 +80,8 @@ void LoginDialog::initializePage(int id)
 		break;
 	case WELCOME_PAGE:
 	case LAST_PAGE:
+		connect(this->button(FinishButton), SIGNAL(clicked()), this, SLOT(FinishButtonCliked()));
+		break;
 	default:
 		break;
 	}
@@ -193,7 +195,6 @@ void LoginDialog::CheckLogin()
 		return;
 
 	// GET-request to host
-	http_client client2(base_url, config);
 	http_request req2(methods::GET);
 	req2.set_request_uri(U("/login/index.php"));
 	req2.headers().add(L"Cookie", moodle_session_.c_str());
@@ -204,35 +205,12 @@ void LoginDialog::CheckLogin()
 	size_t sesskey_word_pos = resp_body2.find("sesskey");
 	size_t sesskey_pos = resp_body2.find("\"", sesskey_word_pos + 10);
 	sesskey_ = resp_body2.substr(sesskey_word_pos + 10, sesskey_pos - sesskey_word_pos - 10);
-
-	// POST-request to quiz page
-	http_client client3(base_url, config);
-	http_request req3(methods::POST);
-	req3.set_request_uri(U("/mod/quiz/startattempt.php"));
-	req3.headers().add(L"Cookie", moodle_session_.c_str());
-	std::string quiz_id = "3257";
-	std::string quizpassword = "231";
-	body_text = "&sesskey=" + sesskey_
-		+ "&_qf__mod_quiz_preflight_check_form=1&quizpassword=" + quizpassword
-		+ "&submitbutton=Start+attempt&cmid=" + quiz_id;
-
-	req3.set_body(body_text, content_type);
-	http_response response3 = client.request(req3).get();
-	
-	// For sending html-page to the browser
-	resp_body3_ = response3.extract_utf8string().get();
 }
 
 // For sending cookies to the browser
 void LoginDialog::GetMoodleSession(std::string& session) const
 {
 	session = moodle_session_;
-}
-
-// For sending resp_body to the browser
-void LoginDialog::GetRespBody(QString& body) const
-{
-	body = QString::fromUtf8(resp_body3_.c_str());
 }
 
 void LoginDialog::RefreshComboBox()
@@ -337,6 +315,34 @@ void LoginDialog::closeEvent(QCloseEvent* close_button)
 		if (worker_.joinable())
 			worker_.join();
 	}
+}
+
+void LoginDialog::FinishButtonCliked()
+{
+	// POST-request to quiz page
+	utility::string_t base_url = U("https://softserve.academy/");
+	utf8string content_type = "application/x-www-form-urlencoded";
+	http_client client(base_url);
+	http_request req(methods::POST);
+	req.set_request_uri(U("/mod/quiz/startattempt.php"));
+	req.headers().add(L"Cookie", moodle_session_.c_str());
+	std::string quiz_id = "3257";
+	std::string quizpassword = "231";
+	std::string body_text = "&sesskey=" + sesskey_
+		+ "&_qf__mod_quiz_preflight_check_form=1&quizpassword=" + quizpassword
+		+ "&submitbutton=Start+attempt&cmid=" + quiz_id;
+
+	req.set_body(body_text, content_type);
+	http_response response = client.request(req).get();
+
+	// For sending html-page to the browser
+	resp_body_ = response.extract_utf8string().get();
+}
+
+// For sending resp_body to the browser
+void LoginDialog::GetRespBody(QString& body) const
+{
+	body = QString::fromUtf8(resp_body_.c_str());
 }
 
 

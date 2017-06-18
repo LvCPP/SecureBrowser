@@ -45,7 +45,7 @@ private:
 	QScopedPointer<Ui::Wizard> ui_;
 	
 	std::string moodle_session_;
-	std::string resp_body3_;
+	std::string resp_body_;
 	std::string sesskey_;
 	bool is_login_checked_;
 	bool moodle_session_found_;
@@ -68,6 +68,7 @@ private slots:
 	void TakePhoto();
 	void AcceptPhotoButtonClicked();
 	void DeclinePhotoButtonClicked();
+	void FinishButtonCliked();
 	
 public slots:
 	void CheckLogin();
