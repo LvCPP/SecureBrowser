@@ -322,8 +322,20 @@ ErrorCode Client::SendFile(const std::string& path_to_file, const std::string& s
 	return ErrorCode::Ok;
 }
 
-Client::Client(const std::string& ip)
-	: ip_(ip)
-	, mutex_()
+Client::Client()
+	: mutex_()
 {
+	ip_ = "127.0.0.1";
 }
+
+namespace Utils
+{
+
+template <>
+void AnFill<Client>(An<Client>& an)
+{
+	static Client instance;
+	an = &instance;
+}
+
+} // namespace Utils

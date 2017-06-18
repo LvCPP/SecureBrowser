@@ -23,6 +23,7 @@ public:
 
 private:
 	static void SaveToDisk(const Frame& frame, const std::string& name, const std::string& path);
+	static void SaveToServer(const std::string& name, const std::string& path);
 
 	std::string name_to_save_;
 	std::string path_to_save_;
