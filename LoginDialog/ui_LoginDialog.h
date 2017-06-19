@@ -480,14 +480,14 @@ public:
         username_label->setText(QApplication::translate("Wizard", "Username*", Q_NULLPTR));
         password_label->setText(QApplication::translate("Wizard", "Password*", Q_NULLPTR));
         agree_checkbox->setText(QString());
-        agree_label->setText(QApplication::translate("Wizard", "<html><head/><body><p><span style=\" font-size:10pt;\">I agree to </span><a href=\"https://drive.google.com/open?id=0B9Xa2M9s3StoOFNXYXQ2QWZPZ28\"><span style=\" font-size:10pt; text-decoration: underline; color:#0000ff;\">The Terms of Service and Privacy Notes</span></a></p></body></html>", Q_NULLPTR));
+        agree_label->setText(QApplication::translate("Wizard", "<html><head/><body><p><span style=\" font-size:10pt;\">I agree to the Terms of Service and Privacy Notes</span></p></body></html>", Q_NULLPTR));
         login_button->setText(QApplication::translate("Wizard", "Login", Q_NULLPTR));
         camera_select_label->setText(QApplication::translate("Wizard", "<html><head/><body><p align=\"center\"><span style=\" font-size:10pt;\">Please select your camera for face and ID detection:</span></p></body></html>", Q_NULLPTR));
         image_label->setText(QString());
         take_photo_button->setText(QApplication::translate("Wizard", "Take photo", Q_NULLPTR));
         accept_photo_button->setText(QApplication::translate("Wizard", "Save photo", Q_NULLPTR));
         decline_photo_button->setText(QApplication::translate("Wizard", "Decline photo", Q_NULLPTR));
-        last_page_label->setText(QApplication::translate("Wizard", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:600;\">You have finished the authentication process. Please get ready for the test!</span></p></body></html>", Q_NULLPTR));
+        last_page_label->setText(QApplication::translate("Wizard", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:600;\">You have finished the authentication process. Please get ready for the test!</span></p><p align=\"center\"><span style=\" font-size:12pt; font-weight:600;\">The test will start as soon as you click<br/>the Finish button</span></p><p align=\"center\"><span style=\" font-size:10pt;\"><br/></span></p></body></html>", Q_NULLPTR));
     } // retranslateUi
 
 };
