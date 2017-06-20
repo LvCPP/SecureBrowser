@@ -1,6 +1,6 @@
 #include "Base64Decryptor.h"
 
-using namespace Decryptor;
+using namespace Utils;
 
 static std::string BASE64_SYMBOLS_ =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"

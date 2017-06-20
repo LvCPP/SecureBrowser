@@ -1,7 +1,7 @@
 #include <Base64Decryptor.h>
 #include <iostream>
 
-using namespace Decryptor;
+using namespace Utils;
 
 int main()
 {

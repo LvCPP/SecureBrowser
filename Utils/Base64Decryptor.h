@@ -1,6 +1,6 @@
 #include <string>
 
-namespace Decryptor
+namespace Utils
 {
 
 class Base64Decryptor
