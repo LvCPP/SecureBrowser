@@ -12,9 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="An.hpp" />
+    <ClInclude Include="Base64Decryptor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="An.cpp" />
+    <ClCompile Include="Base64Decryptor.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3C6B4EB3-7FBF-4D54-8098-D8CB1E02573C}</ProjectGuid>

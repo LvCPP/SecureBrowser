@@ -9,6 +9,7 @@
 #include <FaceCountObserver.h>
 #include <FileSystemFrameSaver.h>
 #include <SessionInspector.h>
+#include <Base64Decryptor.h>
 
 #include <QtWidgets/QApplication>
 #include <QSplashScreen>
@@ -81,7 +82,7 @@ int main(int argc, char* argv[])
 	std::string login = input.at(1);
 	std::string password = input.at(2);
 	std::string quiz_id = input.at(3);
-	std::string password_to_quiz = input.at(4);
+	std::string password_to_quiz = Base64Decryptor::Decode(input.at(4));
 
 	QApplication app(argc, argv);
 	QSplashScreen splash_screen(QPixmap(QString::fromStdString(path + "Resources\\splash.png")));
