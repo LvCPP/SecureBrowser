@@ -19,7 +19,6 @@ bool ChangeSingleFeature(RegisterData reg_data, DWORD value)
 {
 	bool is_success = false;
 
-
 	HKEY hkey;
 	if (RegCreateKeyEx(reg_data.reg_key, reg_data.sub_key, 0, nullptr, REG_OPTION_VOLATILE, KEY_READ | KEY_WRITE | KEY_WOW64_32KEY,
 		nullptr, &hkey, nullptr) == ERROR_SUCCESS)
@@ -101,10 +100,6 @@ bool ChangeAllFeatures(DWORD value)
 //Create a new desktop or open an existing one
 HDESK CreateHiddenDesktop(CHAR* desktop_name)
 {
-	CHAR explorer_path[MAX_PATH];
-	
-	ExpandEnvironmentStringsA("%windir%\\explorer.exe", explorer_path, MAX_PATH - 1);
-
 	HDESK hidden_desktop = OpenDesktopA(desktop_name, NULL, TRUE, ACCESS_RIGHTS);
 	if (!hidden_desktop)
 	{
